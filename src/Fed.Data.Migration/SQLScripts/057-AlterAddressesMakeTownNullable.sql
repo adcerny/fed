@@ -1,0 +1,2 @@
+﻿ALTER TABLE dbo.BillingAddresses ALTER COLUMN Town VARCHAR(250) NULL;
+ALTER TABLE dbo.DeliveryAddresses ALTER COLUMN Town VARCHAR(250) NULL;

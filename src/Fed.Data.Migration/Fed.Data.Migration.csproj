@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>1.2.0</Version>
+    <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="settings.json;SQLScripts\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="SQLScripts\134-OrderDiscounts.sql" />
+    <None Remove="SQLScripts\135-AddIsFreeToOrdersAndRecurringOrders.sql" />
+	  <None Remove="SQLScripts\136-Suppliers.sql" />
+    <None Remove="SQLScripts\137-AddDeliveryShortageIdToDeliveryAdditions.sql" />
+    <None Remove="SQLScripts\137-AddRefundablePriceToOrderProducts.sql" />
+    <None Remove="SQLScripts\138-AddIsActiveToTimeslots.sql" />
+    <None Remove="SQLScripts\138-ProductCategories.sql" />
+    <None Remove="SQLScripts\140-DiscountCodes.sql" />
+    <None Remove="SQLScripts\141-AddDiscountCodeIdToCustomerDiscounts.sql" />
+    <None Remove="SQLScripts\142-AddDateAddedToHolidays.sql" />
+    <None Remove="SQLScripts\143-CustomerAgents.sql" />
+    <None Remove="SQLScripts\144-AddCustomerAgentIdToCustomers.sql" />
+    <None Remove="SQLScripts\144-AddIdTableType.sql" />
+    <None Remove="SQLScripts\144-AddPhoneToDeliveryAddresses.sql" />
+    <None Remove="SQLScripts\145-AddIsDeletedToDeliveryAddress.sql" />
+    <None Remove="SQLScripts\150-CustomerMarketingAttributes.sql" />
+    <None Remove="SQLScripts\151-AddCustomerMarketingattributeIdToCustomers.sql" />
+    <None Remove="SQLScripts\155-AddProductCategoryIdToProduct.sql" />
+    <None Remove="SQLScripts\157-AddProductPriceToDeliveryShortages.sql" />
+    <None Remove="SQLScripts\160-DiscountedProducts.sql" />
+    <None Remove="SQLScripts\161-DiscountQualifyingProducts.sql" />
+    <None Remove="SQLScripts\162-DiscountTypes.sql" />
+    <None Remove="SQLScripts\163-AddDiscountTypesToDiscounts.sql" />
+    <None Remove="SQLScripts\164-AddDiscoutedOrderIdToOrderDiscounts.sql" />
+    <None Remove="SQLScripts\165-DiscountQualifyingProductCategories.sql" />
+    <None Remove="SQLScripts\166-DiscountEligibleProductCategories.sql" />
+    <None Remove="SQLScripts\167-AddPausedAccoutType.sql" />
+    <None Remove="SQLScripts\167-ProductChildren.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dbup" Version="4.3.0" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fed.Core/Fed.Core.csproj" />
+    <ProjectReference Include="../Fed.Infrastructure/Fed.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

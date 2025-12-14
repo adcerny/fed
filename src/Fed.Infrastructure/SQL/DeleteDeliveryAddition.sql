@@ -1,0 +1,1 @@
+﻿DELETE FROM [dbo].[DeliveryAdditions] WHERE [Id] = @Id

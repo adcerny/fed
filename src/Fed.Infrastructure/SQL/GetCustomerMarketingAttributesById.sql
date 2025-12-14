@@ -1,0 +1,1 @@
+﻿SELECT * FROM [dbo].[CustomerMarketingAttributes] WHERE Id = @Id

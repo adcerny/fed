@@ -1,0 +1,10 @@
+﻿@model IList<DateTime>
+@if(Model != null)
+{
+    <ul>
+        @foreach (var date in Model)
+        {
+            <li>@date.ToString("yyyy-mm-dd")</li>
+        }
+    </ul>
+}

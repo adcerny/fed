@@ -1,0 +1,19 @@
+﻿@using Fed.Web.Portal.Components
+
+@model Fed.Web.Portal.ViewModels.LabelViewModel
+@{
+    ViewBag.HideHeader = true;
+    ViewBag.UseBlazor = true;
+    Layout = "_Master";
+}
+@section Scripts {
+    <script src="~/_framework/blazor.server.js"></script>
+}
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/less/label-print.less">
+}
+<div class="print-screen">
+    @(await Html.RenderComponentAsync<Labels>(RenderMode.ServerPrerendered, new { timeslotId = Model.CurrentTimeslot.Id }))
+</div>
+
+

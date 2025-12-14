@@ -1,0 +1,459 @@
+﻿@using Fed.Core.Extensions
+@using Fed.Core.Enums
+@model Fed.Web.Portal.ViewModels.CustomerViewModel
+
+@{
+    Layout = "_Master";
+    var customer = Model.Customer;
+    List<Guid> RednderedOrderIds = new List<Guid>();
+}
+
+<div id="CustomerView">
+    <h1>Customer: @customer.CompanyName</h1>
+    <div id="statusBar">
+        @{
+            var statusClass = "activeCustomer";
+            if (customer.LifecycleStatus == Fed.Core.Enums.LifecycleStatus.Prospect)
+            {
+                statusClass = "prospectCustomer";
+            }
+            else if (customer.LifecycleStatus == Fed.Core.Enums.LifecycleStatus.Lapsed)
+            {
+                statusClass = "lapsedCustomer";
+            }
+        }
+        <span>Type: <strong>@customer.AccountType.ToString()</strong></span>
+        <span>Status: <em class="@statusClass">@customer.LifecycleStatus.ToString()</em></span>
+    </div>
+    <div id="topBar">
+        <nav>
+            <span>Overview</span>
+            <a href="~/customers/@customer.Id/accountInfo">Account Info</a>
+            <a href="~/customers/@customer.Id/paymentInfo">Payment Info</a>
+        </nav>
+
+    </div>
+
+    <div id="AccountInfo">
+        <div id="CompanyInfo">
+            <h2>Company Info</h2>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Customer ID:</th>
+                        <td>@customer.ShortId</td>
+                    </tr>
+                    <tr>
+                        <th>Internal ID:</th>
+                        <td>@customer.Id</td>
+                    </tr>
+                    <tr>
+                        <th>Company Name:</th>
+                        <td>@customer.CompanyName</td>
+                    </tr>
+                    <tr>
+                        <th>Website:</th>
+                        <td>
+                            @if (!string.IsNullOrEmpty(customer.Website))
+                            {
+                                <a href="@customer.Website" target="_blank">@customer.Website</a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Office Size:</th>
+                        <td>@customer.OfficeSizeMin - @customer.OfficeSizeMax</td>
+                    </tr>
+                    <tr>
+                        <th>Payment Method:</th>
+                        <td>@customer.PrimaryContact.PaymentMethod.ToString()</td>
+                    </tr>
+                    <tr>
+                        <th>Total Deliveries:</th>
+                        <td>@(customer.Deliveries != null ? customer.Deliveries.Count : 0)</td>
+                    </tr>
+                    <tr>
+                        <th>First Delivery:</th>
+                        <td>@(customer.FirstDeliveryDate.HasValue ? customer.FirstDeliveryDate.Value.ToString("ddd, dd/MM/yyyy") : "--")</td>
+                    </tr>
+                    <tr>
+                        <th>Last Delivery:</th>
+                        <td>@(customer.LastDeliveryDate.HasValue ? customer.LastDeliveryDate.Value.ToString("ddd, dd/MM/yyyy") : "--")</td>
+                    </tr>
+                    <tr>
+                        <th>Sales to date (&pound;):</th>
+                        <td>@customer.TotalSalesValue.ToString("#,##0.00")</td>
+                    </tr>
+                    <tr>
+                        <th>Sales last week (&pound;):</th>
+                        <td>@customer.TotalSalesLastWeek.ToString("#,##0.00")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="PrimaryContactInfo">
+            <h2>Primary Contact</h2>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Contact ID:</th>
+                        <td>@customer.PrimaryContact.ShortId</td>
+                    </tr>
+                    <tr>
+                        <th>Internal ID:</th>
+                        <td>@customer.PrimaryContact.Id</td>
+                    </tr>
+                    <tr>
+                        <th>Full Name:</th>
+                        <td>@customer.PrimaryContact.FirstName @customer.PrimaryContact.LastName</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>@customer.PrimaryContact.Email</td>
+                    </tr>
+                    <tr>
+                        <th>Phone:</th>
+                        <td>@customer.PrimaryContact.Phone</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="DeliveryAddressInfo">
+            <h2>Delivery Address</h2>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Address Line 1:</th>
+                        <td>@customer.PrimaryContact.GetPrimaryDeliveryAddress()?.AddressLine1</td>
+                    </tr>
+                    <tr>
+                        <th>Address Line 2:</th>
+                        <td>@customer.PrimaryContact.GetPrimaryDeliveryAddress()?.AddressLine2</td>
+                    </tr>
+                    <tr>
+                        <th>Town:</th>
+                        <td>@customer.PrimaryContact.GetPrimaryDeliveryAddress()?.Town</td>
+                    </tr>
+                    <tr>
+                        <th>Postcode:</th>
+                        <td>@customer.PrimaryContact.GetPrimaryDeliveryAddress()?.Postcode</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="MarketingInfo">
+            <h2>Marketing</h2>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Source</th>
+                        <td>@customer.Source</td>
+                    </tr>
+                    <tr>
+                        <th>Opt in</th>
+                        <td>@(customer.PrimaryContact.IsMarketingConsented ? "Yes" : "No")</td>
+                    </tr>
+                    <tr>
+                        <th>Marketing Attribute</th>
+                        <td>@customer.CustomerMarketingAttribute?.Name</td>
+                    </tr>
+                    <tr>
+                        <th>Agent</th>
+                        <td data-agent-id="@customer.CustomerAgent?.Id" data-customer-id="@customer.Id" data-agent-display="name"><a class="set-agent">@customer.CustomerAgent?.Name</a></td data-customer-id="@customer.Id">
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div id="DiscountInfo">
+            <h2>Discounts</h2>
+            @if (Model.Discounts != null && Model.Discounts.Count > 0)
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Discount Name</th>
+                            <th>Discount Description</th>
+                            <th>Discount Code</th>
+                            <th>Discount Expiry</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var discount in Model.Discounts)
+                        {
+                            <tr>
+                                <td rowspan="@discount.DiscountCodes?.Count()">@discount.Name</td>
+                                <td rowspan="@discount.DiscountCodes?.Count()">@discount.Description</td>
+                                <td>@(discount.DiscountCodes != null ? string.Join(", ", discount.DiscountCodes?.Select(d => d.Code + " " + d.Description)) : string.Empty)</td>
+                                <td rowspan="@discount.DiscountCodes?.Count()">@discount.AppliedEndDate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Customer doesn't have any active discounts.</p>
+            }
+        </div>
+
+        <div id="LogonInfo">
+            <h2>Recent Logons</h2>
+
+            @if (Model.LogonHistory != null && Model.LogonHistory.Count > 0)
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>IP Address</th>
+                            <th>User Agent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var logon in Model.LogonHistory)
+                        {
+                            <tr>
+                                <td>@logon.Timestamp.ToString("ddd, dd/MM/yyyy HH:MM:ss")</td>
+                                <td>@logon.PartitionKey</td>
+                                <td>@logon.IpAddress</td>
+                                <td><span title="@logon.UserAgent">@logon.UserAgent.Substring(0, 10)...</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Customer hasn't logged into the website yet.</p>
+            }
+        </div>
+    </div>
+
+    <div>
+        <h2>Create New Order</h2>
+        @if (customer.PrimaryContact.DeliveryAddresses.OrEmptyIfNull().Count() == 0 ||
+             customer.PrimaryContact.BillingAddresses.OrEmptyIfNull().Count() == 0)
+        {
+            <p>Please complete customer account and payment details to place an order.</p>
+        }
+        else
+        {
+            <a class="linkButton" href="~/orders/@customer.ShortId/create">Create New Order</a>
+        }
+    </div>
+    <div>
+        <h2>Upcoming Orders</h2>
+
+        @if (Model.UpcomingOrders != null && Model.UpcomingOrders.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order Type</th>
+                        <th>Order Name</th>
+                        <th>Delivery Address</th>
+                        <th>Timeslot</th>
+                        <th>Next Delivery</th>
+                        <th>Items</th>
+                        <th>Value</th>
+                        <th>Created</th>
+                        <th>Modified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var date in Model.UpcomingOrders.Keys)
+                    {
+                        var upcomingOrders = Model.UpcomingOrders[date];
+
+                        foreach (var order in upcomingOrders)
+                        {
+                            if (!RednderedOrderIds.Contains(order.Id))
+                            {
+                                RednderedOrderIds.Add(order.Id);
+
+                                <tr class="show-order">
+                                    <td>@(order.WeeklyRecurrence == 0 ? "One-Off" : "Regular")</td>
+                                    <td>@order.Name</td>
+                                    <td>@order.DeliveryAddress.AddressLine1 @order.DeliveryAddress.AddressLine2, @order.DeliveryAddress.Postcode</td>
+                                    <td>@order.Timeslot.DayOfWeek.ToString().Substring(0, 3), @order.Timeslot.EarliestTime.ToString(@"hh\:mm") - @order.Timeslot.LatestTime.ToString(@"hh\:mm")</td>
+                                    <td>@date.Value.ToString("ddd, dd/MM/yyyy")</td>
+                                    <td>@order.OrderItems?.Sum(i => i.Quantity)</td>
+                                    <td>&pound; @(order.IsFree ? 0.00M : order.TotalItemPrice)</td>
+                                    <td>@order.CreatedDate.ToString("ddd, dd/MM/yyyy HH:mm")</td>
+                                    <td>@order.LastUpdatedDate.ToString("ddd, dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                                <tr class="order-details">
+                                    <td colspan="9">
+                                        <table class="productsTable">
+                                            <tr>
+                                                <th class="left">Product Code</th>
+                                                <th class="left">Product Group</th>
+                                                <th class="left">Product Name</th>
+                                                <th class="left">Supplier ID</th>
+                                                <th class="left">Supplier SKU</th>
+                                                <th class="right">Quantity</th>
+                                                <th class="right">Price</th>
+                                                <th class="right">Sale Price</th>
+                                                <th class="right">Total Price</th>
+                                            </tr>
+                                            @foreach (var item in order.OrderItems.OrderBy(i => i.ProductCode))
+                                            {
+                                                var product = Model.Products.SingleOrDefault(p => p.Id.Equals(item.ProductId, StringComparison.OrdinalIgnoreCase));
+                                                if (product != null)
+                                                {
+                                                <tr>
+                                                    <td class="left">@product.ProductCode</td>
+                                                    <td class="left">@product.ProductGroup</td>
+                                                    <td class="left">@product.ProductName</td>
+                                                    <td class="left">@product.SupplierId</td>
+                                                    <td class="left">@product.SupplierSKU</td>
+                                                    <td class="right">@item.Quantity</td>
+                                                    <td class="right">&pound; @((order.IsFree ? 0 : product.Price).ToString("#,##0.00"))</td>
+                                                    <td class="right">@((order.IsFree && product.SalePrice.HasValue ? 0 : product.SalePrice)?.ToString("£ #,##0.00"))</td>
+                                                    <td class="right">&pound; @((order.IsFree ? 0 : (product.ActualPrice * item.Quantity)).ToString("#,##0.00"))</td>
+                                                </tr>
+                                                }
+                                            }
+                                            <tr>
+                                                <td class="right" colspan="6"><a href="~/orders/@customer.Id/@order.Id/edit">Edit order details</a></td>
+                                                <td class="right" colspan="3"><a href="~/recurringorders/@order.Id">View order details</a></td>
+                                            </tr>
+
+                                            @if (order.WeeklyRecurrence != Fed.Core.Enums.WeeklyRecurrence.OneOff)
+                                            {
+                                                <tr>
+                                                    <td class="right" colspan="9"><a data-order-id="@order.Id" id="@string.Concat("skiporder", upcomingOrders.IndexOf(order))" href="">Add skip date</a></td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+
+        }
+        else
+        {
+            <p>Customer has no upcoming orders yet.</p>
+        }
+    </div>
+    <div>
+        <h2>Recent Orders</h2>
+        @if (customer.PastOrders != null && customer.PastOrders.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Order Type</th>
+                        <th>Order Name</th>
+                        <th>Delivery ID</th>
+                        <th>Delivery Address</th>
+                        <th>Delivery Date</th>
+                        <th>Timeslot</th>
+                        <th>Items</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in customer.PastOrders.OrderByDescending(x => x.DeliveryDate).Where(x => x.DeliveryDate.Value > DateTime.Today.AddMonths(-1)))
+                    {
+                        <tr class="show-order">
+                            <td>@order.ShortId</td>
+                            <td>@(order.WeeklyRecurrence == 0 ? "One-Off" : "Regular")</td>
+                            <td>@order.OrderName</td>
+                            <td>@customer.Deliveries?.Single(d => d.Orders.Any(o => o.Id.Equals(order.Id))).ShortId</td>
+                            <td>@order.DeliveryAddressLine1 @order.DeliveryAddressLine2, @order.DeliveryPostcode</td>
+                            <td>@order.DeliveryDate.Value.ToString("ddd, dd/MM/yyyy")</td>
+                            <td>@order.EarliestTime.ToString(@"hh\:mm") - @order.LatestTime.ToString(@"hh\:mm")</td>
+                            <td>@order.OrderItems?.Sum(i => i.Quantity)</td>
+                            <td>&pound; @(order.IsFree ? 0.00M : (order.OrderItemsTotal - (order.OrderDiscounts?.Sum(o => o.OrderTotalDeduction) ?? 0)))</td>
+                        </tr>
+                        <tr class="order-details">
+                            <td colspan="9">
+                                <table class="productsTable">
+                                    <tr>
+                                        <th class="left">Product Code</th>
+                                        <th class="left">Product Group</th>
+                                        <th class="left">Product Name</th>
+                                        <th class="left">Supplier ID</th>
+                                        <th class="left">Supplier SKU</th>
+                                        <th class="right">Quantity</th>
+                                        <th class="right">Price</th>
+                                        <th class="right">Sale Price</th>
+                                        <th class="right">Total Price</th>
+                                    </tr>
+                                    @foreach (var item in order.OrderItems.OrderBy(i => i.ProductCode))
+                                    {
+                                        <tr>
+                                            <td class="left">@item.ProductCode</td>
+                                            <td class="left">@item.ProductGroup</td>
+                                            <td class="left">@item.ProductName</td>
+                                            <td class="left">@item.SupplierId</td>
+                                            <td class="left">@item.SupplierSKU</td>
+                                            <td class="right">@item.Quantity</td>
+                                            <td class="right">&pound; @(item.Price.ToString("#,##0.00"))</td>
+                                            <td class="right">@(item.SalePrice?.ToString("£ #,##0.00"))</td>
+                                            <td class="right">&pound; @((item.ActualPrice * item.Quantity).ToString("#,##0.00"))</td>
+                                        </tr>
+                                    }
+                                    @foreach (var discount in order.OrderDiscounts.OrEmptyIfNull())
+                                    {
+                                        <tr class="deliveryCharge">
+                                            <td class="right bgDark" colspan="8">@discount.Name</td>
+                                            <td class="right">- &pound;@discount.OrderTotalDeduction</td>
+                                        </tr>
+                                    }
+                                </table>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Customer has no recent orders yet.</p>
+        }
+    </div>
+
+    @await Html.PartialAsync("~/Views/Partial/_SkipDeliveryDatesPartial.cshtml")
+</div>
+<script>
+    $(function () {
+
+        $(".show-order").click(
+            function () {
+                var details = $(this).closest("tr").next(".order-details");
+                details.toggle();
+            }
+        );
+
+        $("a[id^=skiporder]").click(function (e) {
+            e.preventDefault();
+            var orderId = $(this).attr("data-order-id");
+            $('#OrderId').val(orderId);
+            $('#CustomerId').val('@customer.ShortId');
+            $('#RedirectTo').val('customer');
+            $("#skipDeliveryDatesDialog").show();
+        });
+    });
+
+
+</script>
+<script src="~/js/customer-setagent.js"></script>

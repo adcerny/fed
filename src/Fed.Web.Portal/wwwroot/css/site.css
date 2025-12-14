@@ -1,0 +1,1459 @@
+﻿/* ------------------------------- /
+/   Theme Variables
+/ ------------------------------- */
+
+:root {
+    /* ----- Colours ----- */
+    --col-prim-1: #ecca00;
+}
+
+/* ------------------------------------------ *
+ * Global
+ * ------------------------------------------ */
+
+body {
+    padding: 0;
+    margin: 0;
+    background: #222;
+    color: #999;
+    font-family: 'Roboto', sans-serif;
+    font-size: .95em;
+}
+
+#bodyContainer {
+    margin: 20px;
+}
+
+#fedLogo {
+    height: 150px;
+}
+
+header {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-end;
+}
+
+main, footer {
+    position: relative;
+    margin: 0 25px;
+}
+
+footer {
+    margin-top: 4em;
+    margin-bottom: 2em;
+    padding: 0;
+    font-size: .9em;
+    color: #444;
+    text-align: center;
+}
+
+nav {
+    margin: 0 0 1em 1em;
+    padding: 0;
+}
+
+    nav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    nav li {
+        display: inline-block;
+        margin-left: 1em;
+    }
+
+    nav a {
+        color: #f1f1e788;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+        nav a:hover {
+            color: #ffd800;
+        }
+
+a {
+    text-decoration: none;
+    color: #ffd800;
+    cursor: pointer;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    a.not-set {
+        color: #999;
+        text-decoration: underline;
+    }
+
+h1 {
+    font-size: 4em;
+    color: #f1f1e7;
+}
+
+h2 {
+    font-size: 2em;
+    color: #aaa;
+}
+
+h3 {
+    font-size: 1.6em;
+    color: #777;
+}
+
+table {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+table.small {
+    width:auto;
+}
+
+th {
+    background: #ffd80022;
+    color: #aaa;
+}
+
+th, td {
+    margin: 0;
+    padding: .5em;
+}
+
+tbody tr:nth-child(2n+1) td {
+    background: #292929;
+}
+
+button {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #ecca00;
+    background: #222;
+    border: 1.5px inset #ecca00;
+    border-style: solid;
+    border-radius: 6px;
+    padding: .5em 1em;
+    cursor: pointer;
+}
+
+    button:hover {
+        background: #333;
+    }
+
+input[type=date] {
+    display: inline-block;
+    margin: 0;
+    padding: .5em;
+    border: 2px solid #555;
+    background: transparent;
+    border-radius: 4px;
+    color: #f1f1e7;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+label {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+input[type=text],
+input[type=number],
+select {
+    background: #2f2f2f;
+    border: 2px solid #555;
+    border-radius: 4px;
+    padding: .4em;
+    font-size: 1.1em;
+    min-width: 300px;
+    color: #f1f1e7;
+    font-family: 'Roboto', sans-serif;
+}
+
+    select optgroup {
+        background: #121212;
+        color: #fff;
+        font-style: normal;
+        font-weight: bold;
+        font-family: 'Roboto', sans-serif;
+        padding: .5em;
+    }
+
+    select option {
+        color: #eee;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    select[disabled] {
+        opacity: .5;
+        color: #888;
+    }
+
+main ul {
+    margin: 1em 0 3em 0;
+}
+
+    main ul li {
+        margin: 1em 0;
+    }
+
+        main ul li a {
+            font-size: 1.2em;
+        }
+
+/* ------------------------------------------ *
+ * Useful Classes
+ * ------------------------------------------ */
+
+/* visibility */
+.hidden {
+    display: none !important;
+}
+
+.hidden-accessibility {
+    position: absolute;
+    top: 0;
+    left: 999999px;
+}
+
+/* position */
+.pos-rel {
+    position: relative;
+}
+
+/* icons */
+.icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+}
+
+.icon svg { max-width: 100%; height: auto; }
+
+/* floating */
+.cf::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.float-left {
+    float: left;
+}
+
+/* bg position */
+.bgDark {
+    background: #222 !important;
+}
+
+/* grid */
+.fullWidth {
+    width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box;
+}
+
+.twoThridsWidth {
+    width: 66% !important;
+    box-sizing: border-box;
+}
+
+.formRow {
+    margin: 1em 0;
+}
+
+.alignIntoOneLine {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.singleRowForm {
+    display: block;
+    margin: 2em 0 3em 0;
+}
+
+    .singleRowForm label {
+        margin-right: .5em;
+        margin-left: 1em;
+    }
+
+        .singleRowForm label:first-child {
+            margin-right: .5em;
+            margin-left: 0;
+        }
+
+    .singleRowForm .linkButton,
+    .singleRowForm button {
+        margin-left: .5em;
+    }
+
+    .singleRowForm input[type=text] {
+        font-size: 1.2em;
+        padding: .45em;
+    }
+
+    .singleRowForm button {
+        margin-left: .5em;
+    }
+
+.linkButton {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #ecca00;
+    background: #222;
+    border: 1.5px inset #ecca00;
+    border-style: solid;
+    border-radius: 6px;
+    padding: .5em 1em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    bottom: 0;
+    top: 0;
+    text-align: center;
+}
+
+    .linkButton:disabled {
+        border: 1.5px solid #A5A5A5;
+        color: #A5A5A5;
+        cursor: default;
+    }
+
+    .linkButton:hover {
+        background: #333;
+        text-decoration: none;
+    }
+
+.success {
+    display: block;
+    border: 2px solid #57ba8c;
+    padding: 1em;
+    border-radius: 6px;
+    background: #384942;
+    color: #54e5a2;
+}
+
+.error,
+.validation-summary-errors {
+    display: block;
+    margin: 0;
+    border: 2px solid #f26c6a;
+    background: #301818;
+    color: #f26c6a;
+    padding: 2em 2em;
+    border-radius: 6px;
+}
+
+    .validation-summary-errors ul {
+        margin-bottom: 0;
+    }
+
+    .validation-summary-errors li {
+        margin: .5em 0;
+    }
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.centre {
+    text-align: center;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(255,255,255,0.1);
+}
+
+.modalContent {
+    background-color: #111;
+    margin: 20% auto;
+    padding: 0 20px;
+    border: 4px solid #444;
+    width: 50%;
+    border-radius: 10px;
+    max-width: 400px;
+}
+
+.radioButtonListHorizontal {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+    .radioButtonListHorizontal label {
+        font-size: 1.1em !important;
+    }
+
+.quaterWidth {
+    max-width: 25%;
+    box-sizing: border-box;
+}
+
+.halfWidth {
+    max-width: 50%;
+    box-sizing: border-box;
+}
+
+.infoBox {
+    border: 2px solid #ecca00;
+    padding: .7em;
+    border-radius: 3px;
+    background: #ecca0011;
+    color: #ecca00;
+    line-height: 1.8em;
+}
+
+/* ------------------------------------------ *
+ * Dashboard
+ * ------------------------------------------ */
+
+#urlsDash {
+    grid-column: 2;
+    grid-row: 1 / 3;
+}
+
+#dashboard, #homeDashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+}
+
+.chart {
+    height: 400px
+}
+
+@media only screen and (max-width: 1024px) {
+    #dashboard, #homeDashboard {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+    }
+}
+
+/* ------------------------------------------ *
+ * Reports
+ * ------------------------------------------ */
+
+.report .dynamicTable {
+    margin-top: 1em;
+}
+
+.reportForm {
+    margin: 3em 0;
+}
+
+.reportForm .formRow label {
+    display: inline-block;
+    width: 130px;
+}
+
+.reportForm .formRow input[type=text] {
+    width: 400px;
+}
+
+.reportForm button {
+    width: 550px;
+}
+
+/* ------------------------------------------ *
+ * Customer Forms
+ * ------------------------------------------ */
+.orderItemDetails {
+    display: none;
+    position: absolute;
+    max-width: 450px;
+    background: #222;
+    border: 1px solid #ecca00;
+    border-radius: 4px;
+}
+
+.customersDashBox .singleRowForm label {
+    width: 170px;
+}
+
+.customersDashBox .singleRowForm input {
+    width: 350px;
+}
+
+.customersDashBox .singleRowForm button {
+    width: 200px;
+}
+
+#portalForm {
+    max-width: 600px;
+}
+
+    #portalForm label {
+        color: #aaa;
+        font-size: 1em;
+        margin-bottom: .5em;
+    }
+
+    #portalForm input[type=text],
+    #portalForm input[type=number],
+    #portalForm select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #portalForm button,
+    #portalForm .linkButton {
+        margin: 1em 0 !important;
+        width: 49%;
+        box-sizing: border-box;
+    }
+
+        #portalForm .linkButton:nth-child(1n+1) {
+            margin-left: 5px !important;
+        }
+        #customerAgents{
+            clear:both;
+            float:left
+        }
+
+.discountList .name {
+    min-width: 150px;
+}
+
+#cardMigration {
+    clear: both;
+    float: left
+}
+    #cardMigration label, #cardMigration input{
+        display:block;
+        clear:both;
+        margin-top:0.5em;
+        margin-bottom : 0.5em;
+    }
+
+     .braintree-hosted-field {
+        height: 36px;
+        max-width: 300px;
+    }
+
+.braintree-input {
+    font-size: 15px;
+    color: #ccc;
+}
+
+.braintree-hosted-fields-valid {
+    color: #ccc;
+}
+
+.braintree-hosted-fields-invalid input {
+    color: #cc0000 !important;
+}
+
+.field-error-message {
+    color: #cc0000;
+    margin-top: 5px;
+    display: none;
+}
+
+.invalid-field .braintree-hosted-field, #CreateCustomer .invalid-field input {
+    border: 2px solid #cc0000;
+}
+
+.invalid-field .field-error-message {
+    display: block;
+}
+
+#payment-success, #payment-failure, #payment-error-message {
+    display: none;
+}
+
+    #payment-failure h3, #payment-error-message {
+        color: #cc0000;
+    }
+
+.braintree-hosted-field {
+    display: block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    background: #333;
+    border: 2px solid #666;
+    padding: .5em;
+    color: #ccc;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+#progressRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0px 0px;
+    border-radius: 10px;
+}
+
+    #progressRow button,
+    #progressRow .linkButton {
+        display: block;
+    }
+
+    #progressRow button {
+        margin-left: 20px !important;
+    }
+
+    #progressRow .linkButton {
+        margin-left: 0px !important;
+    }
+
+/* ------------------------------------------ *
+ * Customer Details
+ * ------------------------------------------ */
+
+.activeCustomer {
+    color: greenyellow;
+    font-style: normal;
+    font-weight: bold;
+    margin-left: .5em;
+}
+
+.prospectCustomer {
+    color: lightskyblue;
+    font-style: normal;
+    font-weight: bold;
+    margin-left: .5em;
+}
+
+.lapsedCustomer {
+    color: indianred;
+    font-style: normal;
+    font-weight: bold;
+    margin-left: .5em;
+}
+
+.select-agent select, .select-attribute select {
+    min-width: auto;
+}
+
+#Customers-Table td,
+#MarketingInfo td {
+    position: relative;
+}
+
+.select-agent, #Customers-Table .select-attribute {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: -7px;
+    padding: 7px;
+    background-color: #3c3b3b;
+    border-radius: 4px;
+    box-shadow: -7px 7px 7px 0px rgba(0,0,0,0.75);
+}
+
+#CustomerView h1{
+    margin-bottom:0.3em;
+}
+
+#CustomerView #topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px dashed #444;
+}
+
+    #CustomerView #topBar #statusBar {
+        display: block;
+    }
+
+    #CustomerView #statusBar span {
+        display: inline-block;
+        font-size: 1.7em;
+        padding: .5em;
+    }
+
+        #CustomerView #topBar #statusBar span strong {
+            color: #fff;
+            font-weight: bold;
+            margin-left: .5em;
+        }
+
+    #CustomerView #topBar nav {
+        display: block;
+        margin-bottom: 0;
+        padding: 0;
+        margin-left: 0;
+    }
+
+    #CustomerView #topBar nav span,
+    #CustomerView #topBar nav a {
+        display: inline-block;
+        padding: 15px 30px;
+        border-top: 2px solid #888;
+        border-left: 2px solid #888;
+        border-right: 2px solid #888;
+        text-transform: none;
+        font-size: 1.2em;
+        font-weight: normal;
+        border-radius: 4px 4px 0 0;
+        margin: 0 2px;
+    }
+
+    #CustomerView #topBar nav span {
+        background: #222;
+        color: #ecca00;
+        font-weight: bold;
+        border-top: 2px solid #ecca00;
+        border-left: 2px solid #ecca00;
+        border-right: 2px solid #ecca00;
+    }
+
+    #CustomerView #topBar nav a:hover {
+        color: #ecca00;
+        text-decoration: none;
+    }
+
+    #CustomerView #topBar nav span:first-child,
+    #CustomerView #topBar nav a:first-child {
+        margin-left: 0;
+    }
+
+#AccountInfo {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+}
+
+    #AccountInfo > div {
+        margin-left: 20px;
+    }
+
+        #AccountInfo > div:first-child {
+            margin-left: 0;
+        }
+
+
+    #AccountInfo th {
+        text-align: right;
+
+    }
+#CompanyInfo{
+    width:30%;
+}
+
+#PrimaryContactInfo{
+    width: 35%;
+}
+
+#DeliveryAddressInfo{
+    width:25%;
+}
+
+#MarketingInfo{
+    margin-left:0px !important;
+    width: 30%;
+}
+
+#DiscountInfo{
+    width:35%;
+}
+
+#LogonInfo{
+    width:25%;
+}
+/* ------------------------------------------ *
+ * Table Sort
+ * ------------------------------------------ */
+.tablesorter-metro-dark .header,
+.tablesorter-metro-dark .tablesorter-header {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAGFBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u5jNePWAAAACHRSTlMAMxIHKwEgMWD59H4AAABSSURBVAjXY2BgYFJgAAHzYhDJ6igSAKTYBAUTgJSioKAQAwNzoaCguAFDiCAQuDIkgigxBgiA8cJAVCpQt6AgSL+JoKAzA0gjUBsQqBcBCYhFAAE/CV4zeSzxAAAAAElFTkSuQmCC);
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    white-space: normal;
+}
+
+.tablesorter-metro-dark .tablesorter-header-inner {
+    padding: 0 26px 0 4px;
+}
+
+.tablesorter-metro-dark thead .headerSortUp,
+.tablesorter-metro-dark thead .tablesorter-headerSortUp,
+.tablesorter-metro-dark thead .tablesorter-headerAsc {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u5meJAOAAAACnRSTlMAMwsqXt+gIBUGxGoDMAAAAFlJREFUCNctzC0SQAAUReEzGNQ3AlHRiSRZFCVZYgeswRL8hLdK7834wj3tAlGP6y7fYHpKS6w6WwbVG0I1NZVnZPG8/DYxOYlnhUYkA06R1s9ESsxR4NIdPhkPFDFYuEnMAAAAAElFTkSuQmCC);
+}
+
+.tablesorter-metro-dark thead .headerSortDown,
+.tablesorter-metro-dark thead .tablesorter-headerSortDown,
+.tablesorter-metro-dark thead .tablesorter-headerDesc {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAALVBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7i0NViAAAADnRSTlMAMiweCQITTvDctZZqaTlM310AAABcSURBVAjXY2BgYEtgAAFHERDJqigUAKSYBQUNgFSioKAYAwOLIBA4MASBKFUGQxAlzAAF+94BwWuGKBC1lIFl3rt3Lx0YGCzevWsGSjK9e6cAUlT3HKyW9wADAwDRrBiDy6bKzwAAAABJRU5ErkJggg==);
+}
+
+.tablesorter-metro-dark thead .sorter-false {
+    background-image: none;
+    cursor: default;
+    padding: 4px;
+}
+
+th:focus {
+    outline: 0;
+}
+
+/* ------------------------------------------ *
+ * Custom Table Sort
+ * ------------------------------------------ */
+
+.arrow {
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    margin-left: 20px;
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    position: relative;
+    top: 2px;
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    position: relative;
+    top: -3px;
+}
+
+/* ------------------------------------------ *
+ * Recurring Orders
+ * ------------------------------------------ */
+
+#RecurringOrders tbody tr:hover td {
+    background: #444;
+    color: #ecca00;
+    cursor: pointer;
+}
+
+#recurringOderStats table {
+    max-width: 500px;
+}
+
+    #recurringOderStats table th {
+        width: 200px;
+        text-align: left;
+    }
+
+#SingleRecurringOrder #columnContainer table {
+    max-width: 800px;
+}
+
+    #SingleRecurringOrder #columnContainer table th {
+        width: 250px;
+        text-align: left;
+    }
+
+/* ------------------------------------------ *
+ * Deliveries
+ * ------------------------------------------ */
+
+#bagCount {
+    display: inline-block;
+    min-width: 40px;
+    width: 40px;
+    margin-right: .5em;
+    padding: .6em;
+    text-align: center;
+}
+
+#pickOrder {
+    width: 425px;
+    box-sizing: border-box;
+}
+
+    #pickOrder button[type=submit] {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+.sortByLabelWidth {
+    margin: 0 !important;
+    display: inline-block;
+    width: 120px;
+}
+
+.card {
+    margin-top: 2em;
+    background: rgb(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: .5em;
+}
+
+#DeliveryHeading {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#DeliveryHeading h2 {
+    display: inline-block;
+    font-size: 3em;
+}
+
+.packed {
+    color: greenyellow;
+    font-style: normal;
+    font-weight: bold;
+    margin-left: .5em;
+}
+
+.partiallyPacked {
+    color: lightskyblue;
+    font-style: normal;
+    font-weight: bold;
+    margin-left: .5em;
+}
+
+.notPacked {
+    color: indianred;
+    font-style: normal;
+    font-weight: bold;
+    margin-left: .5em;
+}
+
+#Deliveries {
+    min-width: 1310px;
+}
+
+    #Deliveries > article > hgroup {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-items: center;
+        color: #ecca00;
+        margin: 0;
+        padding: 1.5em .5em;
+        border-bottom: 4px solid #2a2a2a;
+        cursor: pointer;
+    }
+
+    #Deliveries > article.first-order > hgroup {
+        color: #04d603;
+    }
+
+    #Deliveries > article > hgroup:hover {
+        background: #282828;
+    }
+
+    #Deliveries > article > hgroup > h1 {
+        margin: 0;
+        padding: 0;
+        font-size: 1em;
+    }
+
+        #Deliveries > article > hgroup > h1 > span {
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            border-left: 1px solid #a57cbf;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+            #Deliveries > article > hgroup > h1 > span:first-child {
+                border-left: none;
+            }
+
+    #Deliveries > article.first-order > hgroup > h1 > .new {
+        background-image: url(/img/new-green.svg);
+        height: 35px;
+        width: 35px;
+        background-size: 35px;
+        border: none;
+        position: relative;
+        top: 12px;
+        right: 25px;
+        margin-top: -25px;
+    }
+
+    #Deliveries table > caption {
+        margin: 0;
+        padding: .5em;
+        font-weight: 700;
+        font-size: 1.2em;
+        text-align: left;
+        line-height: 2.5em;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        word-spacing: 3px;
+        color: #777;
+    }
+
+    #Deliveries #sortableHeaders {
+        padding: 1.5em .5em;
+    }
+
+        #Deliveries #sortableHeaders > span {
+            display: inline-block;
+        }
+
+            #Deliveries #sortableHeaders > span > a {
+                display: inline-block;
+                width: 100%;
+                border-right: 1px solid #222;
+                text-align: center;
+                padding: .5em;
+                background: #2f2f2f;
+                box-sizing: border-box;
+                color: #a57cbf;
+                text-decoration: none;
+                font-size: .9em;
+                font-weight: 500;
+            }
+
+    #Deliveries .orderInfo {
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+    }
+
+        #Deliveries .orderInfo > table {
+            padding: .5em;
+        }
+
+            #Deliveries .orderInfo > table > tbody > tr > th {
+                width: 150px;
+            }
+
+    #Deliveries .dayCol {
+        display: none !important;
+        width: 0px !important;
+    }
+
+    #Deliveries .dateCol {
+        display: none !important;
+        width: 0px !important;
+    }
+
+    #Deliveries .deadlineCol {
+        width: 120px;
+        border-left: none !important;
+    }
+
+    #Deliveries .orderIdCol {
+        width: 130px;
+    }
+
+    #Deliveries .companyNameCol {
+        min-width: 400px;
+    }
+
+    #Deliveries .contactNameCol {
+        display: none !important;
+        width: 0px !important;
+        /*min-width: 300px;*/
+    }
+
+    #Deliveries .postcodeCol {
+        width: 140px;
+    }
+
+    #Deliveries .itemsCountCol {
+        width: 130px;
+    }
+
+    #Deliveries .firstDeliveryCol {
+        width: 130px;
+    }
+
+    #Deliveries .packingStatusCol {
+        width: 150px;
+    }
+
+    #Deliveries .printLabelButton {
+        margin: 1em 0;
+    }
+    #Deliveries .firstDeliveryCol strong {
+        display: inline-block;
+        color: lightgreen;
+        font-weight: 500;
+        border: 2px solid lightgreen;
+        border-radius: 90px;
+        padding: 5px 10px;
+    }
+
+#deliveryShortages,
+#deliveryAdditions,
+#deliverySkipDates {
+    max-width: 70%;
+}
+
+.totalRetailPrice td:last-child {
+    background: #024554;
+}
+
+.deliveryCharge td:last-child {
+    background: #544e02 !important;
+}
+
+.totalPrice td:last-child {
+    background: #02542e;
+}
+
+.shortBtn {
+    border-color: #aaa;
+    color: #aaa;
+    font-size: .8em;
+    margin: 0;
+}
+
+    .shortBtn:hover {
+        border-color: #ecca00;
+        color: #ecca00;
+    }
+
+.addSubBtn {
+    border-color: #57ba8c;
+    color: #57ba8c;
+    font-size: .8em;
+    margin: 0;
+    padding: .5em 1.4em;
+}
+
+    .addSubBtn:hover {
+        border-color: greenyellow;
+        color: greenyellow;
+    }
+
+#shortageForm label,
+#substituteForm label {
+    display: block;
+    margin-bottom: .5em;
+}
+
+#shortageForm input,
+#shortageForm select,
+#substituteForm select,
+#substituteForm input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+#shortageForm h2,
+#substituteForm h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+#shortDesiredQuantity:disabled {
+    border-color: #333;
+    background: #111;
+    color: #777;
+}
+
+#subBtn {
+    margin-top: 1em;
+}
+
+#saveShortageBtn,
+#saveSubBtn {
+    margin: 1em 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#cancelShortageBtn,
+#cancelSubBtn {
+    border-color: #aaa;
+    color: #aaa;
+    margin: 0 0 .5em 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.deliveryItemQuantity del {
+    font-size: 1.2em;
+    color: #666;
+    font-style: italic !important;
+    font-weight: bold !important;
+}
+
+.deliveryItemQuantity em {
+    color: #f26c6a;
+    margin-left: 10px;
+    font-style: normal;
+}
+
+#deliveryShortages button {
+    border-color: #aaa;
+    color: #aaa;
+    font-size: .8em;
+    margin: 0;
+}
+
+    #deliveryShortages button:hover {
+        border-color: #ecca00;
+        color: #ecca00;
+    }
+
+#deliveryAdditions button {
+    border-color: #aaa;
+    color: #aaa;
+    font-size: .8em;
+    margin: 0;
+}
+
+    #deliveryAdditions button:hover {
+        border-color: #ecca00;
+        color: #ecca00;
+    }
+
+#deliveryShortages tr > th {
+    background: #762626;
+}
+
+#deliveryShortages > caption {
+    color: #f26c6a !important;
+}
+
+#deliveryAdditions tr > th {
+    background: #384942;
+}
+
+#deliveryAdditions > caption {
+    color: #57ba8c !important;
+}
+
+#packagingInfo h3 {
+    margin-top: 1.5em;
+    font-size: 2.5em;
+}
+
+#packagingInfo form {
+    display: inline-block;
+}
+
+.partiallyPackedBtn {
+    border-color: lightskyblue;
+    color: lightskyblue;
+}
+
+.fullyPackedBtn {
+    border-color: greenyellow;
+    color: greenyellow;
+}
+
+.notPackedBtn {
+    border-color: indianred;
+    color: indianred;
+}
+
+@media (min-width: 1700px) {
+    #Deliveries .dayCol {
+        display: inline-block;
+        width: 90px;
+    }
+
+    #Deliveries .dateCol {
+        display: inline-block;
+        width: 120px;
+    }
+
+    #Deliveries .deadlineCol {
+        border-left: 1px solid #a57cbf;
+    }
+}
+
+/* ------------------------------- /
+/   Checkbox & Radio Buttons
+/ ------------------------------- */
+
+/* Customize the label (the container) */
+.checkbox-container > label,
+.radiobutton-container > label {
+    display: flex !important;
+    flex-flow: row wrap;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+    /* Hide the browser's default checkbox */
+    .checkbox-container > label > input,
+    .radiobutton-container > label > input {
+        display: none;
+    }
+
+    /* Style a custom checkbox and radiobutton */
+    .radiobutton-container > label > svg {
+        width: 20px;
+        height: 20px;
+        margin-right: .5em;
+        fill: transparent;
+        stroke: #555555;
+    }
+
+    .checkbox-container > label > svg {
+        width: 20px;
+        height: 20px;
+        margin-right: .5em;
+        fill: transparent;
+        stroke: #555555;
+    }
+
+        /* Hide the checkmark when not checked */
+        .checkbox-container > label > svg > polyline {
+            stroke: transparent;
+        }
+
+    /* Show the checkmark when checked */
+    .checkbox-container > label > input:checked + svg > rect {
+        fill: var(--col-prim-1);
+        stroke-width: 0;
+    }
+
+    .checkbox-container > label > input:checked + svg > polyline {
+        stroke: #333;
+        fill: var(--col-prim-1);
+        -webkit-animation: checkboxChecked 0.5s ease forwards;
+        animation: checkboxChecked 0.5s ease forwards;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+    }
+
+    .checkbox-container > label > input:disabled + svg {
+        opacity: .2;
+    }
+
+    .radiobutton-container > label > input:checked + svg > circle {
+        fill: var(--col-prim-1);
+        stroke-width: 0;
+    }
+
+        .radiobutton-container > label > input:checked + svg > circle + circle {
+            fill: #333333;
+            -webkit-animation: radioChecked 0.3s ease forwards;
+            animation: radioChecked 0.3s ease forwards;
+            r: 0;
+        }
+
+    .radiobutton-container > label > span,
+    .checkbox-container > label > span {
+        color: #fff;
+    }
+
+/* Check animation */
+@-webkit-keyframes checkboxChecked {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes checkboxChecked {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@-webkit-keyframes radioChecked {
+    to {
+        r: 6;
+    }
+}
+
+@keyframes radioChecked {
+    to {
+        r: 6;
+    }
+}
+
+/* On mouse-over style the checkbox and radiobutton */
+.checkbox-container > label:hover input + svg {
+    stroke: var(--col-prim-1);
+}
+
+.radiobutton-container > label:hover input + svg {
+    stroke: var(--col-prim-1);
+}
+
+.order-details {
+    display: none;
+}
+
+.show-order {
+    cursor: pointer;
+}
+
+.order-details .productsTable th {
+    background: #284a34;
+}
+
+.add-to-fresh-sales {
+    text-align: center;
+}
+
+.add-to-fresh-sales img {
+    width: 35px;
+}
+
+
+.add-to-fresh-sales img.added {
+    display:none;
+}
+
+.add-to-fresh-sales.added img.added {
+    display:inline;
+}
+
+.add-to-fresh-sales.added img.add {
+    display: none;
+}
+
+
+.add-to-fresh-sales img.add {
+    cursor:pointer;
+}

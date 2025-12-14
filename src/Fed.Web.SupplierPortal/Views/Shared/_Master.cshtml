@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="refresh" content="300" />
+
+    <title>Fed by Abel &amp; Cole</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/site.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="bodyContainer">
+        <header>
+            <a href="~/"><img id="fedLogo" src="~/img/fed-logo.png" alt="Fed by Abel & Cole" /></a>
+        </header>
+        <main>
+            @RenderBody()
+        </main>
+        <footer>
+            Copyright @DateTime.Now.ToString("yyyy") - Fed by Abel &amp; Cole
+        </footer>
+    </div>
+</body>
+</html>

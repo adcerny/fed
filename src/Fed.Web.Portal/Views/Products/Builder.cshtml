@@ -1,0 +1,44 @@
+﻿@model Fed.Web.Portal.ViewModels.ProductBuilderViewModel
+@using Fed.Web.Portal.Components
+@{
+    Layout = "_Master";
+}
+
+
+<h2>Product Builder</h2>
+
+@*<div class="formRow">
+        <label for="ContactFirstName">Select Primary Product</label>
+        <input type="text" name="product" id="autocomplete" />
+        <button disabled id="add-primary-product">Select</button>
+    </div>*@
+
+<component type="typeof(ProductBuilder)" render-mode="ServerPrerendered" param-products="Model.Products"/>
+<component type="typeof(HelloWorld)" render-mode="ServerPrerendered" />
+
+@section HeaderScripts {
+    <script src="~/js/jquery.autocomplete.min.js"></script>
+    <script>
+        var products = @Html.Raw(Json.Serialize(Model.Products.Select(p => new { value = p.ProductName, data = p.Id })));
+    </script>
+    <script src="~/_framework/blazor.server.js"></script>
+}
+@section FooterScripts {
+    <script>
+        $('#autocomplete').autocomplete({
+            lookup: products,
+            onSelect: function (suggestion) {
+                $("#autocomplete").data("product-product-id", suggestion.data);
+                $("#add-primary-product").prop("disabled", false);
+            },
+            minChars: 3,
+            lookupLimit: 20,
+            triggerSelectOnValidInput: false
+        });
+    </script>
+    <script src="~/js/product-builder.js"></script>
+    
+}
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/product-builder.css">
+}

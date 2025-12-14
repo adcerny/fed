@@ -1,0 +1,321 @@
+﻿@model Fed.Web.Portal.Models.Customers.CreateCustomerModel
+@using Fed.Web.Portal.TagHelpers
+@addTagHelper *, Fed.Web.Portal
+
+@{
+    Layout = "_Master";
+}
+<div style="max-width: 800px">
+    <h1>Create New Customer</h1>
+    @if (Model.MerchelloCustomerCreated)
+    {
+        @await Html.PartialAsync("/Views/Partial/_MerchelloCustomerPartial.cshtml", Model)
+    }
+</div>
+<div id="portalForm">
+    
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary("Please resolve the following errors before you can continue:")
+    }
+
+
+    <form id="billingForm" action="/customers/create/finish" method="post">
+        <div>
+            <input type="hidden" name="BraintreeClientToken" value="@Model.BraintreeClientToken" />
+            <input type="hidden" name="CustomerId" value="@Model.CustomerId" />
+            <input type="hidden" name="AccountTypeId" value="@Model.AccountTypeId" />
+            <input type="hidden" name="CompanyName" value="@Model.CompanyName" />
+            <input type="hidden" name="OfficeSizeDescription" value="@Model.OfficeSize" />
+            <input type="hidden" name="Website" value="@Model.Website" />
+            <input type="hidden" name="Notes" value="@Model.Notes" />
+            <input type="hidden" name="ContactFirstName" value="@Model.ContactFirstName" />
+            <input type="hidden" name="ContactLastName" value="@Model.ContactLastName" />
+            <input type="hidden" name="ContactEmail" value="@Model.ContactEmail" />
+            <input type="hidden" name="PhoneNumber" value="@Model.PhoneNumber" />
+            <input type="hidden" name="Source" value="@Model.Source" />
+            <input type="hidden" name="MarketingConsent" value="@Model.MarketingConsent.ToString()" />
+
+            <input type="hidden" name="DeliveryPostCode" value="@Model.DeliveryPostCode" />
+            <input type="hidden" name="DeliveryAddressLine1" value="@Model.DeliveryAddressLine1" />
+            <input type="hidden" name="DeliveryAddressLine2" value="@Model.DeliveryAddressLine2" />
+            <input type="hidden" name="DeliveryTown" value="@Model.DeliveryTown" />
+            <input type="hidden" name="DeliveryInstructions" value="@Model.DeliveryInstructions" />
+            <input type="hidden" name="DeliveryPhone" value="@Model.DeliveryPhone" />
+        </div>
+
+        <div>
+            <h2>Payment Type</h2>
+
+            <div class="formRow">
+                <label for="PaymentMethod">Payment Method</label>
+                <select id="PaymentMethod" name="PaymentMethod">
+                    @if (Model.PaymentMethod == 1)
+                    {
+                        <option value="1" selected>Card</option>
+                    }
+                    else
+                    {
+                        <option value="1">Card</option>
+                    }
+
+                    @if (Model.PaymentMethod == 2)
+                    {
+                        <option value="2" selected>Invoice</option>
+                    }
+                    else
+                    {
+                        <option value="2">Invoice</option>
+                    }
+
+                    @if (Model.PaymentMethod == 3)
+                    {
+                        <option value="3" selected>DirectDebit</option>
+                    }
+                    else
+                    {
+                        <option value="3">DirectDebit</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div id="CardDetailsForm">
+            <h2>Card Details</h2>
+            <div class="formRow">
+                <label for="card-number">Card Holder Name</label>
+                <input type="text" placeholder="Jo Bloggs" id="cardholderName" name="cardholderName" class="braintree-hosted-field" />
+                <div class="field-error-message">Please enter a valid card holder name</div>
+            </div>
+            <div class="formRow">
+                <label for="card-number">Card Number</label>
+                <div id="card-number" class="braintree-hosted-field"></div>
+                <div class="field-error-message">Please enter a valid card number</div>
+            </div>
+            <div class="formRow">
+                <label for="expiration-date">Expiration Date</label>
+                <div id="expiration-date" class="braintree-hosted-field"></div>
+                <div class="field-error-message">Please enter a valid expiration ate</div>
+            </div>
+            <div class="formRow">
+                <label for="cvv">CVV</label>
+                <div id="cvv" class="braintree-hosted-field"></div>
+                <div class="field-error-message">Please enter a valid CVV</div>
+            </div>
+            <input type="hidden" id="BraintreeNonce" name="BraintreeNonce" />
+        </div>
+
+        <div>
+            <h2>Billing Address</h2>
+
+            <button id="CopyDeliveryAddressBtn" type="button">Copy from Delivery Address</button>
+
+            <div class="formRow">
+                <label for="BillingPostCode">Post Code</label>
+                <input type="text" id="BillingPostCode" name="BillingPostCode" value="@Model.BillingPostCode" />
+            </div>
+            <div class="formRow">
+                <label for="BillingAddressLine1">Address Line 1</label>
+                <input type="text" id="BillingAddressLine1" name="BillingAddressLine1" value="@Model.BillingAddressLine1" />
+            </div>
+            <div class="formRow">
+                <label for="BillingAddressLine2">Address Line 2</label>
+                <input type="text" id="BillingAddressLine2" name="BillingAddressLine2" value="@Model.BillingAddressLine2" />
+            </div>
+            <div class="formRow">
+                <label for="BillingTown">Town</label>
+                <input type="text" id="BillingTown" name="BillingTown" value="@Model.BillingTown" />
+            </div>
+        </div>
+
+        <div>
+            <h2>Billing Email</h2>
+            <div class="formRow">
+                <label for="BillingEmail">Billing Email Address</label>
+                <input type="text" id="BillingEmail" name="BillingEmail" value="@Model.BillingEmail" />
+            </div>
+        </div>
+
+        <div>
+            <h2>Invoice Reference</h2>
+            <div class="formRow">
+                <label for="InvoiceReference">Invoice Reference</label>
+                <input type="text" id="InvoiceReference" name="InvoiceReference" value="@Model.InvoiceReference" />
+            </div>
+        </div>
+
+        <div>
+            <h2>Account Settings</h2>
+
+            <div class="formRow">
+                <checkbox name="ExcludeFromInvoicing" is-checked="@Model.ExcludeFromInvoicing">Exclude from invoicing</checkbox>
+            </div>
+            <div class="formRow">
+                <checkbox name="IsDeliveryChargeExempt" is-checked="@Model.IsDeliveryChargeExempt">Exempt from delivery charge</checkbox>
+            </div>
+            <div class="formRow">
+                <checkbox name="SplitDeliveriesByOrder" is-checked="@Model.SplitDeliveriesByOrder">Split deliveries by order</checkbox>
+            </div>
+            <div class="formRow">
+                <checkbox name="IsFriend" is-checked="@Model.IsFriend">Mark as friend</checkbox>
+            </div>
+            <div class="formRow">
+                <checkbox name="IsTestAccount" is-checked="@Model.IsTestAccount">Mark as test account</checkbox>
+            </div>
+        </div>
+
+        <div>
+            <div class="formRow">
+                <checkbox name="SendPasswordResetEmail" is-checked="@Model.SendPasswordResetEmail">Send Password Reset Email</checkbox>
+            </div>
+            <div class="formRow">
+                <button type="submit">Finish</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Baintree JavaScript -->
+<script src="https://js.braintreegateway.com/web/3.44.0/js/client.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.44.0/js/hosted-fields.min.js"></script>
+<script>
+    $(function () {
+
+        function removeCardErrors() {
+            var cardDetailRows = $("#CardDetailsForm .formRow");
+
+            for (var row of cardDetailRows) {
+                row.classList.remove('invalid-field');
+            }
+        }
+
+        var paymentMethodField = $("#PaymentMethod");
+        var billingForm = document.querySelector("#billingForm");
+        var submit = document.querySelector("button[type=submit]");
+
+        $("#CopyDeliveryAddressBtn").click(function () {
+            $("#BillingEmail").val($("input[name=ContactEmail]").val());
+            $("#BillingAddressLine1").val($("input[name=DeliveryAddressLine1]").val());
+            $("#BillingAddressLine2").val($("input[name=DeliveryAddressLine2]").val());
+            $("#BillingPostCode").val($("input[name=DeliveryPostCode]").val());
+            $("#BillingTown").val($("input[name=DeliveryTown]").val());
+        });
+
+        paymentMethodField.change(function () {
+            if ($(this).val() != 1)
+                removeCardErrors();
+        });
+
+        $("#CardDetailsForm #cardholderName").click (function () {
+            removeCardErrors();
+        });
+
+        braintree.client.create(
+            { authorization: '@Model.BraintreeClientToken' },
+
+            function (clientErr, clientInstance) {
+                if (clientErr) {
+                    // Alert an error during initialisation.
+                    // (Only because this is an internal Portal page)
+                    console.error(clientErr);
+                    alert(clientErr);
+                    return;
+                }
+
+                braintree.hostedFields.create(
+                    {
+                        client: clientInstance,
+                        styles: {
+                            'input': 'braintree-input',
+                            'input.invalid': {
+                                'color': '#F95B5B',
+                                'font-weight': 'bold'
+                            },
+                            'input.valid': {
+                                'color': '#14b487',
+                                'font-weight': 'bold'
+                            },
+                        },
+                        fields: {
+                            number: {
+                                selector: '#card-number',
+                                placeholder: '4111 1111 1111 1111'
+                            },
+                            cvv: {
+                                selector: '#cvv',
+                                placeholder: '123'
+                            },
+                            expirationDate: {
+                                selector: '#expiration-date',
+                                placeholder: '10/2023'
+                            }
+                        }
+                    },
+                    function (createErr, hostedFieldsInstance) {
+                        if (createErr) {
+                            console.error(createErr);
+                            return;
+                        }
+
+                        // Remove the error message when a field is selected:
+                        hostedFieldsInstance.on('focus', function (event) {
+                            console.log(event.emittedBy);
+                            var field = event.fields[event.emittedBy];
+                            field.container.parentNode.classList.remove("invalid-field");
+                        });
+
+                        billingForm.addEventListener(
+                            'submit',
+                            function (event) {
+                                event.preventDefault();
+
+                                // Don't process the card details fields
+                                // if the payment method is Invoice or Direct Debit
+                                if (paymentMethodField.val() != "1") {
+                                    billingForm.submit();
+                                    return;
+                                }
+
+                                var cardholderName = billingForm.elements["cardholderName"];
+
+                                submit.disabled = true;
+                                submit.value = "Please wait...";
+
+                                hostedFieldsInstance.tokenize(
+                                    function (tokenizeErr, payload) {
+                                        submit.removeAttribute('disabled');
+                                        submit.value = "Finish";
+
+                                        if (tokenizeErr || !cardholderName.value) {
+                                            if (!cardholderName.value) {
+                                                cardholderName.parentNode.classList.add("invalid-field");
+                                                cardholderName.focus();
+                                            }
+                                            else if (tokenizeErr.details) {
+                                                for (var error in tokenizeErr.details.invalidFields) {
+                                                    var field = tokenizeErr.details.invalidFields[error];
+                                                    field.parentNode.classList.add("invalid-field");
+                                                    field.focus();
+                                                }
+                                            }
+                                            else {
+                                                $("#card-number").parent().addClass("invalid-field");
+                                                $("#expiration-date").parent().addClass("invalid-field");
+                                                $("#cvv").parent().addClass("invalid-field");
+                                                $("#cardholderName").focus();
+                                            }
+
+                                            return;
+                                        }
+
+                                        // Add the nonce to the form and submit
+                                        document.querySelector('#BraintreeNonce').value = payload.nonce;
+                                        billingForm.submit();
+                                    });
+
+                            },
+                            false);
+                    });
+        });
+    });
+</script>

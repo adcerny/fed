@@ -1,0 +1,1 @@
+﻿CREATE NONCLUSTERED INDEX [nci__Orders_DeliveryDate] ON [dbo].[Orders] ([DeliveryDate]) INCLUDE ([ContactId]) WITH (ONLINE = ON)

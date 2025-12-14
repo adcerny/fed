@@ -1,0 +1,175 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>1.4.0</Version>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="SQL\DeleteCustomerAgent.sql" />
+    <None Remove="SQL\DeleteDeliveryAddition.sql" />
+    <None Remove="SQL\DeleteProduct.sql" />
+    <None Remove="SQL\DeleteProductChildren.sql" />
+    <None Remove="SQL\DeliveriesByCustomerReport.sql" />
+    <None Remove="SQL\FindDeliveryAddition.sql" />
+    <None Remove="SQL\GetAllDiscounts.sql" />
+    <None Remove="SQL\GetDeliveryAdditionById.sql" />
+    <None Remove="SQL\GetDeliveryAdditions.sql" />
+    <None Remove="SQL\GetDeliveryAndTrasactionIdsForRefund.sql" />
+    <None Remove="SQL\GetDeliveryIdsForPayment.sql" />
+    <None Remove="SQL\GetDiscounts.sql" />
+    <None Remove="SQL\GetDiscountsApplicable.sql" />
+    <None Remove="SQL\GetDiscountsByCode.sql" />
+    <None Remove="SQL\GetDiscountsByCustomerId.sql" />
+    <None Remove="SQL\GetForecastedOrders.sql" />
+    <None Remove="SQL\GetInvoicesByContactId.sql" />
+    <None Remove="SQL\GetProductById.sql" />
+    <None Remove="SQL\GetProducts.sql" />
+    <None Remove="SQL\GetSkipDates.sql" />
+    <None Remove="SQL\GetTimeslotById.sql" />
+    <None Remove="SQL\GetTimeslotsByHub.sql" />
+    <None Remove="SQL\InsertCustomerAgent.sql" />
+    <None Remove="SQL\InsertCustomerDiscount.sql" />
+    <None Remove="SQL\InsertCustomerMarketingAttribute.sql" />
+    <None Remove="SQL\InsertDiscount.sql" />
+    <None Remove="SQL\InsertDiscountedProduct.sql" />
+    <None Remove="SQL\InsertDiscountEligibleProductCategory.sql" />
+    <None Remove="SQL\InsertDiscountQualifyingProduct.sql" />
+    <None Remove="SQL\InsertDiscountQualifyingProductCategory.sql" />
+    <None Remove="SQL\InsertHoliday.sql" />
+    <None Remove="SQL\InsertDiscountCode.sql" />
+    <None Remove="SQL\InsertInvoice.sql" />
+    <None Remove="SQL\InsertOrder.sql" />
+    <None Remove="SQL\InsertOrderDiscount.sql" />
+    <None Remove="SQL\InsertOrderProducts.sql" />
+    <None Remove="SQL\InsertProduct.sql" />
+    <None Remove="SQL\InsertProductCategory.sql" />
+    <None Remove="SQL\InsertOrderFromRecurringOrder.sql" />
+    <None Remove="SQL\InsertOrderProduct.sql" />
+    <None Remove="SQL\InsertOrderProductsFromREcurringOrder.sql" />
+    <None Remove="SQL\InsertProductChildren.sql" />
+    <None Remove="SQL\SupplierProductByDelivery.sql" />
+    <None Remove="SQL\UpdateCustomerMarketingAttribute.sql" />
+    <None Remove="SQL\UpdateDiscount.sql" />
+    <None Remove="SQL\UpdateOrderDiscount.sql" />
+    <None Remove="SQL\UpdateOrderProduct.sql" />
+    <None Remove="SQL\UpdateProduct.sql" />
+    <None Remove="SQL\UpdateProductCategory.sql" />
+    <None Remove="SQL\UpdateSupplier.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fed.Api.External\Fed.Api.External.csproj" />
+    <ProjectReference Include="..\Fed.Core.Services\Fed.Core.Services.csproj" />
+    <ProjectReference Include="..\Fed.Core\Fed.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SQL\AccountsCreatedReport.sql" />
+    <EmbeddedResource Include="SQL\DeleteCustomerAgent.sql" />
+    <EmbeddedResource Include="SQL\DeleteDeliveryAddition.sql" />
+    <EmbeddedResource Include="SQL\DeleteProduct.sql">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SQL\DeleteProductChildren.sql" />
+    <EmbeddedResource Include="SQL\FindDeliveryAddition.sql" />
+    <EmbeddedResource Include="SQL\GetProductById.sql" />
+    <EmbeddedResource Include="SQL\GetProducts.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryAdditionById.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryAdditions.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryAndTrasactionIdsForRefund.sql" />
+    <EmbeddedResource Include="SQL\GetAllDiscounts.sql" />
+    <EmbeddedResource Include="SQL\GetDiscountsApplicable.sql" />
+    <EmbeddedResource Include="SQL\GetDiscountsByCode.sql" />
+    <EmbeddedResource Include="SQL\GetDiscountsByCustomerId.sql" />
+    <EmbeddedResource Include="SQL\GetDiscounts.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryIdsForPayment.sql" />
+    <EmbeddedResource Include="SQL\GetForecastedOrders.sql" />
+    <EmbeddedResource Include="SQL\GetInvoicesByContactId.sql" />
+    <EmbeddedResource Include="SQL\GetSkipDates.sql" />
+    <EmbeddedResource Include="SQL\InsertProduct.sql" />
+    <EmbeddedResource Include="SQL\InsertProductChildren.sql" />
+    <EmbeddedResource Include="SQL\InsertDiscountEligibleProductCategory.sql" />
+    <EmbeddedResource Include="SQL\InsertDiscountQualifyingProduct.sql" />
+    <EmbeddedResource Include="SQL\InsertDiscountQualifyingProductCategory.sql" />
+    <EmbeddedResource Include="SQL\InsertProductCategory.sql" />
+    <EmbeddedResource Include="SQL\GetTimeslotById.sql" />
+    <EmbeddedResource Include="SQL\InsertCustomerMarketingAttribute.sql" />
+    <EmbeddedResource Include="SQL\InsertDiscountedProduct.sql" />
+    <EmbeddedResource Include="SQL\InsertDiscountEligibleProduct.sql" />
+    <EmbeddedResource Include="SQL\InsertHoliday.sql" />
+    <EmbeddedResource Include="SQL\InsertCustomerAgent.sql" />
+    <EmbeddedResource Include="SQL\InsertDiscountCode.sql" />
+    <EmbeddedResource Include="SQL\InsertInvoice.sql" />
+    <EmbeddedResource Include="SQL\InsertOrder.sql" />
+    <EmbeddedResource Include="SQL\UpdateOrderDiscount.sql" />
+    <EmbeddedResource Include="SQL\InsertOrderProduct.sql" />
+    <EmbeddedResource Include="SQL\InsertOrderProductsFromRecurringOrder.sql" />
+    <EmbeddedResource Include="SQL\InsertOrderFromRecurringOrder.sql" />
+    <EmbeddedResource Include="SQL\InsertOrderDiscount.sql" />
+    <EmbeddedResource Include="SQL\InsertCustomerDiscount.sql" />
+    <EmbeddedResource Include="SQL\InsertDiscount.sql" />
+    <EmbeddedResource Include="SQL\IsEmailAlreadyInUse.sql" />
+    <EmbeddedResource Include="SQL\GetFullCustomerInfoById.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryShortages.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryShortageReportByDate.sql" />
+    <EmbeddedResource Include="SQL\InsertDeliveryAddition.sql" />
+    <EmbeddedResource Include="SQL\SanityReport.sql" />
+    <EmbeddedResource Include="SQL\SalesSummary.sql" />
+    <EmbeddedResource Include="SQL\NewCustomerSummary.sql" />
+    <EmbeddedResource Include="SQL\DeleteDeliveries.sql" />
+    <EmbeddedResource Include="SQL\GetAllCustomersWithoutContacts.sql" />
+    <EmbeddedResource Include="SQL\GetCustomerByContactId.sql" />
+    <EmbeddedResource Include="SQL\GetAllCustomersWithContacts.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryShortage.sql" />
+    <EmbeddedResource Include="SQL\GetConfirmedOrderSummary.sql" />
+    <EmbeddedResource Include="SQL\GetInvoiceById.sql" />
+    <EmbeddedResource Include="SQL\GetSalesReportByCustomer.sql" />
+    <EmbeddedResource Include="SQL\GetSalesReportByProduct.sql" />
+    <EmbeddedResource Include="SQL\GetSalesReportFull.sql" />
+    <EmbeddedResource Include="SQL\GetPaymentRequests.sql" />
+    <EmbeddedResource Include="SQL\GetRecurringOrdersByIds.sql" />
+    <EmbeddedResource Include="SQL\GetRecurringOrders.sql" />
+    <EmbeddedResource Include="SQL\GetOrderById.sql" />
+    <EmbeddedResource Include="SQL\GetSupplierForecast.sql" />
+    <EmbeddedResource Include="SQL\GetSalesHistoryPerWeek.sql" />
+    <EmbeddedResource Include="SQL\GetSalesHistoryPerDay.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveryByShortId.sql" />
+    <EmbeddedResource Include="SQL\GetDelivery.sql" />
+    <EmbeddedResource Include="SQL\GetDeliveries.sql" />
+    <EmbeddedResource Include="SQL\GetSupplierForecastPerDay.sql" />
+    <EmbeddedResource Include="SQL\FindCustomersByProductCode.sql" />
+    <EmbeddedResource Include="SQL\FindDeliveryShortage.sql" />
+    <EmbeddedResource Include="SQL\DeleteDeliveryShortage.sql" />
+    <EmbeddedResource Include="SQL\GetInvoicesByDate.sql" />
+    <EmbeddedResource Include="SQL\GetCustomerById.sql" />
+    <EmbeddedResource Include="SQL\SetDeliveryPackingStatus.sql" />
+    <EmbeddedResource Include="SQL\SetDeliveryBagCount.sql" />
+    <EmbeddedResource Include="SQL\GetPaymentsByDate.sql" />
+    <EmbeddedResource Include="SQL\DeliveriesByCustomerReport.sql" />
+    <EmbeddedResource Include="SQL\UpdateProduct.sql" />
+    <EmbeddedResource Include="SQL\UpdateProductCategory.sql" />
+    <EmbeddedResource Include="SQL\SupplierProductByDelivery.sql" />
+    <EmbeddedResource Include="SQL\UpdateDiscount.sql" />
+    <EmbeddedResource Include="SQL\UpdateOrderProduct.sql" />
+    <EmbeddedResource Include="SQL\UpdateMarketingConsent.sql" />
+    <EmbeddedResource Include="SQL\UpdateCustomer.sql" />
+    <EmbeddedResource Include="SQL\InsertDeliveryOrder.sql" />
+    <EmbeddedResource Include="SQL\InsertCustomer.sql" />
+    <EmbeddedResource Include="SQL\InsertSupplier.sql" />
+    <EmbeddedResource Include="SQL\InsertDeliveryShortage.sql" />
+    <EmbeddedResource Include="SQL\InsertDelivery.sql" />
+    <EmbeddedResource Include="SQL\GetTimeslotsByHub.sql" />
+    <EmbeddedResource Include="SQL\GetRecentlyUpdatedOrders.sql" />
+    <EmbeddedResource Include="SQL\GetSupplierConfirmedOrdersPerDay.sql" />
+    <EmbeddedResource Include="SQL\GetCustomers.sql" />
+    <EmbeddedResource Include="SQL\GetOrdersPerDay.sql" />
+    <EmbeddedResource Include="SQL\GetProductQuantitiesPerDay.sql" />
+    <EmbeddedResource Include="SQL\UpdateCustomerMarketingAttribute.sql" />
+    <EmbeddedResource Include="SQL\UpdateSupplier.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+  </ItemGroup>
+</Project>

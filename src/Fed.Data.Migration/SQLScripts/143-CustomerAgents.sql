@@ -1,0 +1,17 @@
+﻿SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CustomerAgents](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Name] [nvarchar](250) NOT NULL,
+	[Email] [nvarchar](250) NOT NULL
+ CONSTRAINT [PK_CustomerAgents] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+

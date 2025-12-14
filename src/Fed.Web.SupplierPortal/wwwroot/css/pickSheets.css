@@ -1,0 +1,69 @@
+﻿@media all, print {
+    body {
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .a4sheet {
+        width: 21cm;
+        page-break-after: always;
+    }
+
+    table {
+        width: 100%;
+        font-size: .85em;
+        border-collapse: collapse;
+    }
+
+    caption {
+        padding: 0;
+        margin: 0;
+        font-size: 1.2em;
+        font-weight: 600;
+        background: #ccc;
+    }
+
+        caption span {
+            display: inline-block;
+            box-sizing: border-box;
+            width: 3cm;
+            padding: 15px;
+            position:relative;
+        }
+
+            caption span img {
+                width: 35px;
+                position: absolute;
+                right: 0px;
+                top: 8px;
+            }
+
+            caption span:nth-child(2) {
+                width: 11cm;
+            }
+
+    tr {
+        margin: 0;
+        padding: 0;
+    }
+
+    td, th {
+        margin: 0;
+        padding: .4em;
+        border: 1px solid #eee;
+    }
+
+    th {
+        padding: .8em .4em;
+        font-size: .9em;
+        text-align: left;
+    }
+
+    .groupDivide {
+        background: #eee;
+        height: 25px;
+    }
+}

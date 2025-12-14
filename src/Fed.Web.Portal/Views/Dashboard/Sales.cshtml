@@ -1,0 +1,426 @@
+﻿@model Fed.Web.Portal.ViewModels.SalesDashboardViewModel
+@{
+    Layout = "_Master";
+}
+
+<h1>Sales</h1>
+
+<div id="dashboard">
+    <div>
+        <h2>Total order value per week</h2>
+        <div class="chart">
+            <canvas id="TotalOrdersPerWeekChart"></canvas>
+        </div>
+    </div>
+    <div>
+        <h2>Last week's deliveries per weekday</h2>
+        <div class="chart">
+            <canvas id="LastWeeksDeliveriesChart"></canvas>
+        </div>
+    </div>
+    <div>
+        <h2>Total deliveries per weekday</h2>
+        <div class="chart">
+            <canvas id="DeliveriesChart"></canvas>
+        </div>
+    </div>
+    <div>
+        <h2>Total sales per day</h2>
+        <div class="chart">
+            <canvas id="OrderValueChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div>
+    <h2>Sales Reports</h2>
+    <ul>
+        <li><a href="~/reports/GetSalesReportByCustomer?CustomerId=D60625E0-248C-456B-9268-904A23B2EC80&fromDate=@DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")&toDate=@DateTime.Today.ToString("yyyy-MM-dd")">Show Sales Report By Customer</a></li>
+        <li><a href="~/reports/GetSalesReportByProduct?fromDate=@DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")&toDate=@DateTime.Today.ToString("yyyy-MM-dd")">Show Sales Report By Product</a></li>
+        <li><a href="~/reports/GetSalesReportFull?fromDate=@DateTime.Today.AddDays(-10).ToString("yyyy-MM-dd")&toDate=@DateTime.Today.ToString("yyyy-MM-dd")">Show Sales Report For All</a></li>
+        <li><a href="~/reports/DeliveriesByCustomerReport?fromDate=@DateTime.Today.AddMonths(-2).ToString("yyyy-MM-dd")&toDate=@DateTime.Today.ToString("yyyy-MM-dd")">Show Deliveries By Customer</a></li>
+    </ul>
+</div>
+
+<div>
+    <h2>Display Sales Data</h2>
+    <form action="~/dashboard/sales" method="get" class="singleRowForm">
+        <label for="fromDate">From Date</label>
+        <input type="date" id="fromDate" name="fromDate" value="@Model.FromDate.ToString("yyyy-MM-dd")" />
+
+        <label for="toDate">To Date</label>
+        <input type="date" id="toDate" name="toDate" value="@Model.ToDate.ToString("yyyy-MM-dd")" />
+
+        <button type="submit">Show Sales</button>
+    </form>
+</div>
+
+<div class="twoThridsWidth">
+    @await Html.PartialAsync("_Report", Model.ReportModel)
+</div>
+
+
+<h2>Sales Summary</h2>
+<p><a class="linkButton" href="~/reports/download/SalesSummary">Download CSV</a></p>
+<div id="SalesSummaryReport">
+    @if (Model.SalesSummary == null
+   || Model.SalesSummary.SalesStats == null
+   || Model.SalesSummary.SalesStats.Count == 0)
+    {
+        <p>No data to display.</p>
+    }
+    else
+    {
+        <table class="tablesorter-metro-dark">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th colspan="2" class="centre">@Model.SalesSummary.Week1Name</th>
+                    <th colspan="2" class="centre">@Model.SalesSummary.Week2Name</th>
+                    <th colspan="2" class="centre">@Model.SalesSummary.Week3Name</th>
+                    <th colspan="2" class="centre">@Model.SalesSummary.Week4Name</th>
+                </tr>
+                <tr>
+                    <th class="left">Customer Type</th>
+                    <th class="right">Sales</th>
+                    <th class="right">Deliveries</th>
+                    <th class="right">Sales</th>
+                    <th class="right">Deliveries</th>
+                    <th class="right">Sales</th>
+                    <th class="right">Deliveries</th>
+                    <th class="right">Sales</th>
+                    <th class="right">Deliveries</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var accountTypeStat in Model.SalesSummary.SalesStats)
+                {
+                    <tr>
+                        <td class="left">@accountTypeStat.AccountType</td>
+                        <td class="right">@accountTypeStat.Week1.Sales</td>
+                        <td class="right">@accountTypeStat.Week1.Deliveries</td>
+                        <td class="right">@accountTypeStat.Week2.Sales</td>
+                        <td class="right">@accountTypeStat.Week2.Deliveries</td>
+                        <td class="right">@accountTypeStat.Week3.Sales</td>
+                        <td class="right">@accountTypeStat.Week3.Deliveries</td>
+                        <td class="right">@accountTypeStat.Week4.Sales</td>
+                        <td class="right">@accountTypeStat.Week4.Deliveries</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
+<script>
+    Date.prototype.getWeek = function () {
+        var onejan = new Date(this.getFullYear(), 0, 1);
+        return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    }
+
+    function formatDate(date) {
+        console.log(date)
+        var dd = (date.getDate()).toString().padStart(2, '0');
+        var mm = (date.getMonth() + 1).toString().padStart(2, '0');
+        var yyyy = date.getFullYear();
+        return yyyy + '-' + mm + '-' + dd;
+    }
+
+    function getMonday(d) {
+        d = new Date(d);
+        var day = d.getDay(),
+            diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(d.setDate(diff));
+    }
+
+    var today = new Date();
+    var fewWeeksAgo = new Date();
+    fewWeeksAgo.setDate(fewWeeksAgo.getDate() - ((7 * 6) + fewWeeksAgo.getDay()));
+
+    var toDate = formatDate(today);
+    var fromDate = formatDate(fewWeeksAgo);
+
+    var lastFriday = new Date();
+    lastFriday.setDate(lastFriday.getDate() - lastFriday.getDay() - 2);
+
+    var lastMonday = getMonday(lastFriday);
+
+    var getSalesHistoryPerWeekUrl = "/proxy/reports/GetSalesHistoryPerWeek?fromDate=" + fromDate + "&toDate=" + toDate;
+    var getSalesHistoryPerDayUrl = "/proxy/reports/GetSalesHistoryPerDay?fromDate=" + fromDate + "&toDate=" + toDate;
+    var getWeekdayChartUrl = "/proxy/reports/GetSalesHistoryPerDay?fromDate=" + formatDate(lastMonday) + "&toDate=" + formatDate(lastFriday);
+
+    $(function () {
+        const monthNames =
+            [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+
+        $.get(getSalesHistoryPerWeekUrl,
+            function (data) {
+                var weekNumbers = [];
+                var weeklySales = [];
+                var lowestOrderValue = 0;
+                var highestOrderValue = 0;
+
+                data.forEach(function (item, idx) {
+                    weekNumbers[idx] = item.WeekNumber;
+                    weeklySales[idx] = item.TotalOrderValue;
+
+                    if (item.TotalOrderValue > highestOrderValue) {
+                        highestOrderValue = item.TotalOrderValue;
+                    }
+
+                    if (item.TotalOrderValue < lowestOrderValue) {
+                        lowestOrderValue = item.TotalOrderValue;
+                    }
+                });
+
+                var steps = 15;
+                var rawStepSize = Math.ceil((highestOrderValue - lowestOrderValue) / steps);
+                var stepSize = 100 * Math.round(rawStepSize / 100);
+
+                var totalOrdersPerWeekChartCtx = document.getElementById('TotalOrdersPerWeekChart').getContext('2d');
+
+                new Chart(totalOrdersPerWeekChartCtx, {
+                    type: 'line',
+                    data: {
+                        labels: weekNumbers,
+                        datasets: [
+                            {
+                                label: 'Total order value in £ per week',
+                                data: weeklySales,
+                                backgroundColor: 'rgba(2, 200, 249, 0.3)',
+                                borderColor: '#fffff88',
+                                borderWidth: 1
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Week Number'
+                                },
+                                gridLines: false
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    color: '#333'
+                                },
+                                ticks: {
+                                    beginAtZero: false,
+                                    stepSize: stepSize,
+                                    min: stepSize * 2,
+                                    max: stepSize * steps + (stepSize * 2)
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+
+        $.get(getWeekdayChartUrl,
+            function (data) {
+                var deliveryCounts = [];
+
+                data.forEach(function (item, idx) {
+                    deliveryCounts[idx] = item.TotalDeliveryCount;
+                });
+
+                var lastWeekDeliveriesChartCtx = document.getElementById('LastWeeksDeliveriesChart').getContext('2d');
+
+                new Chart(lastWeekDeliveriesChartCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                        datasets: [
+                            {
+                                label: 'Total deliveries per day',
+                                data: deliveryCounts,
+                                backgroundColor: [
+                                    'rgba(26, 200, 244, 0.6)',
+                                    'rgba(255, 255, 0, 0.6)',
+                                    'rgba(162, 60, 245, 0.6)',
+                                    'rgba(97, 255, 0, 0.6)',
+                                    'rgba(255, 0, 157, 0.6)'
+                                ],
+                                borderColor: '#222222',
+                                borderWidth: 1
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            });
+
+        $.get(getSalesHistoryPerDayUrl,
+            function (data) {
+
+                var deliveryDates = [];
+                var deliveryWeeks = [];
+                var totalOrderValues = [];
+
+                var monDeliveries = [];
+                var tueDeliveries = [];
+                var wedDeliveries = [];
+                var thuDeliveries = [];
+                var friDeliveries = [];
+
+                data.sort(function (a, b) {
+                    a = new Date(a.Date);
+                    b = new Date(b.Date);
+                    return b > a ? -1 : b < a ? 1 : 0;
+                });
+
+                data.forEach(function (item, idx) {
+                    var deliveryDate = new Date(item.Date);
+                    var label = deliveryDate.getDate() + " " + monthNames[deliveryDate.getMonth()];
+
+                    deliveryDates[idx] = label;
+                    totalOrderValues[idx] = item.TotalOrderValue;
+                });
+
+                var prevDate = new Date();
+                var prevDay = 0;
+                var week = 0;
+
+                data.forEach(function (item, idx) {
+                    var deliveryDate = new Date(item.Date);
+                    var day = deliveryDate.getDay();
+
+                    var isNextWeek = day < prevDay;
+
+                    if (isNextWeek) {
+                        deliveryWeeks[week] = prevDate.getWeek();
+                        week = week + 1;
+                    }
+
+                    prevDay = day;
+                    prevDate = deliveryDate;
+
+                    if (day === 1) {
+                        monDeliveries[week] = item.TotalDeliveryCount;
+                    }
+                    else if (day === 2) {
+                        tueDeliveries[week] = item.TotalDeliveryCount;
+                    }
+                    else if (day === 3) {
+                        wedDeliveries[week] = item.TotalDeliveryCount;
+                    }
+                    else if (day === 4) {
+                        thuDeliveries[week] = item.TotalDeliveryCount;
+                    }
+                    else if (day === 5) {
+                        friDeliveries[week] = item.TotalDeliveryCount;
+                    }
+                });
+
+                var deliveriesChartCtx = document.getElementById('DeliveriesChart').getContext('2d');
+                var orderValueChartCtx = document.getElementById('OrderValueChart').getContext('2d');
+
+                new Chart(deliveriesChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: deliveryWeeks,
+                        datasets: [
+                            {
+                                label: 'Monday',
+                                data: monDeliveries,
+                                backgroundColor: 'rgba(26, 200, 244, 0.6)',
+                                borderWidth: 0
+                            },
+                            {
+                                label: 'Tuesday',
+                                data: tueDeliveries,
+                                backgroundColor: 'rgba(255, 255, 0, 0.6)',
+                                borderWidth: 0
+                            },
+                            {
+                                label: 'Wednesday',
+                                data: wedDeliveries,
+                                backgroundColor: 'rgba(162, 60, 245, 0.6)',
+                                borderWidth: 0
+                            },
+                            {
+                                label: 'Thursday',
+                                data: thuDeliveries,
+                                backgroundColor: 'rgba(97, 255, 0, 0.6)',
+                                borderWidth: 0
+                            },
+                            {
+                                label: 'Friday',
+                                data: friDeliveries,
+                                backgroundColor: 'rgba(255, 0, 157, 0.6)',
+                                borderWidth: 0
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Week Number'
+                                },
+                                gridLines: false
+                            }],
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Total Delivery Count'
+                                },
+                                gridLines: {
+                                    color: '#333'
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 5
+                                }
+                            }]
+                        }
+                    }
+                });
+
+                new Chart(orderValueChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: deliveryDates,
+                        datasets: [
+                            {
+                                label: 'Total sales value in £ per day',
+                                data: totalOrderValues,
+                                backgroundColor: 'rgba(54, 162, 235, 0.4)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 0
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            xAxes: [{
+                                gridLines: false
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    color: '#333'
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 200
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+    });
+</script>

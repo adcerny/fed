@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Confirmed Orders by Fed</title>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #222;
+        }
+
+        table {
+            margin: 0;
+            padding: 0;
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px 20px;
+        }
+
+        th {
+            background: #ffcf08;
+        }
+
+        tr.evenRow {
+            background: #dadada;
+        }
+
+        h1 {
+            color: #000;
+        }
+
+        h2 {
+            color: #666;
+            margin-bottom: 1.5em;
+        }
+
+        h4 {
+            margin: 2em 0 1em 0;
+        }
+
+        address {
+            font-style: normal;
+        }
+
+        #lastParagraph {
+            margin-top: 2em;
+        }
+
+        #signature {
+            line-height: 1.3em;
+            font-size: .85em;
+            color: #666;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        .right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fed by Abel &amp; Cole - Confirmed Orders</h1>
+    <h2>Delivery Date: #DeliveryDate#</h2>
+
+    <p>Good afternoon,</p>
+    <p>Please find our confirmed order for #DeliveryDate# below:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="left">Code</th>
+                <th class="left">Product</th>
+                <th class="right">QTY</th>
+            </tr>
+        </thead>
+        <tbody>
+            #ProductRows#
+        </tbody>
+    </table>
+
+    <h4>Delivery address:</h4>
+    <address>
+        Arches 416 - 418<br>
+        Union Walk<br>
+        Hoxton<br>
+        E2 8HP
+    </address>
+
+    <h4>Contact:</h4>
+    <p>Tadas Daubaras, <a href="mailto:tadas.daubaras@fedteam.co.uk">tadas.daubaras@fedteam.co.uk</a>, Tel.: 07482 885 055</p>
+
+    <p id="lastParagraph">
+        Kind regards,<br><br>
+        Lex
+    </p>
+    <p id="signature">
+        Lex Panayi | Head of Product | Fed by Abel &amp; Cole<br>
+        145 City Rd, Hoxton, London, EC1V 1AZ<br>
+        Mobile: 07701 331993<br>
+    </p>
+</body>
+</html>

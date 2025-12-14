@@ -1,0 +1,9 @@
+﻿@model Fed.Web.Portal.ViewModels.ReportingViewModel
+
+@{
+    Layout = "_Master";
+}
+
+<h2>Report: @Model.Title</h2>
+
+@await Html.PartialAsync("_Report", Model.ReportModel)

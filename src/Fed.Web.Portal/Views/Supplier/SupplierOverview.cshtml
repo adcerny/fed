@@ -1,0 +1,53 @@
+﻿@model Fed.Core.Entities.Supplier
+@{
+    Layout = "_Master";
+}
+
+@if (Model != null)
+{
+    <div id="CustomerView">
+        <h1>Supplier Overview</h1>
+
+        <div id="topBar">
+            <nav>
+                <span>Overview</span>
+                <a href="~/supplier/info/@Model.Id">Supplier Info</a>
+            </nav>
+        </div>
+
+        <div id="AccountInfo">
+            <div>
+                <h2>Supplier Info</h2>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Supplier ID:</th>
+                            <td>@Model.Id</td>
+                        </tr>
+                        <tr>
+                            <th>Supplier Name</th>
+                            <td>@Model.Name</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h2>@Model.Name Orders</h2>
+        <form action="~/supplier/@Model.Id" method="get" class="singleRowForm">
+            <label for="deliveryDate">Date</label>
+            <input type="date" id="deliveryDate" name="deliveryDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            <button type="submit">Show Orders</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>@Model.Name Forecast</h2>
+
+        <a class="linkButton" href="~/supplier/@Model.Id/forecast" style="width: 130px;">Show Forecast</a>
+    </div>
+}

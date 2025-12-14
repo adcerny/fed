@@ -1,0 +1,32 @@
+﻿INSERT INTO [dbo].[Products]
+(
+  [Id],
+  [ProductCode],
+  [ProductGroup],
+  [ProductName],
+  [SupplierId],
+  [SupplierSKU],
+  [Price],
+  [SalePrice],
+  [IsDeleted],
+  [DeletedDate],
+  [IsTaxable],
+  [IconCategory],
+  [ProductCategoryId],
+  [IsShippable]
+)
+VALUES
+(@Id, 
+ @ProductCode, 
+ @ProductGroup, 
+ @ProductName, 
+ @SupplierId, 
+ @SupplierSKU, 
+ @Price, 
+ @SalePrice, 
+ 0, 
+ NULL, 
+ @IsTaxable,
+ @IconCategory, 
+ @ProductCategoryId, 
+ @IsShippable)

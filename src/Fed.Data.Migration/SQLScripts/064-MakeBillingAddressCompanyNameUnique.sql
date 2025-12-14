@@ -1,0 +1,8 @@
+﻿SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER TABLE [dbo].[BillingAddresses] WITH CHECK 
+ADD CONSTRAINT UQ_BillingAddresses_CompanyName UNIQUE (CompanyName)

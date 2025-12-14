@@ -1,0 +1,42 @@
+﻿INSERT INTO [dbo].[Discounts]
+(
+    [Id],
+    [Name],
+    [Description],
+    [Percentage],
+    [Value],
+	[MinOrderValue],
+    [MaxOrderValue],
+    [IsInactive],
+    [IsExclusive],
+    [AppliedEventId],
+    [AppliedStartDate],
+    [AppliedEndDate],
+    [StartEventId],
+    [StartEventEndDate],
+    [PeriodFromStartDays],
+    [DiscountRewardTypeId],
+    [DiscountEligibleProductsTypeId],
+    [DiscountQualificationTypeId]
+)
+VALUES
+(   
+    @Id,
+    @Name,
+    @Description,
+    @Percentage,
+    @Value,
+	@MinOrderValue,
+	@MaxOrderValue,
+    @IsInactive,
+    @IsExclusive,
+    @AppliedEventId,
+    @AppliedStartDate,
+    @AppliedEndDate,
+    @StartEventId,
+    @StartEventEndDate,
+    @PeriodFromStartDays,
+    @DiscountRewardTypeId,
+    @DiscountEligibleProductsTypeId,
+    @DiscountQualificationTypeId
+)

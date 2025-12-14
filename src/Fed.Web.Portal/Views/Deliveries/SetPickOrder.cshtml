@@ -1,0 +1,164 @@
+﻿@model Fed.Core.Entities.DeliveryPickOrder
+@using Fed.Core.Extensions
+@using Fed.Core.Enums
+@using Fed.Web.Portal.TagHelpers
+@using Fed.Web.Portal.Models.Deliveries
+@addTagHelper *, Fed.Web.Portal
+@{
+    Layout = "_Master";
+}
+
+<h1>Set Pick Order</h1>
+<div id="pickOrder">
+    @if (ViewBag.Success != null && ViewBag.Success)
+    {
+        <p class="success">The pick order has been successfully saved!</p>
+    }
+    <form action="~/deliveries/setPickOrder" method="post">
+
+        <div class="formRow">
+            <label class="sortByLabelWidth" for="sortBy1">Sort by</label>
+            <select name="sortBy1">
+                <!option value="0" @(Model.SortBy1 == DeliverySortOrder.Slot ? "selected" : "")>Slot</!option>
+                <!option value="1" @(Model.SortBy1 == DeliverySortOrder.DeliveryId ? "selected" : "")>Delivery ID</!option>
+                <!option value="2" @(Model.SortBy1 == DeliverySortOrder.CompanyName ? "selected" : "")>Company Name</!option>
+                <!option value="3" @(Model.SortBy1 == DeliverySortOrder.FirstDelivery ? "selected" : "")>First Delivery</!option>
+                <!option value="4" @(Model.SortBy1 == DeliverySortOrder.ItemCount ? "selected" : "")>Item Count</!option>
+            </select>
+        </div>
+        <div class="formRow alignIntoOneLine">
+            <div class="sortByLabelWidth">
+                <checkbox 
+                    name="useSortBy2" 
+                    id="useSortBy2" 
+                    is-checked="@Model.UseSortBy2">Then by</checkbox>
+            </div>
+            <select id="sortBy2" name="sortBy2" @(Model.UseSortBy2 ? "" : "disabled")>
+                <!option value="0" @(Model.SortBy2 == DeliverySortOrder.Slot ? "selected" : "")>Slot</!option>
+                <!option value="1" @(Model.SortBy2 == DeliverySortOrder.DeliveryId ? "selected" : "")>Delivery ID</!option>
+                <!option value="2" @(Model.SortBy2 == DeliverySortOrder.CompanyName ? "selected" : "")>Company Name</!option>
+                <!option value="3" @(Model.SortBy2 == DeliverySortOrder.FirstDelivery ? "selected" : "")>First Delivery</!option>
+                <!option value="4" @(Model.SortBy2 == DeliverySortOrder.ItemCount ? "selected" : "")>Item Count</!option>
+            </select>
+        </div>
+        <div class="formRow alignIntoOneLine">
+            <div class="sortByLabelWidth">
+                <checkbox
+                    name="useSortBy3"
+                    id="useSortBy3"
+                    is-checked="@Model.UseSortBy3"
+                    is-disabled="@(!Model.UseSortBy2)">Then by</checkbox>
+            </div>
+            <select id="sortBy3" name="sortBy3" @(Model.UseSortBy3 ? "" : "disabled")>
+                <!option value="0" @(Model.SortBy3 == DeliverySortOrder.Slot ? "selected" : "")>Slot</!option>
+                <!option value="1" @(Model.SortBy3 == DeliverySortOrder.DeliveryId ? "selected" : "")>Delivery ID</!option>
+                <!option value="2" @(Model.SortBy3 == DeliverySortOrder.CompanyName ? "selected" : "")>Company Name</!option>
+                <!option value="3" @(Model.SortBy3 == DeliverySortOrder.FirstDelivery ? "selected" : "")>First Delivery</!option>
+                <!option value="4" @(Model.SortBy3 == DeliverySortOrder.ItemCount ? "selected" : "")>Item Count</!option>
+            </select>
+        </div>
+        <div class="formRow alignIntoOneLine">
+            <div class="sortByLabelWidth">
+                <checkbox
+                    name="useSortBy4" 
+                    id="useSortBy4" 
+                    is-checked="@Model.UseSortBy4" 
+                    is-disabled="@(!Model.UseSortBy3)">Then by</checkbox>
+            </div>
+            <select id="sortBy4" name="sortBy4" @(Model.UseSortBy4 ? "" : "disabled")>
+                <!option value="0" @(Model.SortBy4 == DeliverySortOrder.Slot ? "selected" : "")>Slot</!option>
+                <!option value="1" @(Model.SortBy4 == DeliverySortOrder.DeliveryId ? "selected" : "")>Delivery ID</!option>
+                <!option value="2" @(Model.SortBy4 == DeliverySortOrder.CompanyName ? "selected" : "")>Company Name</!option>
+                <!option value="3" @(Model.SortBy4 == DeliverySortOrder.FirstDelivery ? "selected" : "")>First Delivery</!option>
+                <!option value="4" @(Model.SortBy4 == DeliverySortOrder.ItemCount ? "selected" : "")>Item Count</!option>
+            </select>
+        </div>
+        <div class="formRow alignIntoOneLine">
+            <div class="sortByLabelWidth">
+                <checkbox 
+                    name="useSortBy5" 
+                    id="useSortBy5" 
+                    is-checked="@Model.UseSortBy5" 
+                    is-disabled="@(!Model.UseSortBy4)">Then by</checkbox>
+            </div>
+            <select id="sortBy5" name="sortBy5" @(Model.UseSortBy5 ? "" : "disabled")>
+                <!option value="0" @(Model.SortBy5 == DeliverySortOrder.Slot ? "selected" : "")>Slot</!option>
+                <!option value="1" @(Model.SortBy5 == DeliverySortOrder.DeliveryId ? "selected" : "")>Delivery ID</!option>
+                <!option value="2" @(Model.SortBy5 == DeliverySortOrder.CompanyName ? "selected" : "")>Company Name</!option>
+                <!option value="3" @(Model.SortBy5 == DeliverySortOrder.FirstDelivery ? "selected" : "")>First Delivery</!option>
+                <!option value="4" @(Model.SortBy5 == DeliverySortOrder.ItemCount ? "selected" : "")>Item Count</!option>
+            </select>
+        </div>
+
+        <div class="formRow">
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        var useSortBy2 = $("#useSortBy2");
+        var useSortBy3 = $("#useSortBy3");
+        var useSortBy4 = $("#useSortBy4");
+        var useSortBy5 = $("#useSortBy5");
+
+        var sortBy2 = $("#sortBy2");
+        var sortBy3 = $("#sortBy3");
+        var sortBy4 = $("#sortBy4");
+        var sortBy5 = $("#sortBy5");
+
+        useSortBy2.change(function () {
+            var isEnabled = $(this).is(":checked");
+            sortBy2.prop("disabled", !isEnabled);
+
+            useSortBy3.prop("disabled", !isEnabled);
+
+            if (!isEnabled) {
+                useSortBy3.prop("checked", false);
+                useSortBy4.prop("checked", false);
+                useSortBy5.prop("checked", false);
+
+                useSortBy4.prop("disabled", true);
+                useSortBy5.prop("disabled", true);
+
+                sortBy3.prop("disabled", true);
+                sortBy4.prop("disabled", true);
+                sortBy5.prop("disabled", true);
+            }
+        });
+
+        useSortBy3.change(function () {
+            var isEnabled = $(this).is(":checked");
+            sortBy3.prop("disabled", !isEnabled);
+
+            useSortBy4.prop("disabled", !isEnabled);
+
+            if (!isEnabled) {
+                useSortBy4.prop("checked", false);
+                useSortBy5.prop("checked", false);
+
+                useSortBy5.prop("disabled", true);
+
+                sortBy4.prop("disabled", true);
+                sortBy5.prop("disabled", true);
+            }
+        });
+
+        useSortBy4.change(function () {
+            var isEnabled = $(this).is(":checked");
+            sortBy4.prop("disabled", !isEnabled);
+
+            useSortBy5.prop("disabled", !isEnabled);
+
+            if (!isEnabled) {
+                useSortBy5.prop("checked", false);
+                sortBy5.prop("disabled", true);
+            }
+        });
+
+        useSortBy5.change(function () {
+            var isEnabled = $(this).is(":checked");
+            sortBy5.prop("disabled", !isEnabled);
+        });
+    });
+</script>

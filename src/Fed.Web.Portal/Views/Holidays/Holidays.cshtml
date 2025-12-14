@@ -1,0 +1,64 @@
+﻿@model List<Fed.Core.Entities.Holiday>
+@{
+    Layout = "_Master";
+}
+<div style="max-width: 800px">
+    <h1>Holidays</h1>
+
+    @if(ViewData.ContainsKey("Message") && !string.IsNullOrWhiteSpace(ViewData["Message"].ToString()))
+    {
+        <p>@ViewData["Message"].ToString()</p>
+    }
+
+    <a class="linkButton" id="addpublicholidays" href="~/holidays/">Add Holidays</a>
+    @if (Model != null && Model.Any())
+    {
+
+        <div class="report">
+
+            <div class="dynamicTable">
+
+                <table class="tablesorter-metro-dark small">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th class="left">Name</th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var holiday in Model)
+                        {
+                        <tr>
+                            <td>@holiday.Date</td>
+                            <td>
+                                @holiday.Name
+                            </td>
+                            <td><form method="post" id="@string.Concat("deletedate", Model.IndexOf(holiday))" action="~/holidays/deleteholiday/@holiday.Date"><button id="@string.Concat("deletedate", Model.IndexOf(holiday))" type="submit">Delete</button></form></td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+@await Html.PartialAsync("~/Views/Partial/_PublicHolidaysPartial.cshtml")
+<script>
+    $(document).ready(
+        function () {
+
+            $("#addpublicholidays").click(function (e) {
+                e.preventDefault();
+                $("#publicHolidaysDialog").show();
+            });
+
+             $("button[id^=delete]").click(function(){
+             if (confirm("Are you sure you want to delete this holiday?"))
+                $(this).parents('form:first').submit();
+            });
+        });
+</script>
+

@@ -1,0 +1,44 @@
+﻿INSERT INTO [dbo].[Customers] 
+(
+	[Id], 
+	[ShortId], 
+	[CompanyName], 
+	[Website], 
+	[ACAccountNumber], 
+	[RegisterDate], 
+	[FirstDeliveryDate], 
+	[IsInvoiceable], 
+	[OfficeSizeMin], 
+	[OfficeSizeMax], 
+	[IsDeliveryChargeExempt], 
+	[SplitDeliveriesByOrder],
+	[IsTestAccount],
+	[AccountTypeId],
+	[Source],
+	[Notes],
+	[IsFriend],
+	[CancellationReason],
+	[CustomerAgentId]
+) 
+VALUES 
+(
+	@Id, 
+	@ShortId, 
+	@CompanyName, 
+	@Website, 
+	@ACAccountNumber, 
+	GETDATE(), 
+	@FirstDeliveryDate, 
+	@IsInvoiceable, 
+	@OfficeSizeMin, 
+	@OfficeSizeMax, 
+	@IsDeliveryChargeExempt, 
+	@SplitDeliveriesByOrder,
+	@IsTestAccount,
+	@AccountTypeId,
+	@Source,
+	@Notes,
+	@IsFriend,
+	@CancellationReason,
+	@CustomerAgentId
+)

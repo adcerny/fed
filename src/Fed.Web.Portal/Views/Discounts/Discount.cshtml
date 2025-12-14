@@ -1,0 +1,503 @@
+﻿@using Fed.Core.Entities
+@using Fed.Core.Extensions
+@using Fed.Core.Enums
+@using Fed.Web.Portal.TagHelpers
+@using Fed.Web.Portal.Models.Discounts
+@addTagHelper *, Fed.Web.Portal
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model DiscountModel
+@{
+    Layout = "_Master";
+    var discount = Model.Discount;
+
+}
+
+<h1>Discount details</h1>
+
+<form method="post">
+    <div id="portalForm">
+        @*@Html.EditorForModel(Model)*@
+        <input type="hidden" asp-for="@discount.Id">
+        <div class="formRow">
+            <label asp-for="@discount.Name"></label>
+            <input asp-for="@discount.Name">
+        </div>
+        <div class="formRow">
+            <label asp-for="@discount.Description"></label>
+            <input asp-for="@discount.Description">
+        </div>
+        <div class="formRow">
+            <label>Discount Codes</label>
+        </div>
+        <table id="DiscountCodes" class="tablesorter-metro-dark products-table" data-applied-event-id="0">
+            <thead>
+                <tr>
+                    <th>Discount Code</th>
+                    <th>Discount Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="HiddenItemsDiscountCodes">
+        </div>
+        <div class="formRow">
+            <a id="addDiscountCode" class="button">Add discount code</a>
+        </div>
+        <div class="formRow">
+            <label>Type of reward</label>
+            <select asp-for="@discount.RewardType" asp-items="Html.GetEnumSelectList<DiscountRewardType>()">
+                <option value="">Please select</option>
+            </select>
+        </div>
+        <div class="formRow reward-type hidden" data-reward-type-id="1">
+            <label asp-for="@discount.Percentage"></label>
+            <input asp-for="@discount.Percentage" type="number">
+        </div>
+        <div class="formRow reward-type hidden" data-reward-type-id="1">
+            <label>Which products should be included in the percentage discount calculation?</label>
+            <select asp-for="@discount.EligibleProductsType" asp-items="Html.GetEnumSelectList<DiscountEligibleProductsType>()">
+                <option value="">Please select</option>
+            </select>
+        </div>
+        <table id="EligibleProductCategoryIds" class="tablesorter-metro-dark eligible-products-type hidden products-table" data-eligible-products-type-id="2">
+            <thead>
+                <tr>
+                    <th>Eligible Category</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="HiddenItemsEligibleProductCategoryIds">
+        </div>
+        <div class="formRow  eligible-products-type hidden" data-eligible-products-type-id="2">
+            <a id="addEligibleCategory" class="button">Add product category</a>
+        </div>
+        <table id="DiscountedProducts" class="tablesorter-metro-dark reward-type hidden products-table" data-reward-type-id="3">
+            <thead>
+                <tr>
+                    <th>Product Code</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="HiddenItemsDiscountedProducts">
+        </div>
+        <div class="formRow reward-type hidden" data-reward-type-id="3">
+            <a id="addDiscountedProduct" class="button">Add discounted product</a>
+        </div>
+        <div class="formRow reward-type hidden" data-reward-type-id="2">
+            <label asp-for="@discount.Value"></label>
+            <input asp-for="@discount.Value" type="number">
+        </div>
+        <div class="formRow">
+            <label>Minimum order value</label>
+            <input asp-for="@discount.MinOrderValue" type="number">
+        </div>
+        <div class="formRow reward-type hidden" data-reward-type-id="1">
+            <label>Maximum order value for percentage calculation</label>
+            <input asp-for="@discount.MaxOrderValue" type="number">
+        </div>
+        <div class="formRow qualification-type hidden products-table" data-qualification-type-id="2">
+            <a id="addEligibleCategory" class="button">Add product category</a>
+        </div>
+        <div class="formRow">
+            <checkbox name="discount.IsExclusive" is-checked="@discount.IsExclusive">Is the discount exclusive?</checkbox>
+        </div>
+        <div class="formRow">
+            <checkbox name="discount.IsInactive" is-checked="@discount.IsInactive">Is the discount disabled?</checkbox>
+        </div>
+        <div class="formRow">
+            <label>How should the discount be applied?</label>
+            <select asp-for="@discount.AppliedEvent" asp-items="Html.GetEnumSelectList<DiscountEvent>()">
+                <option value="">Please select</option>
+            </select>
+        </div>
+        <div class="formRow">
+            <label asp-for="@discount.AppliedStartDate">What is the earliest date that the discount can be applied?</label><br />
+            <input asp-for="@discount.AppliedStartDate" type="date" />
+        </div>
+        <div class="formRow">
+            <label asp-for="@discount.AppliedEndDate">What is the latest date that the discount can be applied?</label><br />
+            <input asp-for="@discount.AppliedEndDate" type="date" />
+        </div>
+        <div class="formRow">
+            <label>When the discount has been applied, when should we start measuring how long it is active for?</label>
+            <select asp-for="@discount.StartEvent" asp-items="Html.GetEnumSelectList<DiscountEvent>().Where(d => d.Value != ((int)DiscountEvent.Manual).ToString())">
+                <option value="">Please select</option>
+            </select>
+        </div>
+        <div class="formRow">
+            <label asp-for="@discount.StartEventEndDate">What is the latest date that this event can happen?</label><br />
+            <input asp-for="@discount.StartEventEndDate" type="date" />
+        </div>
+        <div class="formRow">
+            <label>How many days from this event should the promo remain active?</label>
+            <input asp-for="@discount.PeriodFromStartDays" type="number">
+        </div>
+        <div class="formRow">
+            <label>How will the customer qualify for the discount?</label>
+            <select asp-for="@discount.QualificationType" asp-items="Html.GetEnumSelectList<DiscountQualificationType>()">
+                <option value="">Please select</option>
+            </select>
+        </div>
+        <table id="QualifyingProducts" class="tablesorter-metro-dark qualification-type hidden products-table" data-qualification-type-id="3">
+            <thead>
+                <tr>
+                    <th>Product Code</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th class="price"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="HiddenItemsQualifyingProducts">
+        </div>
+        <div class="formRow qualification-type hidden" data-qualification-type-id="3">
+            <a id="addQualifyingProduct" class="button">Add qualifying product</a>
+        </div>
+        <table id="QualifyingProductCategories" class="tablesorter-metro-dark qualification-type hidden products-table" data-qualification-type-id="2">
+            <thead>
+                <tr>
+                    <th>Qualifying Category</th>
+                    <th>Minimum quantity</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="HiddenItemsQualifyingProductCategories">
+        </div>
+        <div class="formRow qualification-type hidden" data-qualification-type-id="2">
+            <a id="addQualifyingCategory" class="button">Add product category</a>
+        </div>
+
+        <div id="progressRow">
+            <a class="linkButton" href="~/discounts">Cancel</a>
+            <button type="submit">Save discount</button>
+        </div>
+</form>
+
+<div id="productDialog" class="modal">
+    <div class="modalContent">
+        <div class="formRow">
+            <form>
+                <input type="hidden" id="ProductType">
+                <label for="ProductId">Product</label><br />
+                <select id="ProductId" name="ProductId" required>
+                    <option value="">Select a product</option>
+                    @foreach (var product in Model.Products.OrderBy(p => p.ProductName))
+                    {
+                        <option data-sku="@product.ProductCode" value="@product.Id" data-price="@product.Price">@product.ProductName</option>
+                    }
+                </select>
+
+                <div class="formRow">
+                    <label for="Quantity">Quantity</label><br />
+                    <input type="number" id="Quantity" name="Quantity" value="1" required />
+                </div>
+
+                <div class="formRow" id="productPrice">
+                    <label for="ProductId">Price</label><br />
+                    <input type="number" id="Price" name="Price" value="0" required />
+                </div>
+                <div class="formRow">
+                    <button type="submit" class="add-button" id="AddItem">Add product</button>
+                    <button class="cancel-button" type="button">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="categoryDialog" class="modal">
+    <div class="modalContent">
+        <div class="formRow">
+            <form>
+                <input type="hidden" id="CategoryType">
+                <label for="CategoryId">Category</label><br />
+                <select id="CategoryId" name="ProductId" required>
+                    <option value="">Select a category</option>
+                    @foreach (var category in Model.ProductCategories.OrderBy(c => c.Name))
+                    {
+                        <option data-name="@category.Name" value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <div class="formRow" class="qty">
+                    <label for="Quantity">Minimum quantity</label><br />
+                    <input type="number" id="CategoryQuantity" name="CategoryQuantity" value="1" />
+                </div>
+                <div class="formRow">
+                    <button type="submit" class="add-button" id="AddCategory">Add category</button>
+                    <button class="cancel-button" type="button">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="codeDialog" class="modal">
+    <div class="modalContent">
+        <div class="formRow">
+            <form>
+                <div class="formRow">
+                    <label for="Code">Code</label><br />
+                    <input type="text" id="Code" name="Code" required placeholder="Code" />
+                </div>
+                <div class="formRow">
+                    <label for="Description">Description</label><br />
+                    <input type="text" id="Description" name="Description" placeholder="Description" />
+                </div>
+                <div class="formRow">
+                    <button type="submit" class="add-button" id="AddCode">Add code</button>
+                    <button class="cancel-button" type="button">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+   
+    <script>
+
+        var tableItems = { };
+            tableItems.DiscountedProducts = @Html.Raw(Json.Serialize(Model.Discount.DiscountedProducts.OrEmptyIfNull()));
+            tableItems.QualifyingProducts = @Html.Raw(Json.Serialize(Model.Discount.QualifyingProducts.OrEmptyIfNull()));
+            tableItems.DiscountCodes = @Html.Raw(Json.Serialize(Model.Discount.DiscountCodes.OrEmptyIfNull()));
+            tableItems.EligibleProductCategoryIds = @Html.Raw(Json.Serialize(Model.Discount.EligibleProductCategoryIds.OrEmptyIfNull()));
+            tableItems.QualifyingProductCategories = @Html.Raw(Json.Serialize(Model.Discount.QualifyingProductCategories.OrEmptyIfNull()));
+
+        var products = @Html.Raw(Json.Serialize(Model.Products.OrEmptyIfNull()));
+        var productCategories = @Html.Raw(Json.Serialize(Model.ProductCategories.OrEmptyIfNull()));
+
+        $(document).ready(function () {
+
+            $('#discount_RewardType').change(function () {
+                $('.reward-type').addClass("hidden");
+                $('.reward-type[data-reward-type-id="' + $(this).val() + '"]').removeClass("hidden");
+                $('#discount_EligibleProductsType').trigger("change");
+            });
+
+            $('#discount_QualificationType').change(function () {
+                $('.qualification-type').addClass("hidden");
+                $('.qualification-type[data-qualification-type-id="' + $(this).val() + '"]').removeClass("hidden");
+            });
+
+            $('#discount_AppliedEvent').change(function () {
+                $('.applied-event').addClass("hidden");
+                $('.applied-event[data-applied-event-id="' + $(this).val() + '"]').removeClass("hidden");
+            });
+
+            $('#discount_EligibleProductsType').change(function () {
+                $('.eligible-products-type').addClass("hidden");
+                if($('#discount_RewardType').val() == "1")
+                    $('.eligible-products-type[data-eligible-products-type-id="' + $(this).val() + '"]').removeClass("hidden");
+            });
+
+            $("#addDiscountedProduct").click(function () {
+                $("#ProductType").val("DiscountedProducts");
+                $("#productPrice").show();
+                $("#productDialog").show();
+            });
+
+            $("#addQualifyingProduct").click(function () {
+                $("#ProductType").val("QualifyingProducts");
+                $("#productPrice").hide();
+                $("#productDialog").show();
+            });
+
+            $("#addQualifyingCategory").click(function () {
+                $("#CategoryType").val("QualifyingProductCategories");
+                $("#categoryDialog .qty").show();
+                $("#categoryDialog").show();
+            });
+
+            $("#addEligibleCategory").click(function () {
+                $("#CategoryType").val("EligibleProductCategoryIds");
+                $("#categoryDialog .qty").hide();
+                $("#categoryDialog").show();
+            });
+
+
+            $("#addDiscountCode").click(function () {
+                $("#codeDialog").show();
+            });
+            
+
+            $(".cancel-button").click(function () {
+                $("#ProductId").removeClass("error"); 
+                $(".modal").hide();
+            });
+
+            $('#ProductId').change(function () {
+                $("#ProductId").removeClass("error");
+            });
+
+            $('.products-table').on("click", '.remove-product', function (e) {
+                e.preventDefault();
+                var indexToRemove = $(this).data('index');
+                var lineitems = tableItems[$(this).closest('table').attr('id')];
+                lineitems.splice(indexToRemove, 1);
+                $(this).closest('tr').remove();
+                RebindProductsTable();
+            });
+
+            
+
+            $('#AddItem').click(function (e) {
+                e.preventDefault();
+                var productType = $("#ProductType").val()
+                var lineitems = tableItems[productType];
+                if (!$('#ProductId option:selected').val()) {
+                    $("#ProductId").addClass("error");
+                    return false;
+                }
+                var productId = $('#ProductId option:selected').val();
+                var productName = $('#ProductId option:selected').text();
+                var productCode = $('#ProductId option:selected').data('sku');
+                var quantity = $('#Quantity').val();
+                var price = $('#Price').val();
+                var orderItem = {
+                    productId: productId,
+                    productName: productName,
+                    productCode: productCode,
+                    quantity: quantity,
+                    price: price
+                };
+                lineitems.push(orderItem);
+                RebindProductsTable($("#ProductType").val(), lineitems);
+                $("#productDialog").hide();
+            });
+
+            $('#AddCategory').click(function (e) {
+                e.preventDefault();
+                var productType = $("#CategoryType").val()
+                var lineitems = tableItems[productType];
+                if (!$('#CategoryId option:selected').val()) {
+                    $("#CategoryId").addClass("error");
+                    return false;
+                }
+                var categoryId = $('#CategoryId option:selected').val();
+                var quantity = $('#CategoryQuantity').val();
+                var categoryItem = productType == "EligibleProductCategoryIds" ? categoryId :
+                    {
+                        productCategoryId: categoryId,
+                        quantity: quantity
+                    }
+                lineitems.push(categoryItem);
+                if(productType == "EligibleProductCategoryIds")
+                    RebindCategoryTable(productType, lineitems);
+                else
+                    RebindQualifyingCategoryTable(productType, lineitems);
+                $("#categoryDialog").hide();
+            });
+
+            $('#AddCode').click(function (e) {
+                e.preventDefault();
+                if (!$('#Code').val()) {
+                    $("#Code").addClass("error");
+                    return false;
+                }
+
+                var code = {
+                    code: $('#Code').val(),
+                    description : $('#Description').val()
+                };
+
+                tableItems.DiscountCodes.push(code);
+                RebindCodeTable("DiscountCodes", tableItems.DiscountCodes);
+                $("#codeDialog").hide();
+                $('#Code').val('');
+                $('#Description').val('');
+            });
+
+
+            function RebindProductsTable(tableId, lineItems) {
+                var orderTable = $('#' + tableId).find('tbody');
+                $('#' + tableId + ' > tbody').empty();
+                $('#HiddenItems' + tableId).empty();
+                lineItems.forEach(function (item) {
+                    var product = products.find(p => {
+                        return p.productCode === item.productCode
+                    });
+                    var index = lineItems.indexOf(item);
+                    var row = '<tr><td>' + item.productCode + '</td><td>' + product.productName + '</td><td>' + item.quantity + '</td><td class="price">£' + Number.parseFloat(item.price).toFixed(2) + '</td><td><a href="" data-index=' + index + ' class="remove-product">remove</a></td></tr>';
+                    orderTable.append(row);
+                    var hiddenItems = '<input type=hidden name=discount.' + tableId + '[' + index + '].ProductId value=' + product.id + '><input type=hidden name=discount.' + tableId + '[' + index + '].ProductCode value=' + item.productCode + '><input type=hidden name=discount.' + tableId + '[' + index + '].ProductName value=' + item.productName + '><input type=hidden name=discount.' + tableId + '[' + index + '].Quantity  value=' + item.quantity + '><input type=hidden name=discount.' + tableId + '[' + index + '].Price value=' + item.price + '>';
+                    $('#HiddenItems' + tableId).append(hiddenItems);
+                });
+            }
+
+            function RebindCategoryTable(tableId, lineItems) {
+                var orderTable = $('#' + tableId).find('tbody');
+                $('#' + tableId + ' > tbody').empty();
+                $('#HiddenItems' + tableId).empty();
+                lineItems.forEach(function (item) {
+                    var category = productCategories.find(c => {
+                        return c.id == item
+                    });
+                    var index = lineItems.indexOf(item);
+                    var row = '<tr><td>' + category.name + '</td><td><a href="" data-index=' + index + ' class="remove-product">remove</a></td></tr>';
+                    orderTable.append(row);
+                    var hiddenItems = '<input type=hidden name=discount.' + tableId + '[' + index + '] value="' + item + '">';
+                    $('#HiddenItems' + tableId).append(hiddenItems);
+                });
+            }
+
+            function RebindQualifyingCategoryTable(tableId, lineItems) {
+                var orderTable = $('#' + tableId).find('tbody');
+                $('#' + tableId + ' > tbody').empty();
+                $('#HiddenItems' + tableId).empty();
+                lineItems.forEach(function (item) {
+                    var category = productCategories.find(c => {
+                        return c.id == item.productCategoryId
+                    });
+                    var index = lineItems.indexOf(item);
+                    var row = '<tr><td>' + category.name + '</td><td>' + item.quantity + '</td><td><a href="" data-index=' + index + ' class="remove-product">remove</a></td></tr>';
+                    orderTable.append(row);
+                    var hiddenItems = '<input type=hidden name=discount.' + tableId + '[' + index + '].ProductCategoryId value="' + item.productCategoryId + '"><input type=hidden name=discount.' + tableId + '[' + index + '].quantity value="' + item.quantity + '">';
+                    $('#HiddenItems' + tableId).append(hiddenItems);
+                });
+            }
+
+            function RebindCodeTable(tableId, lineItems) {
+                var orderTable = $('#' + tableId).find('tbody');
+                $('#' + tableId + ' > tbody').empty();
+                $('#HiddenItems' + tableId).empty();
+                lineItems.forEach(function (item) {
+                    var index = lineItems.indexOf(item);
+                    var row = '<tr><td>' + item.code + '</td><td>' + item.description + '</td><td><a href="" data-index=' + index + ' class="remove-product">remove</a></td></tr>';
+                    orderTable.append(row);
+                    var hiddenItems = '<input type=hidden name=discount.' + tableId + '[' + index + '].code value="' + item.code + '"><input type=hidden name=discount.' + tableId + '[' + index + '].description value="' + item.description + '">';
+                    $('#HiddenItems' + tableId).append(hiddenItems);
+                });
+            }
+
+
+            $('select').trigger("change");
+
+            RebindProductsTable("DiscountedProducts", tableItems.DiscountedProducts);
+            RebindProductsTable("QualifyingProducts", tableItems.QualifyingProducts);
+            RebindCategoryTable("EligibleProductCategoryIds", tableItems.EligibleProductCategoryIds);
+            RebindQualifyingCategoryTable("QualifyingProductCategories", tableItems.QualifyingProductCategories);
+            RebindCodeTable("DiscountCodes", tableItems.DiscountCodes);
+
+        });
+    </script>

@@ -1,0 +1,20 @@
+﻿INSERT INTO [dbo].[OrderDiscounts]
+(
+	[OrderId],
+	[DiscountId],
+	[Name],
+	[Description],
+	[Percentage],
+	[Value],
+	[OrderTotalDeduction]
+)
+VALUES
+(   
+	@OrderId,
+	@DiscountId,
+	@Name,
+	@Description,
+	@Percentage,
+	@Value,
+	@OrderTotalDeduction
+)

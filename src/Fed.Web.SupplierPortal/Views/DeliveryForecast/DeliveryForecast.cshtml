@@ -1,0 +1,51 @@
+﻿@using Fed.Core.Extensions;
+@model Fed.Web.SupplierPortal.ViewModels.DeliveryForecastViewModel
+
+@{
+    Layout = "_Master";
+}
+
+<div id="SupplierForecast">
+    <h1>Delivery Forecast </h1>
+
+    <div class="dynamicTable">
+        @if (Model.Forecast == null || Model.Forecast.Count == 0)
+        {
+            <p>No data to display.</p>
+        }
+        else
+        {
+            <table class="tablesorter-metro-dark small">
+                <thead>
+                    <tr>
+                        <th class="left">Timeslot</th>
+                        @foreach (var date in Model.Forecast.Keys)
+                        {
+                        <th class="left">@date.ToString("dddd dd/MM/yyyy")</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var heading in Model.TimeslotRows)
+                    {
+                    <tr>
+                        <td>@(DateTime.Today.Add(heading.Item1).ToString("HH:mm")) - @(DateTime.Today.Add(heading.Item2).ToString("HH:mm"))</td>
+                        @foreach (var date in Model.Forecast.Keys)
+                        {
+                            var timeslot = Model.Timeslots.Single(t => t.EarliestTime == heading.Item1 && t.LatestTime == heading.Item2 && t.DayOfWeek == date.DayOfWeek);
+                            var timeslotDeliveries = Model.Forecast[date].Where(d => d.TimeslotId == timeslot.Id).SingleOrDefault();
+                            <td>@(timeslotDeliveries?.DeliveryAddressIds?.Count ?? 0)</td>
+                        }
+                    </tr>
+                    }
+                    </tbody>
+            </table>
+        }
+    </div>
+</div>
+<script src="~/js/jquery.tablesorter.min.js"></script>
+<script>
+    $(function () {
+        $(".tablesorter-metro-dark").tablesorter();
+    });
+</script>

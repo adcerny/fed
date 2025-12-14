@@ -1,0 +1,8 @@
+﻿{
+  "CSVFileName": "products.csv",
+  "DatabaseToUse": "LocalDb",
+  "ConnectionStrings": {
+    //"Azure": "Server=tcp:fed-sql-server.database.windows.net,1433;Initial Catalog=fed-sql-data-stg;Persist Security Info=False;User ID=FedAdmin;Password=jB&9)m24:JPb:]*w;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+    "LocalDb": "Server=localhost;Database=fed-sql-data-local;Trusted_Connection=True;"
+  }
+}

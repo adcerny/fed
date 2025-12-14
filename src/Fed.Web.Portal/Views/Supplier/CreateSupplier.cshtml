@@ -1,0 +1,42 @@
+﻿@model Fed.Web.Portal.Models.Suppliers.CreateSupplierModel
+@using Fed.Web.Portal.TagHelpers
+@addTagHelper *, Fed.Web.Portal
+
+@{
+    Layout = "_Master";
+}
+<div style="max-width: 800px">
+    <h1>Create New Supplier</h1>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary("Please resolve the following errors before you can continue:")
+    }
+    else if (ViewBag.Success != null && ViewBag.Success)
+    {
+        <p class="success">Supplier has been successfully saved!</p>
+    }
+    else if (ViewBag.Success != null && !ViewBag.Success)
+    {
+        <p class="success">Supplier could not be created!</p>
+    }
+</div>
+
+<div id="portalForm">
+
+    <form action="/suppliers/create/" method="post">
+
+        <input type="hidden" name="SupplierId" value="@Model.SupplierId" />
+
+        <div class="formRow">
+            <label for="SupplierName">Supplier Name</label>
+            <input type="text" id="sSupplierName" name="SupplierName" value="@Model.SupplierName" />
+            @Html.ValidationMessageFor(m => m.SupplierName)
+        </div>
+
+        <div id="progressRow">
+            <a class="linkButton" href="~/dashboard/suppliers">Cancel</a>
+            <button type="submit" formaction="/suppliers/create">Create Supplier</button>
+        </div>
+    </form>
+</div>
