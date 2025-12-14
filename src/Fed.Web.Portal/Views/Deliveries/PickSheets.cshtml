@@ -1,0 +1,72 @@
+﻿@using Fed.Web.Portal.ViewModels
+@using Fed.Core.Extensions
+@model PicksheetViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Fed by Abel &amp; Cole</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/pickSheets.css">
+</head>
+<body>
+    <main>
+        @if (Model.Deliveries != null && Model.Deliveries.Count > 0)
+        {
+            @foreach (var delivery in Model.Deliveries)
+            {
+                var deadline = DateTime.Today.Add(delivery.LatestTime).ToString("hhtt");
+                var items = delivery.GetAggregatedOrderItems().OrderBy(o => o.ProductGroup).ToList();
+                var orderedItems = items.OrderBySequence(Model.ProductOrder, i => i.ProductCode).ToList();
+
+                var currentGroup = items.First().ProductGroup;
+
+                <div class="a4sheet">
+                    <table>
+                        <caption>
+                            <span>@delivery.ShortId</span>
+                            <span>
+                                @(delivery.DeliveryCompanyName)
+                                @if (delivery.Orders.Any(o => o.SplitDeliveriesByOrder))
+                                {<text><p>(@delivery.Orders.Single().OrderName)</p></text>}
+                                @if (delivery.Orders.Any(o => o.IsFirstOrder))
+                                {<img src="~/img/new-black.svg">}
+                            </span>
+                            <span>@delivery.DeliveryDate.Value.ToString("dd.MM.yy")</span>
+                            <span>@deadline</span>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Product Code</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in orderedItems)
+                            {
+                                if (item.ProductGroup != currentGroup)
+                                {
+                                    currentGroup = item.ProductGroup;
+                                    <tr class="groupDivide"><td colspan="5"></td></tr>
+                                }
+                                <tr>
+                                    <td>@item.ProductGroup</td>
+                                    <td>@item.ProductCode</td>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.Quantity</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        }
+    </main>
+</body>
+</html>

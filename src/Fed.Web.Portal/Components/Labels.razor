@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web;
+@using Fed.Web.Service.Client;
+@using Fed.Core.Entities;
+@using Fed.Label.V2;
+@using Fed.Web.Portal.ViewModels;
+
+@inject FedWebClient FedWebClient
+
+
+<h2>Packing for @CurrentTimeslot</h2>
+<button>Change</button>
+
+<button @onclick="Add">Counter = @Status</button>
+
+@code {
+    [Parameter]
+    public Guid timeslotId { get; set; }
+
+    public int Status { get; set; } = 1;
+
+    public Timeslot CurrentTimeslot { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentTimeslot = await FedWebClient.GetTimeslotAsync(timeslotId);
+    }
+
+    protected void Add()
+    {
+        Status++;
+    }
+}

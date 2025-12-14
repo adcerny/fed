@@ -1,0 +1,47 @@
+﻿@model Fed.Web.Portal.Models.Suppliers.SupplierInfoModel
+@using Fed.Web.Portal.TagHelpers
+@addTagHelper *, Fed.Web.Portal
+
+@{
+    Layout = "_Master";
+}
+<div id="CustomerView">
+    <h1>Edit Supplier</h1>
+
+    <div id="topBar">
+        <nav>
+            <a href="~/supplier/overview/@Model.SupplierId">Overview</a>
+            <span>Supplier Info</span>
+        </nav>
+    </div>
+</div>
+
+<div id="portalForm">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary("Please resolve the following errors before you can continue:")
+    }
+    else if (ViewBag.Success != null && ViewBag.Success)
+    {
+        <p class="success">Supplier has been successfully saved!</p>
+    }
+    else if (ViewBag.Success != null && !ViewBag.Success)
+    {
+        <p class="success">Supplier could not be saved!</p>
+    }
+    <form action="/supplier/info/@Model.SupplierId" method="post">
+
+        <input type="hidden" name="SupplierId" value="@Model.SupplierId" />
+
+        <div class="formRow">
+            <label for="SupplierName">Supplier Name</label>
+            <input type="text" id="sSupplierName" name="SupplierName" value="@Model.SupplierName" />
+            @Html.ValidationMessageFor(m => m.SupplierName)
+        </div>
+
+        <div id="progressRow">
+            <a class="linkButton" href="~/supplier/overview/@Model.SupplierId">Cancel</a>
+            <button type="submit" formaction="/supplier/info/@Model.SupplierId">Save Supplier</button>
+        </div>
+    </form>
+</div>

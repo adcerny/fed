@@ -1,0 +1,19 @@
+﻿.sorting-list-mod ul { list-style: none; padding: 0; margin: 0; }
+.sorting-list-mod .tool-list  { border-bottom: 2px solid #fcfcfc; }
+.sorting-list-mod .tool-list .tool { margin: 0 20px 20px  0; }
+.sorting-list-mod .tool-list .tool .cta { min-width: 170px; }
+.sorting-list-mod .tool-list .tool:last-child { margin-right: 0; }
+.sorting-list-mod .tool-list.fixed { position: fixed; top: 20px; left: 0; width: calc(100% - 90px); height: auto; margin: 0 45px; padding: 0; transform: translateY(-100%); }
+.sorting-list-mod .tool-list.fixed.slide { transform: translateY(0); transition: transform 0.3s; background: #222222; }
+.sorting-list-mod.fixed-tool-bar:after { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 20px; background: #222; }
+
+.sorting-list-mod .sorting-list-holder { display: inline-block; }
+.sorting-list-mod .sorting-list-holder .sorting-list { border-right: 2px solid #ffffff; }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element { margin: 0; padding: 10px 0; font-weight: bold; }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element .color-indicator { vertical-align: middle; }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element .checkbox-container { display: inline-block; width: 25px; vertical-align: middle; }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element svg { transition: 0.3s; }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element.position-changed { background: #616161 }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element.selected { background-color: #ffffff; color: #000000; background-image: none; cursor: grab; }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element.selected svg rect { fill: #ecca00; stroke-width: 0; }
+.sorting-list-mod .sorting-list-holder .sorting-list .list-element.selected svg polyline { stroke: #333333; fill: #ecca00; animation: checkboxChecked 0.5s ease forwards; stroke-dasharray: 50; stroke-dashoffset: 50; }

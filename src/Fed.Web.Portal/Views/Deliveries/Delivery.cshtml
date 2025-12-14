@@ -1,0 +1,556 @@
+﻿@model Fed.Web.Portal.ViewModels.DeliveryViewModel
+@using Fed.Core.Extensions
+@using Fed.Web.Portal.Components
+@{
+    Layout = "_Master";
+}
+
+<hgroup id="DeliveryHeading">
+    <h1>@Model.Delivery.ShortId, @Model.Delivery.DeliveryCompanyName</h1>
+    <h2>
+        @{
+            var status = string.Empty;
+            var statusClass = "notPacked";
+
+            switch (Model.Delivery.PackingStatus)
+            {
+                case Fed.Core.Enums.PackingStatus.NotPacked:
+                    status = "Not Packed";
+                    statusClass = "notPacked";
+                    break;
+                case Fed.Core.Enums.PackingStatus.PartiallyPacked:
+                    status = "Partially Packed";
+                    statusClass = "partiallyPacked";
+                    break;
+                case Fed.Core.Enums.PackingStatus.Packed:
+                    status = "Packed";
+                    statusClass = "packed";
+                    break;
+                default: break;
+            }
+        }
+        <strong class="@statusClass">@status</strong>
+    </h2>
+</hgroup>
+
+<div id="Deliveries">
+
+    <article @(Model.Delivery.Orders.Any(o => o.IsFirstOrder) ? " class=first-order" : "")>
+
+        <h2>@Model.Delivery.DeliveryFullName, @Model.Delivery.DeliveryDate.Value.ToString("dddd, dd/MM/yyyy"), @Model.Delivery.EarliestTime.ToString(@"hh\:mm") - @Model.Delivery.LatestTime.ToString(@"hh\:mm")</h2>
+
+        <div>
+            <div class="orderInfo">
+                <table>
+                    <caption>Delivery Details</caption>
+                    <tr>
+                        <th class="left">Delivery ID:</th>
+                        <td>@Model.Delivery.ShortId</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Total Orders:</th>
+                        <td>
+                            @{
+                                var orderIds = new System.Text.StringBuilder();
+
+                                foreach (var order in Model.Delivery.Orders)
+                                {
+                                    if (orderIds.Length > 0)
+                                    {
+                                        orderIds.Append(", ");
+                                    }
+
+                                    orderIds.Append($"{order.ShortId} ({order.OrderName})");
+                                }
+                            }
+                            @Model.Delivery.Orders?.Count: @orderIds.ToString()
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="left">Delivery Time:</th>
+                        <td>@Model.Delivery.DeliveryDate.Value.ToString("dddd, dd/MM/yyyy"), @Model.Delivery.EarliestTime.ToString(@"hh\:mm") - @Model.Delivery.LatestTime.ToString(@"hh\:mm")</td>
+                    </tr>
+                </table>
+                <table>
+                    @{ var sampleOrder = Model.Delivery.Orders.First(); }
+                    <caption>Contact Details</caption>
+                    <tr>
+                        <th class="left">Customer ID:</th>
+                        <td>@sampleOrder.CustomerShortId</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Contact ID:</th>
+                        <td>@sampleOrder.ContactShortId</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Company Name:</th>
+                        <td>@sampleOrder.CompanyName</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Full Name:</th>
+                        <td>@(sampleOrder.ContactFirstName + ' ' + sampleOrder.ContactLastName)</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Email:</th>
+                        <td>@sampleOrder.ContactEmail</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Phone:</th>
+                        <td>@sampleOrder.ContactPhone</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="orderInfo">
+                <table>
+                    <caption>Delivery Address</caption>
+                    <tr>
+                        <th class="left">Full Name:</th>
+                        <td>@Model.Delivery.DeliveryFullName</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Company Name:</th>
+                        <td>@Model.Delivery.DeliveryCompanyName</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Address Line 1:</th>
+                        <td>@Model.Delivery.DeliveryAddressLine1</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Address Line 2:</th>
+                        <td>@Model.Delivery.DeliveryAddressLine2</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Town:</th>
+                        <td>@Model.Delivery.DeliveryTown</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Postcode:</th>
+                        <td>@Model.Delivery.DeliveryPostcode</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Instructions:</th>
+                        <td>@Model.Delivery.DeliveryInstructions</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Leave Outside:</th>
+                        <td>@Model.Delivery.LeaveDeliveryOutside</td>
+                    </tr>
+                </table>
+            </div>
+            <table class="productsTable">
+                <caption>Products</caption>
+                <tr>
+                    <th class="left">Product Code</th>
+                    <th class="left">Product Group</th>
+                    <th class="left">Product Name</th>
+                    <th class="left">Supplier ID</th>
+                    <th class="left">Supplier SKU</th>
+                    <th class="right">Quantity</th>
+                    <th></th>
+                    <th class="right">Price</th>
+                    <th class="right">Sale Price</th>
+                    <th class="right">Total Price</th>
+                </tr>
+                @foreach (var item in Model.Delivery.GetAggregatedOrderItems(true).OrderBy(i => i.ProductCode))
+                {
+                    var shortages = Model.Delivery.DeliveryShortages?.Where(x => x.ProductId.Equals(item.ProductId, StringComparison.OrdinalIgnoreCase)
+                                                                                 && x.ProductPrice == item.ActualPrice)?.ToList();
+
+                    <tr>
+                        <td class="left">@item.ProductCode</td>
+                        <td class="left">@item.ProductGroup</td>
+                        <td class="left">@item.ProductName</td>
+                        <td class="left">@item.SupplierId</td>
+                        <td class="left">@item.SupplierSKU</td>
+                        <td class="right deliveryItemQuantity">
+                            @if (shortages != null && shortages.Count > 1)
+                            {
+                                <del>@item.Quantity</del>
+                                <em>@shortages.Sum(s => s.ActualQuantity)</em>
+                            }
+                            else
+                            {
+                                <span>@item.Quantity</span>
+                            }
+
+                        </td>
+                        <td class="centre">
+                            @if (shortages == null || shortages.Count == 0)
+                            {
+                                <button class="shortBtn"
+                                        data-product-name="@item.ProductName"
+                                        data-product-id="@item.ProductId"
+                                        data-product-price="@item.ActualPrice"
+                                        data-quantity="@item.Quantity">
+                                    Short
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="addSubBtn"
+                                        data-product-name="@item.ProductName"
+                                        data-product-group="@item.ProductGroup">
+                                    Sub
+                                </button>
+                            }
+                        </td>
+                        <td class="right">&pound; @(item.Price.ToString("#,##0.00"))</td>
+                        <td class="right">@(item.SalePrice?.ToString("£ #,##0.00"))</td>
+                        <td class="right">&pound; @((item.ActualPrice * item.Quantity).ToString("#,##0.00"))</td>
+                    </tr>
+                }
+                <tr class="totalRetailPrice">
+                    <td class="right bgDark" colspan="9">Total Retail Price</td>
+                    <td class="right">&pound; @Model.Delivery.GetOrderItemsTotal().ToString("#,##0.00")</td>
+                </tr>
+                <tr class="deliveryCharge">
+                    <td class="right bgDark" colspan="9">Delivery Charge</td>
+                    <td class="right">&pound;0.00</td>
+                </tr>
+                <tr class="totalPrice">
+                    <td class="right bgDark" colspan="9">Total Price</td>
+                    <td class="right">&pound; @Model.Delivery.GetOrderItemsTotal().ToString("#,##0.00")</td>
+                </tr>
+            </table>
+
+            <table id="deliveryShortages">
+                <caption>Delivery Shortages</caption>
+                <tr>
+                    <th class="left">Product</th>
+                    <th class="left">Desired Quantity</th>
+                    <th class="left">Actual Quantity</th>
+                    <th class="left">Price</th>
+                    <th class="left">Reason</th>
+                    <th class="left">Time Recorded</th>
+                    <th></th>
+                </tr>
+                @if (Model.Delivery.DeliveryShortages != null && Model.Delivery.DeliveryShortages.Count > 0)
+                {
+                    @foreach (var item in Model.Delivery.DeliveryShortages.OrderBy(x => x.ProductName))
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.DesiredQuantity</td>
+                            <td>@item.ActualQuantity</td>
+                            <td>£&nbsp;@item.ProductPrice</td>
+                            <td>@item.Reason</td>
+                            <td>@item.TimeRecorded</td>
+                            <td><form method="post" action="~/deliveryShortages/delete/@Model.Delivery.ShortId/@item.Id"><button type="submit">Delete</button></form></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="5">No delivery shortages have been recorded yet.</td></tr>
+                }
+            </table>
+
+            <table id="deliveryAdditions">
+                <caption>Delivery Additions</caption>
+                <tr>
+                    <th class="left">Product</th>
+                    <th class="left">Replacement for shortage</th>
+                    <th class="left">Quantity</th>
+                    <th class="left">Notes</th>
+                    <th class="left">Time Recorded</th>
+                    <th></th>
+                </tr>
+                @if (Model.Delivery.DeliveryAdditions != null && Model.Delivery.DeliveryAdditions.Count > 0)
+                {
+                    @foreach (var item in Model.Delivery.DeliveryAdditions.OrderBy(x => x.ProductName))
+                    {
+                        var shortage = Model.Delivery.DeliveryShortages?.Where(s => s.Id == item.DeliveryShortageId).FirstOrDefault();
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@(shortage?.ProductName ?? "N/A")</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Notes</td>
+                            <td>@item.TimeRecorded</td>
+                            <td><form method="post" action="~/deliveryAdditions/delete/@Model.Delivery.ShortId/@item.Id"><button type="submit">Delete</button></form></td>
+                        </tr>
+                    }
+
+                }
+                else
+                {
+                    <tr><td colspan="5">No substitutes have been recorded.</td></tr>
+                }
+            </table>
+            <button id="subBtn" type="button">Add Substitutes to Delivery</button>
+
+            <div id="packagingInfo">
+                <h3>Packing &amp; Labelling</h3>
+                <div class="singleRowForm">
+                    <label for="bagCount">Bag count</label>
+                    <input type="number" id="bagCount" value="@Model.Delivery.BagCount" />
+                    <a id="printLabelsBtn" class="linkButton printLabelButton" style="margin-right: 1em;">Print Labels for this order</a>
+                    @if (Model.Delivery.PackingStatus != Fed.Core.Enums.PackingStatus.NotPacked)
+                    {
+                        <form method="post" action="~/deliveries/@Model.Delivery.Id/packingStatus">
+                            <input type="hidden" name="packingStatusId" value="0" />
+                            <button class="notPackedBtn" type="submit">Mark as not packed</button>
+                        </form>
+                    }
+
+                        @if (Model.Delivery.PackingStatus != Fed.Core.Enums.PackingStatus.PartiallyPacked)
+                        {
+                            <form method="post" action="~/deliveries/@Model.Delivery.Id/packingStatus">
+                                <input type="hidden" name="packingStatusId" value="1" />
+                                <button class="partiallyPackedBtn" type="submit">Mark as partially packed</button>
+                            </form>
+                        }
+
+                        @if (Model.Delivery.PackingStatus != Fed.Core.Enums.PackingStatus.Packed)
+                        {
+                            <form method="post" action="~/deliveries/@Model.Delivery.Id/packingStatus">
+                                <input type="hidden" name="packingStatusId" value="2" />
+                                <button class="fullyPackedBtn" type="submit">Mark as fully packed</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>View Previous/Next Delivery</h3>
+                <div class="singleRowForm">
+                    @if (!string.IsNullOrEmpty(Model.PrevDeliveryId))
+                    {
+                        <a class="linkButton" href="/deliveries/@Model.PrevDeliveryId">Previous Delivery</a>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.NextDeliveryId))
+                    {
+                        <a class="linkButton" href="/deliveries/@Model.NextDeliveryId">Next Delivery</a>
+                    }
+                </div>
+            </div>
+    </article>
+
+    <div id="shortageDialog" class="modal">
+        <div class="modalContent">
+            <h2>Record Shortage</h2>
+
+            <h3 id="shortProductName"></h3>
+
+            <form id="shortageForm" method="post" action="~/deliveryShortages/@Model.Delivery.Id">
+                <input id="shortProductId" type="hidden" name="productId" />
+                <input id="shortProductPrice" type="hidden" name="productPrice" />
+
+                <div class="formRow">
+                    <label for="shortDesiredQuantity">Desired Quantity</label>
+                    <input type="number" id="shortDesiredQuantity" disabled />
+                    <input type="hidden" id="shortDesiredQuantity2" name="desiredQuantity" />
+                </div>
+                <div class="formRow">
+                    <label for="shortActualQuantity">Actual Quantity</label>
+                    <input type="number" id="shortActualQuantity" min="0" name="actualQuantity" />
+                </div>
+                <div class="formRow">
+                    <label for="shortReason">Reason</label>
+                    <select id="shortReason" name="reasonCode">
+                        <optgroup label="Supplier">
+                            <option value="LIU">Supplier Shortage (Unavailable)</option>
+                            <option value="LIA">Supplier Shortage (Missing Item)</option>
+                            <option value="BFV">Supplier Quality</option>
+                        </optgroup>
+                        <optgroup label="Transit">
+                            <option value="LID">Damage in Transit</option>
+                        </optgroup>
+                        <optgroup label="Warehouse">
+                            <option value="OED">Warehouse Damage</option>
+                            <option value="OER">Warehouse Error</option>
+                        </optgroup>
+                        <optgroup label="Delivery">
+                            <option value="LOU">Delivery Error</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="formRow">
+                    <button id="saveShortageBtn" type="submit">Save Shortage</button>
+                    <button id="cancelShortageBtn" type="button">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="substituteDialog" class="modal">
+        <div class="modalContent">
+            <h2>Add Substitute to Delivery</h2>
+            <form id="substituteForm" method="post" action="~/deliveryAdditions/@Model.Delivery.Id">
+                <div class="formRow">
+                    <label for="productId">Substitute WITH</label>
+
+                    <select id="productId" name="productId">
+                        @foreach (var product in Model.Products.Where(p => !p.IsDeleted).OrderBy(p => p.ProductName))
+                        {
+                            <option value="@product.Id" data-product-group="@product.ProductGroup">@product.ProductName</option>
+                        }
+                    </select>
+                </div>
+
+                @if (Model.Delivery.DeliveryShortages != null && Model.Delivery.DeliveryShortages.Count > 0)
+                {
+                    <div class="formRow">
+                        <label for="deliveryShortageId">Substitute FOR</label>
+                        <select id="deliveryShortageId" name="deliveryShortageId">
+                            @foreach (var item in Model.Delivery.DeliveryShortages.OrderBy(x => x.ProductName))
+                            {
+                                <option value="@item.Id">@item.ProductName</option>
+                            }
+                        </select>
+                    </div>
+                }
+                <div class="formRow">
+                    <label for="quantity">Quantity</label>
+                    <input id="subQty" type="number" min="0" name="quantity" />
+                </div>
+                <div class="formRow">
+                    <label for="notes">Notes</label>
+                    <input id="subNotes" type="text" name="notes" />
+                </div>
+                <div class="formRow">
+                    <button id="saveSubBtn" type="submit">Save Substitute</button>
+                    <button id="cancelSubBtn" type="button">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+
+        $("#printLabelsBtn").click(function (event) {
+
+            event.preventDefault();
+
+            var url = "@Url.ActionContext.HttpContext.Request.Scheme://@Url.ActionContext.HttpContext.Request.Host/deliveries/labels/@Model.Delivery.Id/images";
+            var bagCount = $("#bagCount").val();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(bagCount),
+                contentType: "application/json",
+                success: function (result) {
+                    console.log(result);
+                    var images = { images: result };
+                    printLabels(images);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+        $(".shortBtn").click(function () {
+            var productName = $(this).attr("data-product-name");
+            var productId = $(this).attr("data-product-id");
+            var productPrice = $(this).attr("data-product-price");
+            var quantity = $(this).attr("data-quantity");
+
+            $("#shortProductId").val(productId);
+            $("#shortProductPrice").val(productPrice);
+            $("#shortActualQuantity").val(quantity - 1);
+            $("#shortDesiredQuantity").val(quantity);
+            $("#shortDesiredQuantity2").val(quantity);
+
+            $("#shortProductName").text(productName);
+
+            $("#shortActualQuantity").attr("max", quantity - 1);
+
+            $("#shortageDialog").show();
+
+            $("#shortActualQuantity").select();
+            $("#shortActualQuantity").focus();
+        });
+
+        $("#saveShortageBtn").click(function () {
+            $("#shortageDialog").hide();
+        });
+
+        $("#cancelShortageBtn").click(function () {
+            $("#shortageDialog").hide();
+        });
+
+        $("#saveSubBtn").click(function () {
+            $("#substituteDialog").hide();
+        });
+
+        $("#cancelSubBtn").click(function () {
+            $("#substituteDialog").hide();
+        });
+
+        $("#productId").filterProductsByGroup($(".addSubBtn"));
+
+        function printLabels(images) {
+            $.ajax({
+                url: "@Model.FedLabelHostUrl",
+                type: "POST",
+                dataType: 'json',
+                crossDomain: true,
+                data: images,
+                error:function(xhr,status,error){
+                    console.log(status);
+                }
+            });
+        }
+    });
+
+    //jQuery extension method for filtering subs by product category:
+    jQuery.fn.filterProductsByGroup =
+        function (btn) {
+            return this.each(function () {
+                var select = this;
+                var options = [];
+
+                $(select).find("option").each(function () {
+                    options.push({
+                        value: $(this).val(),
+                        text: $(this).text(),
+                        group: $(this).attr("data-product-group")
+                    });
+                });
+
+                $(select).data("options", options);
+
+                $(btn).bind("click", function () {
+                    var options = $(select).empty().data("options");
+                    var productGroup = $(this).attr("data-product-group");
+                    var shortenedProduct = $(this).attr("data-product-name");
+
+                    $.each(options, function (i) {
+                        var option = options[i];
+
+                        if (option.group === productGroup) {
+                            $(select).append(
+                                $('<option data-product-group="' + option.group + '">').text(option.text).val(option.value)
+                            );
+                        }
+                    });
+
+                    $("#subNotes").val("Substitute for " + shortenedProduct);
+                    $("#subQty").val("1");
+                    $("#substituteDialog").show();
+                });
+
+                $("#subBtn").bind("click", function () {
+                    if (!$("#deliveryShortageId option").length)
+                        return alert("Please add a shortage before adding a substitution");
+
+                    var options = $(select).empty().data("options");
+                    $.each(options, function (i) {
+                        var option = options[i];
+
+                        $(select).append(
+                            $('<option data-product-group="' + option.group + '">').text(option.text).val(option.value)
+                        );
+                    });
+
+                    $("#subNotes").val("");
+                    $("#subQty").val("");
+                    $("#substituteDialog").show();
+                });
+            });
+        };
+</script>

@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Confirmed Orders by Fed</title>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #222;
+        }
+
+        h1 {
+            color: #000;
+        }
+
+        h2 {
+            color: #666;
+            margin-bottom: 1.5em;
+        }
+
+        h4 {
+            margin: 2em 0 1em 0;
+        }
+
+        address {
+            font-style: normal;
+        }
+
+        table {
+            margin: 0;
+            padding: 0;
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px 20px;
+        }
+
+        th {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        td {
+            text-align: right;
+        }
+
+        tr.oddRow {
+            background: #dadada;
+        }
+
+        #lastParagraph {
+            margin-top: 2em;
+        }
+
+        #signature {
+            line-height: 1.3em;
+            font-size: .85em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fed by Abel &amp; Cole - Operations Forecast</h1>
+    <h2>Delivery Date: #DeliveryDate#</h2>
+
+    <p>Good afternoon,</p>
+    <p>Based on our current data we anticipate orders for the following categories at 4PM today:</p>
+
+    <table>
+        <tbody>
+            <tr class="oddRow">
+                <th>Pantry orders to be picked</th>
+                <td>#HasPantry#</td>
+            </tr>
+            <tr>
+                <th>Chill orders to be picked</th>
+                <td>#HasChill#</td>
+            </tr>
+            <tr class="oddRow">
+                <th>F&V orders to be picked</th>
+                <td>#HasFandV#</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Please be aware that this is only a forecast based on current data which could change when customers place more orders before our official cut off time at 4PM.</p>
+
+    <h4>Contact:</h4>
+    <p>Keith Ellis, <a href="mailto:keith.ellis@fedteam.co.uk">keith.ellis@fedteam.co.uk</a>, Tel.: 07701 332028</p>
+
+    <p id="lastParagraph">
+        Kind regards,<br><br>
+        Keith
+    </p>
+    <p id="signature">
+        Keith Ellis | Senior Operations Manager | Fed by Abel &amp; Cole<br>
+        145 City Rd, Hoxton, London, EC1V 1AZ<br>
+        Tel: 07701 332028<br>
+    </p>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿@model Fed.Core.Entities.Customer
+
+@{
+    Layout = "_Master";
+}
+
+
+<h1>@Model.CompanyName</h1>
+
+<div style="max-width: 800px">
+
+    <h3>User has been successfully created!</h3>
+
+    <div class="formRow">
+        <a class="linkButton" href="~/customers/create/step1">Create another customer</a>
+    </div>
+
+</div>
+
+<script>
+    var clipboard = new ClipboardJS('.btn', {
+        text: function (trigger) {
+            var id = $(trigger).attr("data-clipboard-target");
+            return $(id).html();
+        }
+    });
+
+    clipboard.on('success', function (e) {
+        e.clearSelection();
+    });
+</script>

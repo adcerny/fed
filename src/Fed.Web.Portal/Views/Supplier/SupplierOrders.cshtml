@@ -1,0 +1,60 @@
+﻿@model Fed.Web.Portal.ViewModels.SupplierOrdersViewModel
+
+@{
+    Layout = "_Master";
+}
+
+    <div id="SupplierForecast">
+        <h1>@Model.Supplier Orders</h1>
+
+        <div class="dynamicTable">
+            @if (Model.Orders == null || Model.Orders.Count == 0)
+            {
+                <p>No data to display.</p>
+            }
+            else
+            {
+                <table class="tablesorter-metro-dark">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="left">Product Code</th>
+                            <th class="left">Product Name</th>
+                            <th class="left">Supplier SKU</th>
+                            <th class="left">Fed Quantity</th>
+                            <th class="left">Supplier Quantity</th>
+                            <th class="left">Customer Count</th>
+                            <th class="left">Customers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var counter = 1;
+                        }
+                        @foreach (var item in Model.Orders)
+                        {
+                            <tr>
+                                <td>@(counter++)</td>
+                                <td>@item.ProductCode</td>
+                                <td>@item.ProductName</td>
+                                <td>@item.SupplierSKU</td>
+                                <td>@item.FedQuantity</td>
+                                <td>@item.SupplierQuantity</td>
+                                <td>@item.CustomerCount</td>
+                                <td>@item.Customers</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div id="progressRow">
+            <a class="linkButton" href="~/supplier/overview/@Model.SupplierId">Back to Overview</a>
+        </div>
+    </div>
+<script src="~/js/jquery.tablesorter.min.js"></script>
+<script>
+    $(function () {
+        $(".tablesorter-metro-dark").tablesorter();
+    });
+</script>

@@ -1,0 +1,43 @@
+﻿<div id="skipDeliveryDatesDialog" class="modal">
+    <div class="modalContent">
+
+        @if (ViewData.ContainsKey("success") && ViewData["success"].ToString() == "1")
+        {
+            <p class="success">Skip dates saved.</p>
+        }
+        <h2>Skip Delivery Dates</h2>
+
+        <h3 id="shortProductName"></h3>
+
+        <form id="skipDeliveryDatesForm" method="post" action="/recurringOrders/SkipDeliveryDates">
+            <div class="formRow">
+                <input type="hidden" id="OrderId" name="OrderId" />
+                <input type="hidden" id="CustomerId" name="CustomerId" />
+                <input type="hidden" id="RedirectTo" name="RedirectTo" />
+                <input type="hidden" id="CreatedBy" name="CreatedBy" value="Portal" />
+            </div>
+            <div class="formRow">
+                <label for="SkipDate">Skip Delivery Date</label>
+                <input type="date" id="SkipDate" name="SkipDate" />
+            </div>
+
+            <div class="formRow">
+                <label for="Reason">Reason</label>
+                <textarea id="Reason" name="Reason" rows="10" cols="50"></textarea>
+            </div>
+
+            <div class="formRow">
+                <button id="skipDeliveryBtn" type="submit">Skip Delivery</button>
+                <button id="cancelSkipDeliveryBtn" type="button">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        $("#cancelSkipDeliveryBtn").click(function (e) {
+            $("#skipDeliveryDatesDialog").hide();
+        });
+    });
+</script>

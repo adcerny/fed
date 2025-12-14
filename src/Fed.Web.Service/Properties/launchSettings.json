@@ -1,0 +1,31 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:55928",
+      "sslPort": 44308
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "environmentVariables": {
+        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONENABLED": "true",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONVAULT": "https://fed-key-vault-stg.vault.azure.net"
+      }
+    },
+    "Fed.Web.Service": {
+      "commandName": "Project",
+      "launchUrl": "/",
+      "environmentVariables": {
+        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONENABLED": "true",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONVAULT": "https://fed-key-vault-stg.vault.azure.net"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    }
+  }
+}

@@ -1,0 +1,217 @@
+﻿@model Fed.Web.Portal.Models.Orders.Order
+@using Fed.Web.Portal.TagHelpers
+@addTagHelper *, Fed.Web.Portal
+
+@{
+    Layout = "_Master";
+}
+<div style="max-width: 800px">
+    <h1>Create New Order</h1>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary("Please resolve the following errors before you can continue:")
+    }
+    else if (ViewBag.Success != null && ViewBag.Success)
+    {
+        <p class="success">Order has been successfully saved!</p>
+    }
+    else if (ViewBag.Success != null && !ViewBag.Success)
+    {
+        <p class="success">Order could not be created!</p>
+    }
+</div>
+
+<div id="portalForm">
+
+    <form method="post" action="/orders/@Model.CustomerId/create">
+
+        @Html.HiddenFor(m => m.CustomerId)
+        @Html.HiddenFor(m => m.ContactId)
+        <input type="hidden" name="BillingAddressId" value="@Model.BillingAddressId" />
+        @if (Model.DeliveryAddress?.Count == 1)
+        {
+            <div class="formRow">
+                <label for="DeliveryAddressId">Delivery Address</label>
+                <input type="hidden" name="DeliveryAddressId" value="@Model.DeliveryAddress.FirstOrDefault().Id" />
+                <h3>@string.Concat(Model.DeliveryAddress.FirstOrDefault().AddressLine1, " ", Model.DeliveryAddress.FirstOrDefault().AddressLine2, " ", Model.DeliveryAddress.FirstOrDefault().Postcode)</h3>
+            </div>
+        }
+        <div class="formRow">
+            <label for="OrderName">Order Name</label><br />
+            <input type="text" id="OrderName" name="OrderName" value="@Model.OrderName" />
+            @Html.ValidationMessageFor(m => m.OrderName)
+        </div>
+
+        <div class="formRow">
+            <label for="StartDate">Start Date</label><br />
+            <input type="date" id="StartDate" name="StartDate" value="@Model.StartDate" />
+            @Html.ValidationMessageFor(m => m.StartDate)
+        </div>
+
+        <div class="formRow" id="timeSlotInput" style="display:none">
+            <label for="TimeSlotId">Choose a time slot</label>
+
+            <select id="TimeSlotId" name="TimeSlotId">
+                <option value="">Select a time</option>
+                @foreach (var timeslot in Model.TimeSlots.Where(t => t.IsActive && t.AvailableCapacity > 0))
+                {
+                    <option data-day="@timeslot.DayOfWeek" value="@timeslot.Id">@timeslot.ToString()</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(m => m.TimeSlotId)
+        </div>
+        <div class="formRow" id="notimeslots" style="display:none">
+            <p>No timeslots available</p>
+            </div>
+
+            @if (Model.DeliveryAddress.Count > 1)
+            {
+                <div class="formRow">
+                    <label for="DeliveryAddressId">Delivery Address</label>
+                    <select id="DeliveryAddressId" name="DeliveryAddressId">
+                        @foreach (var address in Model.DeliveryAddress)
+                        {
+                            <option value="@address.Id">@string.Concat(address.AddressLine1, " ", address.AddressLine2, " ", address.Postcode)</option>
+                        }
+                    </select>
+                    @Html.ValidationMessageFor(m => m.DeliveryAddressId)
+                </div>
+            }
+
+            <div class="formRow">
+                <label for="StartDate">Order Reccurence</label><br />
+                <input type="radio" name="Reccurence" value="0" checked="checked" />One off
+                <input type="radio" name="Reccurence" value="1" />Weekly
+            </div>
+
+
+            <div class="formRow">
+                <label for="FreeOrder">Make this order free</label>
+                @Html.CheckBoxFor(m => m.FreeOrder)
+            </div>
+
+            <h3>Add Items</h3>
+
+            <div class="formRow">
+                <label for="ProductId">Product</label><br />
+                <select id="ProductId" name="ProductId">
+                    <option value="">Select a product</option>
+                    @foreach (var product in Model.Products.OrderBy(p => p.ProductName))
+                    {
+                        <option data-sku="@product.ProductCode" value="@product.Id" data-price="@product.Price">@product.ProductName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="formRow">
+                <label for="ProductId">Quantity</label><br />
+                <input type="number" id="Quantity" name="Quantity" value="1" required />
+            </div>
+
+            <button type="submit" id="AddItem">Add Item to Order</button>
+
+            <table id="OrderTable" class="tablesorter-metro-dark">
+                <thead>
+                    <tr>
+                        <th>Product Code</th>
+                        <th>Product</th>
+
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="HiddenItems"></div>
+
+            <div class="formRow">
+                <label for="TotalCost">Total Cost</label>
+                <h2 name="TotalCost" id="TotalCost">£ 0.00</h2>
+            </div>
+
+
+            <div id="progressRow">
+                <a class="linkButton" href="~/customers/@Model.CustomerId">Cancel</a>
+                <button type="submit">Create Order</button>
+            </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(
+        function () {
+            var orderItems = [];
+            $('#StartDate').change(function () {
+                var dayOfTheWeek = new Date($('#StartDate').val()).toLocaleDateString('en', { weekday: 'long' });
+                var selectedTimeslot = $('#TimeSlotId').children("option:selected").val();
+                if (selectedTimeslot.length > 0) {
+                    $('#TimeSlotId').prop('selectedIndex', -1);
+                }
+                $('#TimeSlotId option').css('display', 'block');
+                $('#TimeSlotId option[data-day != ' + dayOfTheWeek + ']').css('display', 'none');
+                if ($('#TimeSlotId option[data-day = ' + dayOfTheWeek + ']').length > 0) {
+                    $('#timeSlotInput').show();
+                    $('#notimeslots').hide();
+                }
+                else {
+                    $('#notimeslots').show();
+                     $('#timeSlotInput').hide()
+                }
+            });
+
+            $(document).on("click","#AddItem", function (e) {
+                e.preventDefault();
+                var productId = $('#ProductId option:selected').val();
+                var productName = $('#ProductId option:selected').text();
+                var productCode = $('#ProductId option:selected').data('sku');
+                var quantity = $('#Quantity').val();
+                var price = (($('#ProductId option:selected').data('price')) * quantity).toFixed(2);
+                var orderItem = {
+                    productId: productId,
+                    productName: productName,
+                    productCode: productCode,
+                    quantity: quantity,
+                    price: price
+                };
+                orderItems.push(orderItem);
+                RebindTable();
+            });           
+
+            function RebindTable() {
+                var totalCost = 0;
+                var orderTable = $('#OrderTable').find('tbody');
+                $("#OrderTable > tbody").empty();
+                $('#HiddenItems').empty();
+                orderItems.forEach(function (item) {
+                    var index = orderItems.indexOf(item);
+                    var hiddenItems = '<input type=hidden name=OrderItems[' + index + '].ProductId value=' + item.productId + '><input type=hidden name=OrderItems[' + index + '].ProductCode value=' + item.productCode + '><input type=hidden name=OrderItems[' + index + '].ProductName value=' + item.productName + '><input type=hidden name=OrderItems[' + index + '].Quantity  value=' + item.quantity + '><input type=hidden name=OrderItems[' + index + '].Price value=' + item.price + '>';
+                    $('#HiddenItems').append(hiddenItems);
+                    var quantityInputId = 'quantity' + index;
+                    var row = '<tr><td>' + item.productCode + '</td><td>' + item.productName + '</td><td><input type="number" id="'+quantityInputId+'" value="'+item.quantity+'" style="max-width:70px !important;min-width:70px !important;" data-index="' + index + '"/></td><td>' + item.price + '</td><td><a href="" data-index=' + index + '>Remove Item</a></td></tr>';
+                    orderTable.append(row);
+                    totalCost = parseFloat(totalCost) + parseFloat(item.price);
+                    $('#TotalCost').empty();
+                    $('#TotalCost').append('£ ' + totalCost.toFixed(2));
+                });
+            }
+
+             $(document).on("click", "#OrderTable a", function (e) {
+                e.preventDefault();
+                var indexToRemove = $(this).data('index');
+                $(this).closest('tr').remove();
+                orderItems.splice(indexToRemove, 1);
+                RebindTable();
+            });
+                       
+     $(document).on("change", "#OrderTable input[id^='quantity']", function (e) {
+                var index = $(this).data('index');
+                var orderItem = orderItems[index];
+                orderItem.quantity = $(this).val();
+                RebindTable();
+            });
+
+        });
+</script>
+ 

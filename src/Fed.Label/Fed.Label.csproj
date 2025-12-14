@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>1.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.6.1" />
+    <PackageReference Include="System.Windows.Extensions" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fed.Core\Fed.Core.csproj" />
+  </ItemGroup>
+
+</Project>

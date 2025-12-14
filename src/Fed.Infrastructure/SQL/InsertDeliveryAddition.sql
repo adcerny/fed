@@ -1,0 +1,20 @@
+﻿INSERT INTO [dbo].[DeliveryAdditions]
+(
+	[Id],
+	[OrderId],
+	[ProductId],
+	[Quantity],
+	[Reason],
+	[Notes],
+	[DeliveryShortageId]
+)
+VALUES
+(
+	@Id,
+	@OrderId,
+	@ProductId,
+	@Quantity,
+	@Reason,
+	@Notes,
+	@DeliveryShortageId
+)

@@ -1,0 +1,73 @@
+﻿@model Fed.Web.SupplierPortal.ViewModels.SupplierForecastViewModel
+
+@{
+    Layout = "_Master";
+}
+
+<div id="SupplierForecast">
+    <h1>Bakery Forecast</h1>
+
+    <div class="dynamicTable">
+        @if (Model.Forecast == null || Model.Forecast.Count == 0)
+        {
+            <p>No data to display.</p>
+        }
+        else
+        {
+            <table class="tablesorter-metro-dark">
+                <thead>
+                    <tr>
+                        <th class="left">Product Name</th>
+                        <th class="left">Supplier SKU</th>
+
+                        @*<th class="left">@Model.ToDate.AddDays(-13).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-12).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-11).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-10).Value.ToString("ddd dd MMM")</th>*@
+                        <th class="left">@Model.ToDate.AddDays(-9).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-8).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-7).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-6).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-5).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-4).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-3).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-2).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.AddDays(-1).Value.ToString("ddd dd MMM")</th>
+                        <th class="left">@Model.ToDate.Value.ToString("ddd dd MMM")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model.Products.OrderBy(p => p.SupplierSKU))
+                    {
+                        <tr>
+                            <td>@product.ProductName</td>
+                            <td>@product.SupplierSKU</td>
+
+                            @foreach (var date in Model.Forecast.Keys)
+                            {
+                                var forecast = Model.Forecast[date];
+
+                                var productQuantity = forecast.SingleOrDefault(x => x.SupplierSKU == product.SupplierSKU);
+
+                                if (productQuantity != default(Fed.Core.Models.SupplierProductQuantity))
+                                {
+                                    <td style="color: #00ff90;"><strong>@productQuantity.SupplierQuantity</strong></td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+<script src="~/js/jquery.tablesorter.min.js"></script>
+<script>
+    $(function () {
+        $(".tablesorter-metro-dark").tablesorter();
+    });
+</script>

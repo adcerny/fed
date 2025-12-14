@@ -1,0 +1,50 @@
+﻿@model Fed.Web.Portal.Models.Customers.CreateCustomerModel
+<p>
+    The member has been automatically created in Umbraco
+    @if (Model.SendPasswordResetEmail)
+    {
+        <text>and a password reset email has been sent to the customer</text>
+    }.
+</p>
+
+<p>Summary:</p>
+
+<table>
+    <tbody>
+        <tr>
+            <th>Customer Name</th>
+            <td id="CompanyName">@Model.CompanyName</td>
+            <td style="text-align: center;"><button class="btn" type="button" data-clipboard-target="#CompanyName">Copy to Clipboard</button></td>
+        </tr>
+        <tr>
+            <th>First Name</th>
+            <td id="FirstName">@Model.ContactFirstName</td>
+            <td style="text-align: center;"><button class="btn" type="button" data-clipboard-target="#FirstName">Copy to Clipboard</button></td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td id="LastName">@Model.ContactLastName</td>
+            <td style="text-align: center;"><button class="btn" type="button" data-clipboard-target="#LastName">Copy to Clipboard</button></td>
+        </tr>
+        <tr>
+            <th>Customer ID</th>
+            <td id="CustomerId">@Model.CustomerId</td>
+            <td style="text-align: center;"><button class="btn" type="button" data-clipboard-target="#CustomerId">Copy to Clipboard</button></td>
+        </tr>
+        <tr>
+            <th>Contact ID</th>
+            <td id="ContactId">@Model.ContactId</td>
+            <td style="text-align: center;"><button class="btn" type="button" data-clipboard-target="#ContactId">Copy to Clipboard</button></td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td id="Email">@Model.ContactEmail</td>
+            <td style="text-align: center;"><button class="btn" type="button" data-clipboard-target="#Email">Copy to Clipboard</button></td>
+        </tr>
+        <tr>
+            <th>Password</th>
+            <td id="Password">5yjCPe8c33eYQb2v</td>
+            <td style="text-align: center;"><button class="btn" type="button" data-clipboard-target="#Password">Copy to Clipboard</button></td>
+        </tr>
+    </tbody>
+</table>

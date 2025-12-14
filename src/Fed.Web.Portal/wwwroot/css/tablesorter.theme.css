@@ -1,0 +1,61 @@
+/*************
+  Black Ice Theme (by thezoggy)
+ *************/
+
+.tablesorter-metro-dark .header,
+.tablesorter-metro-dark .tablesorter-header {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAGFBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u5jNePWAAAACHRSTlMAMxIHKwEgMWD59H4AAABSSURBVAjXY2BgYFJgAAHzYhDJ6igSAKTYBAUTgJSioKAQAwNzoaCguAFDiCAQuDIkgigxBgiA8cJAVCpQt6AgSL+JoKAzA0gjUBsQqBcBCYhFAAE/CV4zeSzxAAAAAElFTkSuQmCC);
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    white-space: normal;
+}
+
+.tablesorter-metro-dark .tablesorter-header-inner {
+    padding: 0 18px 0 4px;
+}
+
+.tablesorter-metro-dark thead .headerSortUp,
+.tablesorter-metro-dark thead .tablesorter-headerSortUp,
+.tablesorter-metro-dark thead .tablesorter-headerAsc {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u5meJAOAAAACnRSTlMAMwsqXt+gIBUGxGoDMAAAAFlJREFUCNctzC0SQAAUReEzGNQ3AlHRiSRZFCVZYgeswRL8hLdK7834wj3tAlGP6y7fYHpKS6w6WwbVG0I1NZVnZPG8/DYxOYlnhUYkA06R1s9ESsxR4NIdPhkPFDFYuEnMAAAAAElFTkSuQmCC);
+}
+
+.tablesorter-metro-dark thead .headerSortDown,
+.tablesorter-metro-dark thead .tablesorter-headerSortDown,
+.tablesorter-metro-dark thead .tablesorter-headerDesc {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAALVBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7i0NViAAAADnRSTlMAMiweCQITTvDctZZqaTlM310AAABcSURBVAjXY2BgYEtgAAFHERDJqigUAKSYBQUNgFSioKAYAwOLIBA4MASBKFUGQxAlzAAF+94BwWuGKBC1lIFl3rt3Lx0YGCzevWsGSjK9e6cAUlT3HKyW9wADAwDRrBiDy6bKzwAAAABJRU5ErkJggg==);
+}
+
+.tablesorter-metro-dark thead .sorter-false {
+    background-image: none;
+    cursor: default;
+    padding: 4px;
+}
+
+th:focus {
+    outline: 0;
+}
+
+.tablesorter-header {
+    border: 2px solid #2F2F2F;
+    border-right: none;
+    border-bottom: none;
+}
+
+    .tablesorter-header:last-child {
+        border-right: 2px solid #2F2F2F;
+        border-radius: 0px 6px 0px 0px;
+    }
+
+    .tablesorter-header:first-child {
+        border-radius: 6px 0px 0px 0px;
+    }
+
+.tablesorter td:first-child {
+    border-left: 2px solid #2F2F2F;
+}
+
+.tablesorter td:last-child {
+    border-right: 2px solid #2F2F2F;
+}

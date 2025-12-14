@@ -1,0 +1,250 @@
+﻿@model Fed.Web.Portal.Models.Customers.AccountInfoModel
+@using Fed.Web.Portal.TagHelpers
+@addTagHelper *, Fed.Web.Portal
+
+@{
+    Layout = "_Master";
+}
+
+<div id="CustomerView">
+    <h1>Customer: @Model.CompanyName</h1>
+
+    <div id="topBar">
+        <nav>
+            <a href="~/customers/@Model.CustomerId">Overview</a>
+            <span>Account Info</span>
+            <a href="~/customers/@Model.CustomerId/paymentInfo">Payment Info</a>
+        </nav>
+        <div id="statusBar">
+            @{
+                var statusClass = "activeCustomer";
+                if (Model.LifecycleStatus == Fed.Core.Enums.LifecycleStatus.Prospect)
+                {
+                    statusClass = "prospectCustomer";
+                }
+                else if (Model.LifecycleStatus == Fed.Core.Enums.LifecycleStatus.Lapsed)
+                {
+                    statusClass = "lapsedCustomer";
+                }
+            }
+            <span>Type: <strong>@Model.AccountType.ToString()</strong></span>
+            <span>Status: <em class="@statusClass">@Model.LifecycleStatus.ToString()</em></span>
+        </div>
+    </div>
+
+    <div id="portalForm">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            @Html.ValidationSummary("Please resolve the following errors before you can continue:")
+        }
+        else if (ViewBag.Success != null && ViewBag.Success)
+        {
+            <p class="success">Customer has been sucessfully saved!</p>
+        }
+            <form action="/customers/@Model.CustomerId/accountInfo" method="post">
+                <input type="hidden" id="CustomerId" name="CustomerId" value="@Model.CustomerId" />
+                <input type="hidden" id="ContactId" name="ContactId" value="@Model.ContactId" />
+                <input type="hidden" id="DeliveryAddressId" name="DeliveryAddressId" value="@Model.DeliveryAddressId" />
+                <div>
+                    <h2>Customer Type</h2>
+                    <div class="radioButtonListHorizontal">
+                        <radioButton name="AccountTypeId" value="0" is-checked="@((Model.AccountTypeId == 0))">
+                            Standard
+                        </radioButton>
+                        <radioButton name="AccountTypeId" value="1" is-checked="@((Model.AccountTypeId == 1))">
+                            Internal
+                        </radioButton>
+                        <radioButton name="AccountTypeId" value="2" is-checked="@((Model.AccountTypeId == 2))">
+                            Presale
+                        </radioButton>
+                        <radioButton name="AccountTypeId" value="3" is-checked="@((Model.AccountTypeId == 3))">
+                            Demo
+                        </radioButton>
+                        <radioButton name="AccountTypeId" value="6" is-checked="@((Model.AccountTypeId == 6))">
+                            Paused
+                        </radioButton>
+                        <radioButton name="AccountTypeId" value="4" is-checked="@((Model.AccountTypeId == 4))">
+                            Cancelled
+                        </radioButton>
+                        <radioButton name="AccountTypeId" value="5" is-checked="@((Model.AccountTypeId == 5))">
+                            Deleted
+                        </radioButton>
+                    </div>
+                    <div id="CancellationReasonRow" class="formRow">
+                        <label for="CancellationReason">Cancellation Reason</label>
+                        <input type="text" id="CancellationReason" name="CancellationReason" value="@Model.CancellationReason" />
+                    </div>
+                </div>
+                <div>
+                    <h2>Company</h2>
+
+                    <div class="formRow">
+                        <label for="CompanyName">Company Name</label>
+                        <input type="text" id="CompanyName" name="CompanyName" value="@Model.CompanyName" />
+                    </div>
+                    <div class="formRow">
+                        <label for="OfficeSize">Office Size</label>
+                        <input type="text" id="OfficeSize" name="OfficeSize" value="@Model.OfficeSize" />
+                    </div>
+                    <div class="formRow">
+                        <label for="CompanyName">Company Domain</label>
+                        <input type="text" id="Website" name="Website" value="@Model.Website" />
+                    </div>
+                    <div class="formRow">
+                        <label for="Notes">Notes</label>
+                        <input type="text" id="Notes" name="Notes" value="@Model.Notes" />
+                    </div>
+                    <div class="formRow">
+                        <label for="ACAccountNumber">Abel &amp; Cole Account number</label>
+                        <input type="text" id="ACAccountNumber" name="ACAccountNumber" value="@Model.ACAccountNumber" />
+                    </div>
+                </div>
+
+                <div>
+                    <h2>Primary Contact</h2>
+
+                    <div class="formRow">
+                        <label for="ContactFirstName">First Name</label>
+                        <input type="text" id="ContactFirstName" name="ContactFirstName" value="@Model.ContactFirstName" />
+                    </div>
+                    <div class="formRow">
+                        <label for="ContactLastName">Last Name</label>
+                        <input type="text" id="ContactLastName" name="ContactLastName" value="@Model.ContactLastName" />
+                    </div>
+                    <div class="formRow">
+                        <label for="ContactEmail">Email Address</label>
+                        <input type="text" id="ContactEmail" name="ContactEmail" value="@Model.ContactEmail" />
+                    </div>
+                    <div class="formRow">
+                        <label for="PhoneNumber">Contact Number</label>
+                        <input type="text" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
+                    </div>
+                </div>
+
+                <div>
+                    <h2>Marketing Information</h2>
+                    <div class="formRow">
+                        <label for="Source">Source</label>
+                        <input type="text" id="Source" name="Source" value="@Model.Source" />
+                    </div>
+                    @*<div class="formRow">
+                        <label for="MarketingAttributeId">Marketing Attribute</label>
+                        <select id="MarketingAttributeId" name="MarketingAttributeId">
+                            <option value="@Guid.Empty">Select</option>
+                            @foreach (var attribute in Model.MarketingAttributes)
+                            {
+                                <option value="@attribute.Id" selected="@(attribute.Id == Model.MarketingAttributeId)">@attribute.Name</option>
+                            }
+                        </select>
+                    </div>*@
+                    <div class="formRow">
+                        <p class="infoBox">Can we send you occasional email about seasonal changes, product launches and offers? We won't clog your inbox.</p>
+                        <div class="radioButtonListHorizontal quaterWidth">
+                            <radioButton name="MarketingConsent" value="True" is-checked="@Model.MarketingConsent">
+                                Yes
+                            </radioButton>
+                            <radioButton name="MarketingConsent" value="False" is-checked="@(!Model.MarketingConsent)">
+                                No
+                            </radioButton>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2>Delivery Address</h2>
+
+                    <div class="formRow">
+                        <label for="DeliveryPostCode">Post Code</label>
+                        <input type="text" id="DeliveryPostCode" name="DeliveryPostCode" value="@Model.DeliveryPostCode" />
+                    </div>
+                    <div class="formRow">
+                        <label for="DeliveryAddressLine1">Address Line 1</label>
+                        <input type="text" id="DeliveryAddressLine1" name="DeliveryAddressLine1" value="@Model.DeliveryAddressLine1" />
+                    </div>
+                    <div class="formRow">
+                        <label for="DeliveryAddressLine2">Address Line 2</label>
+                        <input type="text" id="DeliveryAddressLine2" name="DeliveryAddressLine2" value="@Model.DeliveryAddressLine2" />
+                    </div>
+                    <div class="formRow">
+                        <label for="DeliveryTown">Town</label>
+                        <input type="text" id="DeliveryTown" name="DeliveryTown" value="@Model.DeliveryTown" />
+                    </div>
+                    <div class="formRow">
+                        <label for="DeliveryInstructions">Delivery Instructions</label>
+                        <input type="text" id="DeliveryInstructions" name="DeliveryInstructions" value="@Model.DeliveryInstructions" />
+                    </div>
+                    <div class="formRow">
+                        <label for="DeliveryPhone">Phone</label>
+                        <input type="text" id="DeliveryPhone" name="DeliveryPhone" value="@Model.DeliveryPhone" />
+                    </div>
+                </div>
+
+                <div>
+                    <h2>Account Settings</h2>
+
+                    <div class="formRow">
+                        <checkbox name="ExcludeFromInvoicing" is-checked="@Model.ExcludeFromInvoicing">Exclude from invoicing</checkbox>
+                    </div>
+                    <div class="formRow">
+                        <checkbox name="IsDeliveryChargeExempt" is-checked="@Model.IsDeliveryChargeExempt">Exempt from delivery charge</checkbox>
+                    </div>
+                    <div class="formRow">
+                        <checkbox name="SplitDeliveriesByOrder" is-checked="@Model.SplitDeliveriesByOrder">Split deliveries by order</checkbox>
+                    </div>
+                    <div class="formRow">
+                        <checkbox name="IsFriend" is-checked="@Model.IsFriend">Mark as friend</checkbox>
+                    </div>
+                    <div class="formRow">
+                        <checkbox name="IsTestAccount" is-checked="@Model.IsTestAccount">Mark as test account</checkbox>
+                    </div>
+                </div>
+                <input type="hidden" name="IsDirty" />
+                <div id="formRow">
+                    <button type="submit">Save Changes</button>
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        console.log($('input[name=AccountTypeId]:checked').val());
+
+        if ($('input[name=AccountTypeId]:checked').val() != 4)
+            $("#CancellationReasonRow").hide();
+         var isDirty = $('input[name="IsDirty"]').val();
+
+        $("input[type=radio][name=AccountTypeId]").change(function () {
+            if (this.value == "4") {
+                $("#CancellationReasonRow").show();
+            }
+            else {
+                $("#CancellationReasonRow").hide();
+            }
+        });
+
+        $("#CompanyName").change(function () {
+            if (isDirty != '1') {
+                $('input[name="IsDirty"]').val('1');
+            }
+        })
+
+          $("#ContactFirstName").change(function () {
+            if (isDirty != '1') {
+                $('input[name="IsDirty"]').val('1');
+            }
+          })
+
+          $("#ContactLastName").change(function () {
+            if (isDirty != '1') {
+                $('input[name="IsDirty"]').val('1');
+            }
+          })
+
+          $("#ContactEmail").change(function () {
+            if (isDirty != '1') {
+                $('input[name="IsDirty"]').val('1');
+            }
+        })
+    });
+</script>

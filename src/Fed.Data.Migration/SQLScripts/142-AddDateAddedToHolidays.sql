@@ -1,0 +1,3 @@
+﻿ALTER TABLE [dbo].[Holidays]
+ADD DateAdded DATETIME NOT NULL
+        DEFAULT GETDATE();

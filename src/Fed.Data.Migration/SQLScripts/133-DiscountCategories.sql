@@ -1,0 +1,17 @@
+﻿SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[DiscountCategories](
+	[DiscountId] [uniqueidentifier] NOT NULL,
+	[CategoryId] NVARCHAR(250) NOT NULL
+	CONSTRAINT [PK_DiscountCategories] PRIMARY KEY CLUSTERED ([DiscountId], [CategoryId] ASC) 
+	WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[CustomerDiscounts] WITH CHECK ADD CONSTRAINT [FK_DiscountCategories_Discount] FOREIGN KEY([DiscountId])
+REFERENCES [dbo].[Discounts] ([Id])
+GO

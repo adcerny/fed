@@ -1,0 +1,219 @@
+﻿@model Fed.Web.Portal.ViewModels.RecurringOrdersViewModel
+@using Fed.Core.Extensions
+@using Fed.Core.ValueTypes
+
+@{
+    Layout = "_Master";
+
+    var recurringOrders = Model.RecurringOrders?.Where(o => o.WeeklyRecurrence != Fed.Core.Enums.WeeklyRecurrence.OneOff).OrEmptyIfNull().ToList();
+    var oneOffOrders = Model.RecurringOrders?.Where(o => o.WeeklyRecurrence == Fed.Core.Enums.WeeklyRecurrence.OneOff).OrEmptyIfNull().ToList();
+   }
+
+<h1>Recurring &amp; One-Off Orders</h1>
+
+<div id="RecurringOrders">
+    <div>
+
+    </div>
+
+    @if (Model.SelectedDate != Date.MinDate)
+    {
+        <form action="" method="get">
+            <label for="deliveryDate">Delivery Date</label>
+            <input type="date" id="deliveryDate" name="deliveryDate" value="@Model.SelectedDate" />
+            <button type="submit">Show Orders</button>
+        </form>
+    }
+    <h2>Overview</h2>
+    <div id="recurringOderStats">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Total Recurring Orders:</th>
+                    <td>@recurringOrders.Count</td>
+                </tr>
+                <tr>
+                    <th>Total One Off Orders:</th>
+                    <td>@oneOffOrders.Count</td>
+                </tr>
+                <tr>
+                    <th>Total Orders:</th>
+                    <td>@(recurringOrders.Count + oneOffOrders.Count)</td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Total Recurring Order Value:</th>
+                    <td>&pound; @recurringOrders.Sum(o => o.TotalItemPrice).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <th>Total One Off Order Value:</th>
+                    <td>&pound; @oneOffOrders.Sum(o => o.TotalItemPrice).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <th>Total Order Value:</th>
+                    <td>&pound; @((recurringOrders.Sum(o => o.TotalItemPrice) + oneOffOrders.Sum(o => o.TotalItemPrice)).ToString("#,##0.00"))</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Recurring Orders</h2>
+    @if (recurringOrders != null && recurringOrders.Count > 0)
+    {
+        <table class="tablesorter-metro-dark">
+            <thead>
+                <tr>
+                    <th>Order Name</th>
+                    <th>Customer ID</th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Delivery Address</th>
+                    <th>Timeslot</th>
+                    <th>Items</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var recurringOrder in recurringOrders)
+                {
+                    var customerId = string.Empty;
+                    var companyName = string.Empty;
+                    var contactName = string.Empty;
+                    var contactTel = string.Empty;
+                    var contactEmail = string.Empty;
+                    var deliveryAddress = string.Empty;
+                    var timeslotInfo = string.Empty;
+
+                    foreach (var customer in Model.Customers)
+                    {
+                        foreach (var contact in customer.Contacts)
+                        {
+                            if (contact.Id.Equals(recurringOrder.ContactId))
+                            {
+                                customerId = customer.ShortId;
+                                companyName = customer.CompanyName;
+                                contactName = contact.Title is null ? $"{contact.FirstName} {contact.LastName}" : $"{contact.Title} {contact.FirstName} {contact.LastName}";
+                                contactTel = contact.Phone;
+                                contactEmail = contact.Email;
+
+                                var da = contact.DeliveryAddresses.Single(x => x.Id.Equals(recurringOrder.DeliveryAddressId));
+
+                                deliveryAddress =
+                                string.IsNullOrEmpty(da.AddressLine2)
+                                ? $"{da.AddressLine1}, {da.Postcode}"
+                                : $"{da.AddressLine1}, {da.AddressLine2}, {da.Postcode}";
+
+                                break;
+                            }
+                        }
+
+                        foreach (var timeslot in Model.Timeslots)
+                        {
+                            if (timeslot.Id.Equals(recurringOrder.TimeslotId))
+                            {
+                                timeslotInfo = $"{timeslot.DayOfWeek}s by {timeslot.LatestTime.ToString(@"hh\:mm")}";
+                                break;
+                            }
+                        }
+                    }
+
+                    <tr class="anchor-row" data-href="/recurringOrders/@recurringOrder.Id">
+                        <td>@recurringOrder.Name</td>
+                        <td>@customerId</td>
+                        <td>@companyName</td>
+                        <td>@contactName</td>
+                        <td>@deliveryAddress</td>
+                        <td>@timeslotInfo</td>
+                        <td class="right">@recurringOrder.OrderItems.Count</td>
+                        <td class="right">&pound; @recurringOrder.TotalItemPrice.ToString("#,##0.00")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No active recurring orders have been placed.</p>
+    }
+
+
+    <h2>One Off Orders</h2>
+    @if (oneOffOrders != null && oneOffOrders.Count > 0)
+    {
+        <table class="tablesorter-metro-dark">
+            <thead>
+                <tr>
+                    <th>Order Name</th>
+                    <th>Customer ID</th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Delivery Address</th>
+                    <th>Timeslot</th>
+                    <th>Items</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var recurringOrder in oneOffOrders)
+                {
+                    var customerId = string.Empty;
+                    var companyName = string.Empty;
+                    var contactName = string.Empty;
+                    var contactTel = string.Empty;
+                    var contactEmail = string.Empty;
+                    var deliveryAddress = string.Empty;
+                    var timeslotInfo = string.Empty;
+
+                    foreach (var customer in Model.Customers)
+                    {
+                        foreach (var contact in customer.Contacts)
+                        {
+                            if (contact.Id.Equals(recurringOrder.ContactId))
+                            {
+                                customerId = customer.ShortId;
+                                companyName = customer.CompanyName;
+                                contactName = contact.Title is null ? $"{contact.FirstName} {contact.LastName}" : $"{contact.Title} {contact.FirstName} {contact.LastName}";
+                                contactTel = contact.Phone;
+                                contactEmail = contact.Email;
+
+                                var da = contact.DeliveryAddresses.Single(x => x.Id.Equals(recurringOrder.DeliveryAddressId));
+
+                                deliveryAddress =
+                                string.IsNullOrEmpty(da.AddressLine2)
+                                ? $"{da.AddressLine1}, {da.Postcode}"
+                                : $"{da.AddressLine1}, {da.AddressLine2}, {da.Postcode}";
+
+                                break;
+                            }
+                        }
+
+                        timeslotInfo = $"{recurringOrder.StartDate.Value.ToString("ddd, dd/MM/yyyy")}";
+                    }
+
+                    <tr class="anchor-row" data-href="/recurringOrders/@recurringOrder.Id">
+                        <td>@recurringOrder.Name</td>
+                        <td>@customerId</td>
+                        <td>@companyName</td>
+                        <td>@contactName</td>
+                        <td>@deliveryAddress</td>
+                        <td>@timeslotInfo</td>
+                        <td class="right">@recurringOrder.OrderItems.Count</td>
+                        <td class="right">&pound; @recurringOrder.TotalItemPrice.ToString("#,##0.00")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No active one off orders have been placed.</p>
+    }
+
+    
+</div>
+<script src="~/js/recurring-order.js"></script>

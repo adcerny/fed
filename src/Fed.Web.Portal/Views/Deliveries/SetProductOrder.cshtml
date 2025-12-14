@@ -1,0 +1,79 @@
+﻿@model List<Product>
+@using Fed.Core.Entities
+@addTagHelper *, Fed.Web.Portal
+@{
+    Layout = "_Master";
+}
+<h1>Set Product Order</h1>
+<div class="sorting-list-mod">
+    <div class="tool-list">
+        <ul class="cf">
+            <li class="tool float-left">
+                <button class="cta move-up" type="button">Move to top</button>
+            </li>
+            <li class="tool float-left">
+                <button class="cta move-bottom" type="button">Move to bottom</button>
+            </li>
+            <li class="tool float-left">
+                <button class="cta unselect-all" type="button">Unselect</button>
+            </li>
+            <li class="tool float-left">
+                <button class="cta save" type="button">Save</button>
+            </li>
+            <li class="tool float-left">
+                <button class="cta resort" type="button">Resort</button>
+            </li>
+            <li class="tool float-left">
+                <button class="cta scroll-top" type="button">
+                    <span>&#11014;</span>
+                    Scroll to top
+                </button>
+            </li>
+            <li class="tool float-left">
+                <button class="cta scroll-bottom" type="button">
+                    <span>&#11015;</span>
+                    Scroll to bottom
+                </button>
+            </li>
+        </ul>
+        <div class="user-messages">
+            <p class="success hidden">The product order has been successfully saved!</p>
+            <p class="error hidden">The product order has not been successfully saved!</p>
+        </div>
+    </div>
+    <div class="sorting-list-holder">
+        <ul class="sorting-list">
+            @foreach (var product in Model)
+            {
+                <li class="list-element">
+                    <span class="icon color-indicator"></span>
+                    <span class="checkbox-container">
+                        <svg viewBox="0 0 40 40">
+                            <rect x="2" y="2" rx="4" ry="4" width="36" height="36" stroke-width="3"></rect>
+                            <polyline points="10,20 18,27 30,12" stroke-width="4"></polyline>
+                        </svg>
+                    </span>
+                    <span class="product-code">
+                        @product.ProductCode
+                    </span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<script id="sorting-list-item" type="text/x-handlebars-template">
+    {{#each array}}
+        <li class="list-element">
+            <span class="icon color-indicator"></span>
+            <span class="checkbox-container">
+                <svg viewBox="0 0 40 40">
+                    <rect x="2" y="2" rx="4" ry="4" width="36" height="36" stroke-width="3"></rect>
+                    <polyline points="10,20 18,27 30,12" stroke-width="4"></polyline>
+                </svg>
+            </span>
+            <span class="product-code">
+                {{this}}
+            </span>
+        </li>
+    {{/each}}
+</script>

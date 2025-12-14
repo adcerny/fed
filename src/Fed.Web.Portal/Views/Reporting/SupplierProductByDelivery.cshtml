@@ -1,0 +1,32 @@
+﻿@model Fed.Web.Portal.ViewModels.ReportingViewModel
+
+@{
+    Layout = "_Master";
+    var suppliers = new Dictionary<string, string>();
+}
+
+<h2>Report: @Model.Title</h2>
+
+@foreach (var row in Model.ReportModel.Rows)
+{
+    var propertyList = row.Properties().ToList();
+    if (!suppliers.ContainsKey(propertyList[0].Value.ToString()))
+    {
+        suppliers.Add(propertyList[0].Value.ToString(), propertyList[1].Value.ToString());
+    }
+}
+<div id="supplierslist" >
+    @foreach (var supplier in suppliers)
+    {
+        <input type="checkbox" name="suppliers" value="@supplier.Key" checked>@(supplier.Value)
+    }
+</div>
+
+@await Html.PartialAsync("_Report", Model.ReportModel)
+
+<script src="~/js/supplierproductbydeliverreport-filters.js"></script>
+<style>
+    #supplierlist{
+        margin-top:-15px;
+    }
+</style>

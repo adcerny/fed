@@ -1,0 +1,33 @@
+﻿<div id="publicHolidaysDialog" class="modal">
+    <div class="modalContent">
+
+        
+        <h2>Add Holidays</h2>
+
+        <form id="skipDeliveryDatesForm" method="post" action="/holidays/SetHoliday">
+            <input type="hidden" name="Id" value="0" />
+            <div class="formRow">
+                <label for="Date">Holiday Date</label>
+                <input type="date" id="Date" name="Date" />
+            </div>
+
+            <div class="formRow">
+                <label for="Name">Name</label>
+                <input id="Name" name="Name" type="text" />
+            </div>
+            <input type="hidden" name="DateAdded" value="@DateTime.Now" />
+            <div class="formRow">
+                <button id="addHolidayButton" type="submit">Add Holiday</button>
+                <button id="closeHolidayModel" type="button">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        $("#closeHolidayModel").click(function (e) {
+            $("#publicHolidaysDialog").hide();
+        });
+    });
+</script>

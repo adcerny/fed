@@ -1,0 +1,347 @@
+﻿@model Fed.Web.Portal.ViewModels.SingleRecurringOrderViewModel
+
+@{
+    Layout = "_Master";
+
+    var timeslotInfo = string.Empty;
+
+    foreach (var timeslot in Model.Timeslots)
+    {
+        if(Model.RecurringOrder.WeeklyRecurrence == Fed.Core.Enums.WeeklyRecurrence.EveryWeek)
+        {
+            if (timeslot.Id.Equals(Model.RecurringOrder.TimeslotId))
+            {
+                timeslotInfo = $"Every {timeslot.DayOfWeek} between {timeslot.EarliestTime.ToString(@"hh\:mm")} - {timeslot.LatestTime.ToString(@"hh\:mm")}";
+                break;
+            }
+        }
+        else
+        {
+            if (timeslot.Id.Equals(Model.RecurringOrder.TimeslotId))
+            {
+                timeslotInfo = $"{timeslot.DayOfWeek}, {Model.RecurringOrder.StartDate} between {timeslot.EarliestTime.ToString(@"hh\:mm")} - {timeslot.LatestTime.ToString(@"hh\:mm")}";
+                break;
+            }
+        }
+    }
+
+    var deliveryAddress = Model.Contact.DeliveryAddresses.Single(a => a.Id.Equals(Model.RecurringOrder.DeliveryAddressId));
+    var billingAddress = Model.Contact.BillingAddresses.Single(a => a.Id.Equals(Model.RecurringOrder.BillingAddressId));
+
+    var deliveryAddressLine =
+        string.IsNullOrEmpty(deliveryAddress.AddressLine2)
+        ? string.IsNullOrEmpty(deliveryAddress.Town)
+            ? $"{deliveryAddress.AddressLine1}, {deliveryAddress.Postcode}"
+            : $"{deliveryAddress.AddressLine1}, {deliveryAddress.Town}, {deliveryAddress.Postcode}"
+        : string.IsNullOrEmpty(deliveryAddress.Town)
+            ? $"{deliveryAddress.AddressLine1}, {deliveryAddress.AddressLine2}, {deliveryAddress.Postcode}"
+            : $"{deliveryAddress.AddressLine1}, {deliveryAddress.AddressLine2}, {deliveryAddress.Town}, {deliveryAddress.Postcode}";
+
+    var billingAddressLine =
+        string.IsNullOrEmpty(billingAddress.AddressLine2)
+        ? string.IsNullOrEmpty(billingAddress.Town)
+            ? $"{billingAddress.AddressLine1}, {billingAddress.Postcode}"
+            : $"{billingAddress.AddressLine1}, {billingAddress.Town}, {billingAddress.Postcode}"
+        : string.IsNullOrEmpty(billingAddress.Town)
+            ? $"{billingAddress.AddressLine1}, {billingAddress.AddressLine2}, {billingAddress.Postcode}"
+            : $"{billingAddress.AddressLine1}, {billingAddress.AddressLine2}, {billingAddress.Town}, {billingAddress.Postcode}";
+}
+
+    <div id="SingleRecurringOrder">
+
+        <h1>@Model.RecurringOrder.Name</h1>
+
+        <div id="columnContainer">
+
+            <div class="halfWidth">
+                <div>
+                    <h2>Order Info</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Name:</th>
+                                <td>@Model.RecurringOrder.Name</td>
+                            </tr>
+                            <tr>
+                                <th>Created:</th>
+                                <td>@Model.RecurringOrder.CreatedDate.ToString("dddd, dd/MM/yyyy hh:mm")</td>
+                            </tr>
+                            <tr>
+                                <th>Timeslot:</th>
+                                <td>@timeslotInfo</td>
+                            </tr>
+                            <tr>
+                                <th>Internal ID:</th>
+                                <td>@Model.RecurringOrder.Id</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h2>Customer Info</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Customer ID:</th>
+                                <td>@Model.Customer.ShortId</td>
+                            </tr>
+                            <tr>
+                                <th>Company Name:</th>
+                                <td>@Model.Customer.CompanyName</td>
+                            </tr>
+                            <tr>
+                                <th>Contact Name:</th>
+                                <td>@Model.ContactFullName</td>
+                            </tr>
+                            <tr>
+                                <th>Contact Tel.:</th>
+                                <td>@Model.Contact.Phone</td>
+                            </tr>
+                            <tr>
+                                <th>Contact Email:</th>
+                                <td>@Model.Contact.Email</td>
+                            </tr>
+                            <tr>
+                                <th>Delivery Charge Exempt:</th>
+                                <td>@Model.Customer.IsDeliveryChargeExempt</td>
+                            </tr>
+                            <tr>
+                                <th>Split deliveries by order:</th>
+                                <td>@Model.Customer.SplitDeliveriesByOrder</td>
+                            </tr>
+                            <tr>
+                                <th>Marketing Consent:</th>
+                                <td>@Model.Contact.IsMarketingConsented</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="halfWidth">
+                <div>
+                    <h2>Billing Details</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Billing Method:</th>
+                                <td>@Model.Contact.PaymentMethod</td>
+                            </tr>
+                            <tr>
+                                <th>Billing Company Name:</th>
+                                <td>@billingAddress.CompanyName</td>
+                            </tr>
+                            <tr>
+                                <th>Billing Name:</th>
+                                <td>@billingAddress.FullName</td>
+                            </tr>
+                            <tr>
+                                <th>Billing Address:</th>
+                                <td>@billingAddressLine</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h2>Delivery Details</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Delivery Company Name:</th>
+                                <td>@deliveryAddress.CompanyName</td>
+                            </tr>
+                            <tr>
+                                <th>Delivery Recipient:</th>
+                                <td>@deliveryAddress.FullName</td>
+                            </tr>
+                            <tr>
+                                <th>Delivery Address:</th>
+                                <td>@deliveryAddressLine</td>
+                            </tr>
+                            <tr>
+                                <th>Leave Outside:</th>
+                                <td>@deliveryAddress.LeaveDeliveryOutside</td>
+                            </tr>
+                            <tr>
+                                <th>Delivery Instructions:</th>
+                                <td>@deliveryAddress.DeliveryInstructions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        @{
+            var orderItems = new List<(Fed.Core.Entities.RecurringOrderItem, Fed.Core.Entities.Product)>();
+
+            foreach (var item in Model.RecurringOrder.OrderItems)
+            {
+                var product = Model.Products.SingleOrDefault(p => p.Id.Equals(item.ProductId, StringComparison.OrdinalIgnoreCase));
+
+                if (product == default(Fed.Core.Entities.Product))
+                {
+                    Console.WriteLine($"Could not find product {item.ProductId}");
+                }
+                else
+                {
+                    orderItems.Add((item, product));
+                }
+            }
+        }
+
+        <div id="orderItems">
+            <h2>Order Items</h2>
+            <table id="recurringOrderItems" class="productsTable">
+                <tr>
+                    <th>Product Code</th>
+                    <th>Product Group</th>
+                    <th>Product Name</th>
+                    <th>Supplier ID</th>
+                    <th>Supplier SKU</th>
+                    <th class="centre">Quantity</th>
+                    <th class="right">Price</th>
+                    <th class="right">Sale Price</th>
+                    <th class="right">Total Price</th>
+                </tr>
+                @foreach (var (item, product) in orderItems)
+                {
+                    <tr>
+                        <td>@product.ProductCode</td>
+                        <td>@product.ProductGroup</td>
+                        <td>@product.ProductName</td>
+                        <td>@product.SupplierId</td>
+                        <td>@product.SupplierSKU</td>
+                        <td class="centre">@item.Quantity</td>
+                        <td class="right">&pound; @((Model.RecurringOrder.IsFree ? 0 : product.Price).ToString("#,##0.00"))</td>
+                        <td class="right">@((Model.RecurringOrder.IsFree && product.SalePrice.HasValue ? 0 : product.SalePrice)?.ToString("£ #,##0.00"))</td>
+                        <td class="right">&pound; @((Model.RecurringOrder.IsFree ? 0 : (product.ActualPrice * item.Quantity)).ToString("#,##0.00"))</td>
+                    </tr>
+                }
+
+                @if (Model.RecurringOrder.IsFree)
+                {
+                    <tr class="totalPrice">
+                        <td class="right" colspan="8">Total Price (order is free)</td>
+                        <td class="right">&pound;0.00</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="totalPrice">
+                        <td class="right" colspan="8">Total Price</td>
+                        <td class="right">&pound; @Model.RecurringOrder.TotalItemPrice.ToString("#,##0.00")</td>
+                    </tr>
+                }
+            </table>
+            @if (Model.RecurringOrder.WeeklyRecurrence == 0)
+            {
+
+                <div class="singleRowForm">
+                    <a class="linkButton" style="float:right;" href="~/recurringOrders/@Model.RecurringOrder.Id/Free?isFree=@(!Model.RecurringOrder.IsFree)">@(Model.RecurringOrder.IsFree ? "Restore charges" : "Remove charges")</a>
+                    <a name="charges"></a>
+                </div>
+            }
+
+            <table id="copyOrderItems" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Product Name</th>
+                        <th style="text-align: right;">Price</th>
+                        <th style="text-align: right;">Sale Price</th>
+                        <th style="text-align: right;">Quantity</th>
+                        <th style="text-align: right;">Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var (item, product) in orderItems)
+                    {
+                        <tr>
+                            <td style="text-align: left;">@product.ProductName</td>
+                            <td style="text-align: right;">&pound; @(product.Price.ToString("#,##0.00"))</td>
+                            <td class="right">&pound; @((Model.RecurringOrder.IsFree ? 0 : product.Price).ToString("#,##0.00"))</td>
+                            <td class="right">@((Model.RecurringOrder.IsFree && product.SalePrice.HasValue ? 0 : product.SalePrice)?.ToString("£ #,##0.00"))</td>
+                            <td class="right">&pound; @((Model.RecurringOrder.IsFree ? 0 : (product.ActualPrice * item.Quantity)).ToString("#,##0.00"))</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="left" colspan="4">Total Price</td>
+                        <td class="right">&pound; @Model.RecurringOrder.TotalItemPrice.ToString("#,##0.00")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="singleRowForm">
+            <button class="btn" data-clipboard-target="#copyOrderItems">Copy Products to Clipboard</button>
+        </div>
+        <div class="singleRowForm">
+            <a class="linkButton delete-button" data-id="@Model.RecurringOrder.Id" data-company-name="@Model.Customer.CompanyName" data-customer-short-id="@Model.Customer.ShortId" data-order-name="@Model.RecurringOrder.Name">Delete order</a>
+        </div>
+
+        <div id="skipDates">
+
+            <h2>Skipped Delivery Dates</h2>
+
+            <p>  <button id="addSkipDates" type="submit">Add Skip Delivery Dates</button></p>
+            @if (Model.SkipDates != null && Model.SkipDates.Count > 0)
+            {
+                <table id="deliverySkipDates">
+
+                    <tbody>
+                        @foreach (var skipDate in Model.SkipDates)
+                        {
+                            <tr>
+                                <td>@skipDate.Date.Value.ToString("dddd, dd MMMM yyyy")</td>
+                                <td><form method="post" id="@string.Concat("deleteform", Model.SkipDates.IndexOf(skipDate))" action="~/recurringOrders/DeleteSkipDeliveryDates/@Model.RecurringOrder.Id/@skipDate.Date.Value.ToString("yyyy-MM-dd")"><button id="@string.Concat("delete", Model.SkipDates.IndexOf(skipDate))" type="submit">Delete</button></form></td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No skip dates have been recorded for this order.</p>
+            }
+        </div>
+        <div class="singleRowForm">
+            <a class="linkButton" href="~/recurringOrders">Back to all recurring orders</a>
+        </div>
+        @await Html.PartialAsync("~/Views/Partial/_SkipDeliveryDatesPartial.cshtml")
+    </div>
+
+<script src="~/js/clipboard.min.js"></script>
+<script src="~/js/recurring-order.js"></script>
+
+<script>
+    var clipboard = new ClipboardJS('.btn', {
+        target: function (trigger) {
+            $("#copyOrderItems").show();
+            return document.getElementById("copyOrderItems");
+        }
+    });
+
+    clipboard.on('success', function (e) {
+        $("#copyOrderItems").hide();
+        e.clearSelection();
+    });
+     $(function () {
+        $("#addSkipDates").click(function (e) {
+            e.preventDefault();
+            $('#OrderId').val('@Model.RecurringOrder.Id');
+            $('#CustomerId').val('@Model.Customer.ShortId');
+             $('#RedirectTo').val('recurringOrders');
+            $("#skipDeliveryDatesDialog").show();
+        });
+
+         $("button[id^=delete]").click(function(){
+             if (confirm("Are you sure you want to delete this skip date?"))
+                $(this).parents('form:first').submit();
+            });
+    });
+</script>

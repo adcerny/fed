@@ -1,0 +1,78 @@
+﻿@model List<Fed.Core.Entities.Supplier>
+@{
+    Layout = "_Master";
+}
+
+<h1>Suppliers</h1>
+
+<div class="formRow">
+    <a class="linkButton" href="~/suppliers/create/">Create New Supplier</a>
+</div>
+
+@if (Model.Any())
+{
+
+    <div class="report">
+
+        <div class="dynamicTable">
+
+            <table class="tablesorter-metro-dark small">
+                <thead>
+                    <tr>
+                        <th>Supplier Id</th>
+                        <th class="left">Supplier Name</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var supplier in Model)
+                    {
+                        <tr>
+                            <td>@supplier.Id</td>
+                            <td>
+                                <a href="~/supplier/overview/@supplier.Id">@supplier.Name</a>                                
+                            </td>                            
+                        </tr>
+                    }
+                </tbody>
+            </table>            
+        </div>
+    </div>
+}
+
+
+
+    @*<div>
+            <h2>Abel &amp; Cole Orders</h2>
+            <form action="~/supplier/8" method="get" class="singleRowForm">
+                <label for="deliveryDate">Date</label>
+                <input type="date" id="deliveryDate" name="deliveryDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <button type="submit">Show Orders</button>
+            </form>
+        </div>
+
+        <div>
+            <h2>Seven Seeded Orders</h2>
+            <form action="~/supplier/7" method="get" class="singleRowForm">
+                <label for="deliveryDate">Date</label>
+                <input type="date" id="deliveryDate" name="deliveryDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <button type="submit">Show Orders</button>
+            </form>
+        </div>
+
+        <div>
+            <h2>Yummy Tummy Orders</h2>
+            <form action="~/supplier/209" method="get" class="singleRowForm">
+                <label for="deliveryDate">Date</label>
+                <input type="date" id="deliveryDate" name="deliveryDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <button type="submit">Show Orders</button>
+            </form>
+        </div>
+
+        <div>
+            <h2>Forecast</h2>
+
+            <a class="linkButton" href="~/supplier/8/forecast" style="width: 130px;">Abel &amp; Cole</a>
+            <a class="linkButton" style="margin-left: 10px; width: 130px;" href="~/supplier/7/forecast">Seven Seeded</a>
+            <a class="linkButton" style="margin-left: 10px; width: 130px;" href="~/supplier/209/forecast">Yummy Tummy</a>
+        </div>*@

@@ -1,0 +1,188 @@
+﻿@model Fed.Web.Portal.Models.Customers.PaymentInfoModel
+
+@{
+    Layout = "_Master";
+}
+
+<div id="CustomerView">
+    <h1>Customer: @Model.BillingCompanyName</h1>
+
+    <div id="topBar">
+        <nav>
+            <a href="~/customers/@Model.CustomerId">Overview</a>
+            <a href="~/customers/@Model.CustomerId/accountInfo">Account Info</a>
+            <span>Payment Info</span>
+        </nav>
+        <div id="statusBar">
+            @{
+                var statusClass = "activeCustomer";
+                if (Model.LifecycleStatus == Fed.Core.Enums.LifecycleStatus.Prospect)
+                {
+                    statusClass = "prospectCustomer";
+                }
+                else if (Model.LifecycleStatus == Fed.Core.Enums.LifecycleStatus.Lapsed)
+                {
+                    statusClass = "lapsedCustomer";
+                }
+            }
+            <span>Type: <strong>@Model.AccountType.ToString()</strong></span>
+            <span>Status: <em class="@statusClass">@Model.LifecycleStatus.ToString()</em></span>
+        </div>
+    </div>
+
+    <div id="portalForm">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            @Html.ValidationSummary("Please resolve the following errors before you can continue:")
+        }
+        else if (ViewBag.Success != null && ViewBag.Success)
+        {
+            <p class="success">Customer has been sucessfully saved!</p>
+        }
+            <form action="/customers/@Model.CustomerId/paymentInfo" method="post">
+
+                <input type="hidden" id="CustomerId" name="CustomerId" value="@Model.CustomerId" />
+                <input type="hidden" id="ContactId" name="ContactId" value="@Model.ContactId" />
+                <input type="hidden" id="BillingAddressId" name="BillingAddressId" value="@Model.BillingAddressId" />
+
+                <input type="hidden" name="ContactEmail" value="@Model.ContactEmail" />
+                <input type="hidden" name="DeliveryPostCode" value="@Model.DeliveryPostCode" />
+                <input type="hidden" name="DeliveryAddressLine1" value="@Model.DeliveryAddressLine1" />
+                <input type="hidden" name="DeliveryAddressLine2" value="@Model.DeliveryAddressLine2" />
+                <input type="hidden" name="DeliveryTown" value="@Model.DeliveryTown" />
+                <div>
+                    <h2>Payment Type</h2>
+
+                    <div class="formRow">
+                        <label for="PaymentMethod">Payment Method</label>
+                        <select id="PaymentMethod" name="PaymentMethod">
+                            @if (Model.PaymentMethod == 1)
+                            {
+                                <option value="1" selected>Card</option>
+                            }
+                            else
+                            {
+                                <option value="1">Card</option>
+                            }
+
+                            @if (Model.PaymentMethod == 2)
+                            {
+                                <option value="2" selected>Invoice</option>
+                            }
+                            else
+                            {
+                                <option value="2">Invoice</option>
+                            }
+
+                            @if (Model.PaymentMethod == 3)
+                            {
+                                <option value="3" selected>DirectDebit</option>
+                            }
+                            else
+                            {
+                                <option value="3">DirectDebit</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div id="CardDetailsView">
+                    <h2>Card Details</h2>
+                    <a class="linkButton" href="~/customers/@Model.CustomerId/paymentInfo/cardDetails">Edit Card Details</a>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Name on card:</th>
+                                <td>@Model.CardDetails?.CardHolderFullName</td>
+                            </tr>
+                            <tr>
+                                <th>Card number:</th>
+                                <td>@Model.CardDetails?.ObscuredCardNumber</td>
+                            </tr>
+                            <tr>
+                                <th>Expiration date:</th>
+                                <td>@(Model.CardDetails?.ExpiresMonth)/@(Model.CardDetails?.ExpiresYear)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h2>Billing Address</h2>
+
+                    <button id="CopyDeliveryAddressBtn" type="button">Copy from Delivery Address</button>
+
+                    <div class="formRow">
+                        <label for="BillingCompanyName">Company Name</label>
+                        <input type="text" id="BillingCompanyName" name="BillingCompanyName" value="@Model.BillingCompanyName" />
+                    </div>
+
+                    <div class="formRow">
+                        <label for="BillingPostCode">Post Code</label>
+                        <input type="text" id="BillingPostCode" name="BillingPostCode" value="@Model.BillingPostCode" />
+                    </div>
+                    <div class="formRow">
+                        <label for="BillingAddressLine1">Address Line 1</label>
+                        <input type="text" id="BillingAddressLine1" name="BillingAddressLine1" value="@Model.BillingAddressLine1" />
+                    </div>
+                    <div class="formRow">
+                        <label for="BillingAddressLine2">Address Line 2</label>
+                        <input type="text" id="BillingAddressLine2" name="BillingAddressLine2" value="@Model.BillingAddressLine2" />
+                    </div>
+                    <div class="formRow">
+                        <label for="BillingTown">Town</label>
+                        <input type="text" id="BillingTown" name="BillingTown" value="@Model.BillingTown" />
+                    </div>
+                </div>
+
+                <div>
+                    <h2>Billing Email</h2>
+                    <div class="formRow">
+                        <label for="BillingEmail">Billing Email Address</label>
+                        <input type="text" id="BillingEmail" name="BillingEmail" value="@Model.BillingEmail" />
+                    </div>
+                </div>
+
+                <div>
+                    <h2>Invoice Reference</h2>
+                    <div class="formRow">
+                        <label for="InvoiceReference">Invoice Reference</label>
+                        <input type="text" id="InvoiceReference" name="InvoiceReference" value="@Model.InvoiceReference" />
+                    </div>
+                </div>
+
+                <div id="formRow">
+                    <button type="submit">Save Changes</button>
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+    $(function () {
+        var paymentMethod = $("#PaymentMethod");
+        var cardDetails = $("#CardDetailsView");
+
+        function toggleCardDetails(paymentMethodId) {
+            if (paymentMethodId == "1") {
+                cardDetails.show();
+            }
+            else {
+                cardDetails.hide();
+            }
+        }
+
+        paymentMethod.change(function () {
+            toggleCardDetails(this.value);
+        });
+
+        toggleCardDetails(paymentMethod.val());
+
+        $("#CopyDeliveryAddressBtn").click(function () {
+            $("#BillingEmail").val($("input[name=ContactEmail]").val());
+            $("#BillingAddressLine1").val($("input[name=DeliveryAddressLine1]").val());
+            $("#BillingAddressLine2").val($("input[name=DeliveryAddressLine2]").val());
+            $("#BillingPostCode").val($("input[name=DeliveryPostCode]").val());
+            $("#BillingTown").val($("input[name=DeliveryTown]").val());
+        });
+    });
+</script>

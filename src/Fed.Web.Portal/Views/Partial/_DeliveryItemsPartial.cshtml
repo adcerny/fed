@@ -1,0 +1,49 @@
+﻿@model Fed.Core.Entities.Delivery
+@using Fed.Core.Extensions
+<table class="productsTable">
+    <caption>Products</caption>
+    <tr>
+        <th class="left">Product Code</th>
+        <th class="left">Product Group</th>
+        <th class="left">Product Name</th>
+        <th class="left">Supplier ID</th>
+        <th class="left">Supplier SKU</th>
+        <th class="right">Quantity</th>
+        <th class="right">Price</th>
+        <th class="right">Sale Price</th>
+        <th class="right">Total Price</th>
+    </tr>
+    @foreach (var item in Model.GetAggregatedOrderItems(true))
+    {
+        <tr>
+            <td class="left">@item.ProductCode</td>
+            <td class="left">@item.ProductGroup</td>
+            <td class="left">@item.ProductName</td>
+            <td class="left">@item.SupplierId</td>
+            <td class="left">@item.SupplierSKU</td>
+            <td class="right">@item.Quantity</td>
+            <td class="right">&pound; @(item.Price.ToString("#,##0.00"))</td>
+            <td class="right">@(item.SalePrice?.ToString("£ #,##0.00"))</td>
+            <td class="right">&pound; @((item.ActualPrice * item.Quantity).ToString("#,##0.00"))</td>
+        </tr>
+    }
+    <tr class="totalRetailPrice">
+        <td class="right bgDark" colspan="8">Total Retail Price</td>
+        <td class="right">&pound; @Model.GetOrderItemsTotal().ToString("#,##0.00")</td>
+    </tr>
+    <tr class="deliveryCharge">
+        <td class="right bgDark" colspan="8">Delivery Charge</td>
+        <td class="right">&pound;@Model.DeliveryCharge</td>
+    </tr>
+    @foreach (var discount in Model.Orders.SelectMany(o => o.OrderDiscounts.OrEmptyIfNull()))
+    {
+        <tr class="deliveryCharge">
+            <td class="right bgDark" colspan="8">@discount.Name</td>
+            <td class="right">- &pound;@discount.OrderTotalDeduction</td>
+        </tr>
+    }
+    <tr class="totalPrice">
+        <td class="right bgDark" colspan="8">Total Price</td>
+        <td class="right">&pound; @(Model.GetDeliveryTotal().ToString("#,##0.00"))</td>
+    </tr>
+</table>

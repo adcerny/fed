@@ -1,0 +1,69 @@
+﻿@using Newtonsoft.Json;
+@using Newtonsoft.Json.Serialization
+@model Fed.Web.Portal.ViewModels.CustomersDashboardViewModel
+@{
+    Layout = "_Master";
+
+    var serializerSettings = new JsonSerializerSettings();
+    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+}
+
+<h1>Customers</h1>
+
+<div class="formRow">
+    <a class="linkButton" href="~/customers/create/step1">Create New Customer</a>
+</div>
+
+<div class="customersDashBox">
+    <h2>Find Customer</h2>
+
+    <form action="~/customers" method="get" class="singleRowForm">
+        <label for="q">ID or Customer Name</label>
+        <input type="text" id="q" name="q" />
+        <button type="submit">Find Customer</button>
+    </form>
+
+    <form action="~/reports/FindCustomersByProductCode" method="get" class="singleRowForm">
+        <label for="ProductCode">By Product</label>
+        <input type="text" id="ProductCode" name="ProductCode" />
+        <button type="submit">Find Customer</button>
+    </form>
+</div>
+
+<div class="customersDashBox">
+    <h2>Reports</h2>
+    <div class="singleRowForm">
+        <a class="linkButton" href="~/reports/GetDeliveryShortageReportByDate?fromDate=@DateTime.Today.ToString("yyyy-MM-dd")&toDate=@DateTime.Today.ToString("yyyy-MM-dd")">View Shortages</a>
+        <a class="linkButton" href="~/reports/GetPaymentsByDate?fromDate=@DateTime.Today.ToString("yyyy-MM-dd")&toDate=@DateTime.Today.ToString("yyyy-MM-dd")">View Payments</a>
+    </div>
+</div>
+
+<div>
+    <h2>@(string.IsNullOrEmpty(Model.LifecycleStatus) && Model.AccountTypeId == null ? "All" : Model.ReportModel.Rows.Count.ToString()) Customers</h2>
+
+    <form action="~/dashboard/customers" method="get" class="singleRowForm">
+        <label for="lifecycleStatus">Filter</label>
+        <select id="lifecycleStatus" name="lifecycleStatus">
+            <!option value="" @(string.IsNullOrEmpty(Model.LifecycleStatus) ? "selected" : "")>Show All</!option>
+            <!option value="Prospect" @(Model.LifecycleStatus != null && Model.LifecycleStatus.Equals("Prospect") ? "selected" : "")>Prospect</!option>
+            <!option value="Active" @(Model.LifecycleStatus != null && Model.LifecycleStatus.Equals("Active") ? "selected" : "")>Active</!option>
+            <!option value="Lapsed" @(Model.LifecycleStatus != null && Model.LifecycleStatus.Equals("Lapsed") ? "selected" : "")>Lapsed</!option>
+        </select>
+        <select id="accountTypeId" name="accountTypeId">
+            <!option value="" @(Model.AccountTypeId == null ? "selected" : "")>Show All</!option>
+            <!option value="0" @(Model.AccountTypeId.HasValue && Model.AccountTypeId.Value == 0 ? "selected" : "")>Standard</!option>
+            <!option value="1" @(Model.AccountTypeId.HasValue && Model.AccountTypeId.Value == 1 ? "selected" : "")>Internal</!option>
+            <!option value="2" @(Model.AccountTypeId.HasValue && Model.AccountTypeId.Value == 2 ? "selected" : "")>Presale</!option>
+            <!option value="3" @(Model.AccountTypeId.HasValue && Model.AccountTypeId.Value == 3 ? "selected" : "")>Demo</!option>
+            <!option value="4" @(Model.AccountTypeId.HasValue && Model.AccountTypeId.Value == 4 ? "selected" : "")>Cancelled</!option>
+            <!option value="5" @(Model.AccountTypeId.HasValue && Model.AccountTypeId.Value == 5 ? "selected" : "")>Deleted</!option>
+        </select>
+        <button type="submit">Apply Filter</button>
+    </form>
+    <div id="Customers-Table">
+        @await Html.PartialAsync("_Report", Model.ReportModel)
+    </div>
+</div>
+
+<script src="~/js/customer-setagent.js"></script>
+<script src="~/js/customer-setattribute.js"></script>

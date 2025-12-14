@@ -1,0 +1,1 @@
+﻿ALTER TABLE [dbo].[Products] ADD [IsShippable] BIT NOT NULL DEFAULT 0

@@ -1,0 +1,776 @@
+﻿/* ------------------------------------------ *
+ * Global
+ * ------------------------------------------ */
+
+body {
+    padding: 0;
+    margin: 0;
+    background: #222;
+    color: #999;
+    font-family: 'Roboto', sans-serif;
+    font-size: .95em;
+}
+
+#bodyContainer {
+    margin: 20px;
+}
+
+#fedLogo {
+    height: 150px;
+}
+
+header {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-end;
+}
+
+main, footer {
+    position: relative;
+    margin: 0 25px;
+}
+
+footer {
+    margin-top: 4em;
+    margin-bottom: 2em;
+    padding: 0;
+    font-size: .9em;
+    color: #444;
+    text-align: center;
+}
+
+nav {
+    margin: 0 0 1em 1em;
+    padding: 0;
+}
+
+    nav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    nav li {
+        display: inline-block;
+        margin-left: 1em;
+    }
+
+    nav a {
+        color: #f1f1e788;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+        nav a:hover {
+            color: #ffd800;
+        }
+
+a {
+    text-decoration: none;
+    color: #ffd800;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+h1 {
+    font-size: 4em;
+    color: #f1f1e7;
+}
+
+h2 {
+    font-size: 2em;
+    color: #aaa;
+}
+
+h3 {
+    font-size: 1.6em;
+    color: #777;
+}
+
+table {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+table.small {
+    width:auto;
+}
+
+th {
+    background: #ffd80022;
+    color: #aaa;
+}
+
+th, td {
+    margin: 0;
+    padding: .5em;
+}
+
+tbody tr:nth-child(2n+1) td {
+    background: #292929;
+}
+
+button {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #ecca00;
+    background: #222;
+    border: 1.5px inset #ecca00;
+    border-style: solid;
+    border-radius: 6px;
+    padding: .5em 1em;
+    cursor: pointer;
+}
+
+    button:hover {
+        background: #333;
+    }
+
+input[type=date] {
+    display: inline-block;
+    margin: 0;
+    padding: .5em;
+    border: 2px solid #555;
+    background: transparent;
+    border-radius: 4px;
+    color: #f1f1e7;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+label {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+input[type=text],
+input[type=number],
+select {
+    background: #2f2f2f;
+    border: 2px solid #555;
+    border-radius: 4px;
+    padding: .4em;
+    font-size: 1.1em;
+    min-width: 300px;
+    color: #f1f1e7;
+    font-family: 'Roboto', sans-serif;
+}
+
+    select optgroup {
+        background: #121212;
+        color: #fff;
+        font-style: normal;
+        font-weight: bold;
+        font-family: 'Roboto', sans-serif;
+        padding: .5em;
+    }
+
+    select option {
+        color: #eee;
+        font-family: 'Roboto', sans-serif;
+    }
+
+main ul {
+    margin: 1em 0 3em 0;
+}
+
+    main ul li {
+        margin: 1em 0;
+    }
+
+        main ul li a {
+            font-size: 1.2em;
+        }
+
+/* ------------------------------------------ *
+ * Useful Classes
+ * ------------------------------------------ */
+
+.bgDark {
+    background: #222 !important;
+}
+
+.fullWidth {
+    width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box;
+}
+
+.twoThridsWidth {
+    width: 66% !important;
+    box-sizing: border-box;
+}
+
+.formRow {
+    margin: 1em 0;
+}
+
+.singleRowForm {
+    display: block;
+    margin: 2em 0 3em 0;
+}
+
+    .singleRowForm label {
+        margin-right: .5em;
+        margin-left: 1em;
+    }
+
+        .singleRowForm label:first-child {
+            margin-right: .5em;
+            margin-left: 0;
+        }
+
+    .singleRowForm .linkButton,
+    .singleRowForm button {
+        margin-left: .5em;
+    }
+
+    .singleRowForm input[type=text] {
+        font-size: 1.2em;
+        padding: .45em;
+    }
+
+    .singleRowForm button {
+        margin-left: .5em;
+    }
+
+.linkButton {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #ecca00;
+    background: #222;
+    border: 1.5px inset #ecca00;
+    border-style: solid;
+    border-radius: 6px;
+    padding: .5em 1em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    bottom: 0;
+    top: 0;
+    text-align: center;
+}
+
+    .linkButton:disabled {
+        border: 1.5px solid #A5A5A5;
+        color: #A5A5A5;
+        cursor: default;
+    }
+
+    .linkButton:hover {
+        background: #333;
+        text-decoration: none;
+    }
+
+.success {
+    display: block;
+    border: 2px solid #57ba8c;
+    padding: 1em;
+    border-radius: 6px;
+    background: #384942;
+    color: #54e5a2;
+}
+
+.validation-summary-errors {
+    display: block;
+    margin: 0;
+    border: 2px solid #f26c6a;
+    background: #301818;
+    color: #f26c6a;
+    padding: 2em 2em;
+    border-radius: 6px;
+}
+
+    .validation-summary-errors li {
+        margin: .5em 0;
+    }
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.centre {
+    text-align: center;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(255,255,255,0.1);
+}
+
+.modalContent {
+    background-color: #111;
+    margin: 20% auto;
+    padding: 0 20px;
+    border: 4px solid #444;
+    width: 50%;
+    border-radius: 10px;
+    max-width: 400px;
+}
+
+/* ------------------------------------------ *
+ * Dashboard
+ * ------------------------------------------ */
+
+#urlsDash {
+    grid-column: 2;
+    grid-row: 1 / 3;
+}
+
+#dashboard, #homeDashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+}
+
+.chart {
+    height: 400px
+}
+
+@media only screen and (max-width: 1024px) {
+    #dashboard, #homeDashboard {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+    }
+}
+
+/* ------------------------------------------ *
+ * Reports
+ * ------------------------------------------ */
+
+#Report .dynamicTable {
+    margin-top: 1em;
+}
+
+/* ------------------------------------------ *
+ * Customer Forms
+ * ------------------------------------------ */
+
+.customersDashBox .singleRowForm label {
+    width: 170px;
+}
+
+.customersDashBox .singleRowForm input {
+    width: 350px;
+}
+
+.customersDashBox .singleRowForm button {
+    width: 200px;
+}
+
+#portalForm {
+    max-width: 600px;
+}
+
+    #portalForm label {
+        color: #aaa;
+        font-size: 1em;
+        margin-bottom: .5em;
+    }
+
+    #portalForm input[type=text],
+    #portalForm select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #portalForm button,
+    #portalForm .linkButton {
+        margin: 1em 0 !important;
+        width: 49%;
+        box-sizing: border-box;
+    }
+
+        #portalForm .linkButton:nth-child(1n+1) {
+            margin-left: 5px !important;
+        }
+
+.braintree-hosted-field {
+    height: 36px;
+    max-width: 300px;
+}
+
+.braintree-input {
+    font-size: 15px;
+    color: #ccc;
+}
+
+.braintree-hosted-fields-valid {
+    color: #ccc;
+}
+
+.braintree-hosted-fields-invalid input {
+    color: #cc0000 !important;
+}
+
+.field-error-message {
+    color: #cc0000;
+    margin-top: 5px;
+    display: none;
+}
+
+.invalid-field .braintree-hosted-field, #CreateCustomer .invalid-field input {
+    border: 2px solid #cc0000;
+}
+
+.invalid-field .field-error-message {
+    display: block;
+}
+
+#payment-success, #payment-failure, #payment-error-message {
+    display: none;
+}
+
+    #payment-failure h3, #payment-error-message {
+        color: #cc0000;
+    }
+
+.braintree-hosted-field {
+    display: block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    background: #333;
+    border: 2px solid #666;
+    padding: .5em;
+    color: #ccc;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+/* ------------------------------------------ *
+ * Table Sort
+ * ------------------------------------------ */
+
+.tablesorter-metro-dark .header,
+.tablesorter-metro-dark .tablesorter-header {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAGFBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u5jNePWAAAACHRSTlMAMxIHKwEgMWD59H4AAABSSURBVAjXY2BgYFJgAAHzYhDJ6igSAKTYBAUTgJSioKAQAwNzoaCguAFDiCAQuDIkgigxBgiA8cJAVCpQt6AgSL+JoKAzA0gjUBsQqBcBCYhFAAE/CV4zeSzxAAAAAElFTkSuQmCC);
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    white-space: normal;
+}
+
+.tablesorter-metro-dark .tablesorter-header-inner {
+    padding: 0 26px 0 4px;
+}
+
+.tablesorter-metro-dark thead .headerSortUp,
+.tablesorter-metro-dark thead .tablesorter-headerSortUp,
+.tablesorter-metro-dark thead .tablesorter-headerAsc {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u5meJAOAAAACnRSTlMAMwsqXt+gIBUGxGoDMAAAAFlJREFUCNctzC0SQAAUReEzGNQ3AlHRiSRZFCVZYgeswRL8hLdK7834wj3tAlGP6y7fYHpKS6w6WwbVG0I1NZVnZPG8/DYxOYlnhUYkA06R1s9ESsxR4NIdPhkPFDFYuEnMAAAAAElFTkSuQmCC);
+}
+
+.tablesorter-metro-dark thead .headerSortDown,
+.tablesorter-metro-dark thead .tablesorter-headerSortDown,
+.tablesorter-metro-dark thead .tablesorter-headerDesc {
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAALVBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7i0NViAAAADnRSTlMAMiweCQITTvDctZZqaTlM310AAABcSURBVAjXY2BgYEtgAAFHERDJqigUAKSYBQUNgFSioKAYAwOLIBA4MASBKFUGQxAlzAAF+94BwWuGKBC1lIFl3rt3Lx0YGCzevWsGSjK9e6cAUlT3HKyW9wADAwDRrBiDy6bKzwAAAABJRU5ErkJggg==);
+}
+
+.tablesorter-metro-dark thead .sorter-false {
+    background-image: none;
+    cursor: default;
+    padding: 4px;
+}
+
+th:focus {
+    outline: 0;
+}
+
+/* ------------------------------------------ *
+ * Recurring Orders
+ * ------------------------------------------ */
+
+#RecurringOrders tbody tr:hover td {
+    background: #444;
+    color: #ecca00;
+    cursor: pointer;
+}
+
+#recurringOderStats table {
+    max-width: 500px;
+}
+
+    #recurringOderStats table th {
+        width: 200px;
+        text-align: left;
+    }
+
+#SingleRecurringOrder #columnContainer table {
+    max-width: 800px;
+}
+
+    #SingleRecurringOrder #columnContainer table th {
+        width: 250px;
+        text-align: left;
+    }
+
+/* ------------------------------------------ *
+ * Deliveries
+ * ------------------------------------------ */
+
+#Deliveries {
+    min-width: 1310px;
+}
+
+    #Deliveries > article > hgroup {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-items: center;
+        color: #ecca00;
+        margin: 0;
+        padding: 1.5em .5em;
+        border-bottom: 4px solid #2a2a2a;
+        cursor: pointer;
+    }
+
+    #Deliveries > article.first-order > hgroup {
+        color: #04d603;
+    }
+
+    #Deliveries > article > hgroup:hover {
+        background: #282828;
+    }
+
+    #Deliveries > article > hgroup > h1 {
+        margin: 0;
+        padding: 0;
+        font-size: 1em;
+    }
+
+        #Deliveries > article > hgroup > h1 > span {
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            border-left: 1px solid #a57cbf;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+            #Deliveries > article > hgroup > h1 > span:first-child {
+                border-left: none;
+            }
+
+    #Deliveries > article.first-order > hgroup > h1 > .new {
+        background-image: url(/img/new-green.svg);
+        height: 35px;
+        width: 35px;
+        background-size: 35px;
+        border: none;
+        position: relative;
+        top: 12px;
+        right: 25px;
+        margin-top: -25px;
+    }
+
+    #Deliveries table > caption {
+        margin: 0;
+        padding: .5em;
+        font-weight: 700;
+        font-size: 1.2em;
+        text-align: left;
+        line-height: 2.5em;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        word-spacing: 3px;
+        color: #777;
+    }
+
+    #Deliveries #sortableHeaders {
+        padding: 1.5em .5em;
+    }
+
+        #Deliveries #sortableHeaders > span {
+            display: inline-block;
+        }
+
+            #Deliveries #sortableHeaders > span > a {
+                display: inline-block;
+                width: 100%;
+                border-right: 1px solid #222;
+                text-align: center;
+                padding: .5em;
+                background: #2f2f2f;
+                box-sizing: border-box;
+                color: #a57cbf;
+                text-decoration: none;
+                font-size: .9em;
+                font-weight: 500;
+            }
+
+    #Deliveries .orderInfo {
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+    }
+
+        #Deliveries .orderInfo > table {
+            padding: .5em;
+        }
+
+            #Deliveries .orderInfo > table > tbody > tr > th {
+                width: 150px;
+            }
+
+    #Deliveries .dayCol {
+        width: 60px;
+    }
+
+    #Deliveries .dateCol {
+        width: 90px;
+    }
+
+    #Deliveries .deadlineCol {
+        width: 90px;
+    }
+
+    #Deliveries .orderIdCol {
+        width: 100px;
+    }
+
+    #Deliveries .companyNameCol {
+        min-width: 400px;
+    }
+
+    #Deliveries .contactNameCol {
+        min-width: 300px;
+    }
+
+    #Deliveries .postcodeCol {
+        width: 130px;
+    }
+
+    #Deliveries .itemsCountCol {
+        width: 100px;
+    }
+
+    #Deliveries .printLabelButton {
+        margin: 1em 0;
+    }
+
+#deliveryShortages {
+    max-width: 50%;
+}
+
+.totalRetailPrice td:last-child {
+    background: #024554;
+}
+
+.deliveryCharge td:last-child {
+    background: #544e02 !important;
+}
+
+.totalPrice td:last-child {
+    background: #02542e;
+}
+
+.shortBtn {
+    border-color: #aaa;
+    color: #aaa;
+    font-size: .8em;
+    margin: 0;
+}
+
+    .shortBtn:hover {
+        border-color: #ecca00;
+        color: #ecca00;
+    }
+
+#shortageForm label {
+    display: block;
+    margin-bottom: .5em;
+}
+
+#shortageForm input,
+#shortageForm select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+#shortageForm h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+#shortDesiredQuantity:disabled {
+    border-color: #333;
+    background: #111;
+    color: #777;
+}
+
+#saveShortageBtn {
+    margin: 1em 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#cancelShortageBtn {
+    border-color: #aaa;
+    color: #aaa;
+    margin: 0 0 .5em 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+.deliveryItemQuantity del {
+    font-size: 1.2em;
+    color: #666;
+    font-style: italic !important;
+    font-weight: bold !important;
+}
+
+.deliveryItemQuantity em {
+    color: #f26c6a;
+    margin-left: 10px;
+    font-style: normal;
+}
+
+#deliveryShortages button {
+    border-color: #aaa;
+    color: #aaa;
+    font-size: .8em;
+    margin: 0;
+}
+
+#deliveryShortages button:hover {
+    border-color: #ecca00;
+    color: #ecca00;
+}

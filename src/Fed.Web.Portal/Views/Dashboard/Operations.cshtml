@@ -1,0 +1,70 @@
+﻿@model Fed.Web.Portal.ViewModels.BaseViewModel
+@{
+    Layout = "_Master";
+    var today = DateTime.Now;
+    var nextWorkingDay = today.AddDays(1);
+    if(today.DayOfWeek == DayOfWeek.Friday)
+    {
+        nextWorkingDay = today.AddDays(3);
+    }
+    
+}
+
+<h1>Operations</h1>
+
+<div>
+    <h2>Deliveries, Picksheets &amp; Labels</h2>
+
+    <div>
+        <h3>Find Delivery</h3>
+        <form action="~/deliveries" method="get" class="singleRowForm">
+            <label for="deliveryId">ID or Short ID</label>
+            <input type="text" id="deliveryId" />
+
+            <button id="findDeliveryBtn" type="submit">Show Delivery</button>
+        </form>
+    </div>
+
+    <h3>Confirmed Deliveries</h3>
+    <div class="singleRowForm">
+        <a class="linkButton" href="~/deliveries/setPickOrder">Set Delivery Order</a>
+        <a class="linkButton" href="~/deliveries/setProductOrder">Set Product Order</a>
+
+        @if (ViewBag.NextDeliveryId != null)
+        {
+            <a class="linkButton" href="~/deliveries/@ViewBag.NextDeliveryId">Start/Continue Packing</a>
+        }
+        <a class="linkButton" href="~/deliveries?deliveryDate=@DateTime.Today.ToString("yyyy-MM-dd")">View Confirmed Deliveries</a>
+        
+    </div>
+</div>
+
+<h2>Recurring &amp; One-Off Orders</h2>
+<div class="singleRowForm">
+    <a class="linkButton" href="~/recurringOrders">View Upcoming Orders</a>
+    <a class="linkButton" href="@ViewBag.DeliveryForecastUrl">View Delivery Forecast</a>
+</div>
+
+<div>
+    <h2>Public Holidays</h2>
+    <a class="linkButton" id="addpublicholidays" href="~/holidays/getholidays">Add Public Holidays</a>
+</div>
+
+<div>
+    <h2>Reports</h2>
+    <ul>
+        <li><a href="~/reports/GetOrdersPerDay">Orders Per Day</a></li>
+        <li><a href="~/reports/GetProductQuantitiesPerDay">Product Quantities Per Day</a></li>
+        <li><a href="~/reports/SupplierProductByDelivery?date=@nextWorkingDay.ToString("yyyy-MM-dd")">Supplier Product By Delivery</a></li>
+    </ul>
+</div>
+
+<script>
+    $(document).ready(
+        function () {
+            $('#findDeliveryBtn').on('click', function () {
+                var deliveryId = $('#deliveryId').val();
+                $(this).attr('formaction', "/deliveries/" + deliveryId);
+            });
+        });
+</script>

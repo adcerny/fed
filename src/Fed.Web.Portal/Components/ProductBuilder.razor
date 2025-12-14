@@ -1,0 +1,68 @@
+﻿@using Fed.Core.Entities
+@using Microsoft.AspNetCore.Components
+@using Fed.Web.Portal.JsInterop
+
+@inject IJSRuntime JSRuntime
+
+<h1>Text received</h1>
+<ul>
+    @foreach (string text in TextHistory)
+    {
+        <li>@text</li>
+    }
+</ul>
+
+
+<div class="formRow">
+    <label for="ContactFirstName">@LabelText</label>
+    <input type="text" name="product" id="autocomplete" />
+    <button disabled id="add-primary-product">Select</button>
+    <button type="button" class="btn btn-primary" @onclick="TriggerNetInstanceMethod">
+        Trigger .NET instance method HelloHelper.SayHello
+    </button>
+</div>
+@code {
+
+    private DotNetObjectReference<HelloHelper> _objRef;
+
+    public async Task TriggerNetInstanceMethod()
+    {
+        _objRef = DotNetObjectReference.Create(new HelloHelper("Blazor"));
+
+        await JSRuntime.InvokeAsync<string>(
+            "exampleJsFunctions.sayHello",
+            _objRef);
+    }
+
+    public void Dispose()
+    {
+        _objRef?.Dispose();
+    }
+
+
+    [Parameter]
+    public List<Product> products { get; set; }
+
+    List<string> TextHistory = new List<string>();
+
+    public string LabelText { get; set; } = "Select a primary product";
+
+    public Product product { get; set; }
+
+
+    [JSInvokable("AddPrimaryProduct")]
+    public void AddPrimaryProduct(string productId)
+    {
+        product = products.Single(p => p.Id == productId);
+    }
+
+    [JSInvokable("AddText")]
+    public void AddTextToTextHistory(string text)
+    {
+        TextHistory.Add(text.ToString());
+        while (TextHistory.Count > 10)
+            TextHistory.RemoveAt(0);
+        StateHasChanged();
+        System.Diagnostics.Debug.WriteLine("DotNet: Received " + text);
+    }
+}

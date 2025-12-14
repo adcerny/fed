@@ -1,0 +1,208 @@
+﻿@model Fed.Web.Portal.ViewModels.SystemDashboardViewModel
+@{
+    Layout = "_Master";
+}
+
+    <div id="homeDashboard">
+        <div>
+            <h2>App Info</h2>
+            <h3>Fed Web Service</h3>
+            <table>
+                <tr>
+                    <th>Version</th>
+                    <td>@Model.ServiceInfo.Version</td>
+                </tr>
+                <tr>
+                    <th>Last Published</th>
+                    <td>@Model.ServiceInfo.LastPublished.ToString("dddd, dd MMMM yyyy, hh:mm")</td>
+                </tr>
+            </table>
+            <h3>Fed Portal</h3>
+            <table>
+                <tr>
+                    <th>Version</th>
+                    <td>@Model.PortalInfo.Version</td>
+                </tr>
+                <tr>
+                    <th>Last Published</th>
+                    <td>@Model.PortalInfo.LastPublished.ToString("dddd, dd MMMM yyyy, hh:mm")</td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="urlsDash">
+            <h2>URLs</h2>
+            <h3>Production URLs</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Fed Website:</th>
+                        <td><a href="https://fedteam.co.uk">fedteam.co.uk</a></td>
+                    </tr>
+                    <tr>
+                        <th>Umbraco Portal:</th>
+                        <td><a href="https://fedteam.co.uk/umbraco">fedteam.co.uk/umbraco</a></td>
+                    </tr>
+                    <tr>
+                        <th>Fed Web Service:</th>
+                        <td><a href="https://fed-service-prd.azurewebsites.net">fed-service-prd.azurewebsites.net</a></td>
+                    </tr>
+                    <tr>
+                        <th>Function Logs:</th>
+                        <td><a href="https://fed-functions-prd.scm.azurewebsites.net/DebugConsole">fed-functions-prd.scm.azurewebsites.net</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Staging URLs</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Fed Website:</th>
+                        <td><a href="https://app-fed-stg.azurewebsites.net">app-fed-stg.azurewebsites.net</a></td>
+                    </tr>
+                    <tr>
+                        <th>Umbraco Portal:</th>
+                        <td><a href="https://app-fed-stg.azurewebsites.net/umbraco">app-fed-stg.azurewebsites.net/umbraco</a></td>
+                    </tr>
+                    <tr>
+                        <th>Fed Web Service:</th>
+                        <td><a href="https://fed-service-stg.azurewebsites.net">fed-service-stg.azurewebsites.net</a></td>
+                    </tr>
+                    <tr>
+                        <th>Function Logs:</th>
+                        <td><a href="https://fed-functions-stg.scm.azurewebsites.net/DebugConsole">fed-functions-stg.scm.azurewebsites.net</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="merchelloSyncDash">
+            <h2>Product Sync with Merchello</h2>
+            <a class="linkButton" href="@Model.ProductSyncUrl" target="_blank">Force Product Sync</a>
+        </div>
+
+        <div class="customersDashBox" id="cardMigration">
+            <h2>Migrate Card Details</h2>
+            <form method="post" action="@Model.BrainTreeMigrationUrl" target="_blank">
+                <label for="ACAccountNumber">A&amp;C Account Number</label>
+                <input type="text" id="ACAccountNumber" name="ACAccountNumber" />
+                <button type="submit">Migrate to Fed</button>
+            </form>
+        </div>
+
+        <div class="customersDashBox" id="customerAgents">
+            <h2>Customer Agents</h2>
+            @if (Model.CustomerAgents == null)
+            {
+                <p>No agents have been added</p>
+            }
+            else
+            {
+                <table class="small" id="customer-agents">
+                    <tbody>
+
+                        <tr class="no-agents@(Model.CustomerAgents.Count() > 0 ? " hidden" : "" )"> <td>No agents have been added</td></tr>
+                        @foreach (var agent in Model.CustomerAgents)
+                        {
+                            <tr class="agent-details">
+                                <td>@agent.Name</td>
+                                <td>@agent.Email</td>
+                                <td><a data-agent-id="@agent.Id" data-agent-name="@agent.Name" class="delete-agent">delete</a></td>
+                            </tr>
+                        }
+                        <tr class="agent-form hidden">
+                            <td><input id="agent-name" placeholder="Agent name" /></td>
+                            <td><input id="agent-email" placeholder="Agent email" /></td>
+                            <td><a id="add-agent">add</a> </td>
+                        </tr>
+                        <tr id="show-agent-form"><td colspan="3"><a>Add new agent</a></td></tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div class="customersDashBox" id="customerMarketingAttributes">
+            <h2>Customer Marketing Attributes</h2>
+            @if (Model.CustomerMarketingAttributes == null)
+            {
+                <p>No marketing attributes have been added</p>
+            }
+            else
+            {
+                <table id="marketingattributestable">
+                    <tbody>
+                        <tr class="no-attributes@(Model.CustomerMarketingAttributes.Count() > 0 ? " hidden" : "" )"> <td>No marketing attributes have been added</td></tr>
+                        @foreach (var customerMarketingAttribute in Model.CustomerMarketingAttributes)
+                        {
+                            <tr class="attribute-details">
+                               <td>@customerMarketingAttribute.Name</td>
+                                <td>@customerMarketingAttribute.Description</td>
+                                <td><a data-attribute-id="@customerMarketingAttribute.Id" data-attribute-name="@customerMarketingAttribute.Name" data-attribute-description="@customerMarketingAttribute.Description" class="update-attribute">Update</a></td>
+                            </tr>
+                        }
+                        <tr class="attribute-form hidden">
+                            <td><input id="attribute-name" placeholder="Marketing Attribute name" /></td>
+                            <td><input id="attribute-description" placeholder="Marketing Attribute description" /></td>
+                            <td><a id="add-attribute">Add</a>&nbsp; <a id="cancel-add-attribute">Cancel</a></td>
+                        </tr>
+                        <tr id="show-attribute-form"><td colspan="3"><a>Add new marketing attribute</a></td></tr>
+                    </tbody>
+                </table>
+                <table id="updatemarketingattributetable" class="small" style="display:none">
+                    <tr>
+                        <td>
+                            <input type="hidden" name="updateattributeid" id="updateattributeid" />
+                            <input id="update-attribute-name" placeholder="Marketing Attribute name" />
+                        </td>
+
+                        <td><input id="update-attribute-description" placeholder="Marketing Attribute description" /></td>
+
+                        <td><a id="updateattribute">Update</a></td>
+                        <td><a id="cancel">Cancel</a></td>
+                    </tr>
+                </table>
+            }
+        </div>
+        <div class="customersDashBox" id="productCategories">
+            <h2>Product Categories</h2>
+            @if (Model.ProductCategories == null)
+            {
+                <p>No product categories have been added</p>
+            }
+            else
+            {
+                <table id="productcategoriestable">
+                    <tbody>
+                        <tr class="no-categories@(Model.ProductCategories.Count() > 0 ? " hidden" : "" )"> <td>No categories have been added</td></tr>
+                        @foreach (var category in Model.ProductCategories)
+                        {
+                            <tr class="category-details">
+                                <td>@category.Name</td>
+                                <td><a data-category-id="@category.Id" data-category-name="@category.Name" class="update-category">Update</a></td>
+                            </tr>
+                        }
+                    <tr class="category-form hidden">
+                        <td><input id="category-name" placeholder="Category name" /></td>
+                        <td><a id="add-category">Add</a> &nbsp;<a id="cancel-add-category">Cancel</a></td>
+                    </tr>
+                        <tr id="show-category-form"><td colspan="3"><a>Add new product category</a></td></tr>
+                    </tbody>
+                </table>
+                <table id="updatecategorytable" class="small" style="display:none">
+                    <tr>
+                        <td>
+                            <input type="hidden" name="updatecategoryid" id="updatecategoryid" />
+                            <input id="update-category-name" placeholder="Category name" />
+                        </td>
+
+                       
+                        <td><a id="updatecategory">Update</a></td>
+                        <td><a id="cancel">Cancel</a></td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+
+<script src="~/js/customer-agents.js"></script>
+<script src="~/js/customer-marketingattribute.js"></script>
+<script src="~/js/productcategories.js"></script>

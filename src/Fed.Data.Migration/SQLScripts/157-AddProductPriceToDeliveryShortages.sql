@@ -1,0 +1,1 @@
+﻿ALTER TABLE [dbo].[DeliveryShortages] ADD [ProductPrice] [decimal](18, 2) NOT NULL DEFAULT 0

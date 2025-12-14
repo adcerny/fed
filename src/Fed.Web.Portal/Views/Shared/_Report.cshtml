@@ -1,0 +1,121 @@
+﻿@model Fed.Web.Portal.Models.Reports.ReportModel
+
+<div class="report">
+    @if(Model.DisplayInputFieldsForParameters && Model.ParameterValues != null && Model.ParameterValues.Count > 0)
+    {
+        <form class="reportForm" method="get">
+            @foreach(var parameter in Model.ParameterValues)
+            {
+                <div class="formRow">
+                    <label for="@parameter.Key">@parameter.Key</label>
+                    <input type="text" id="@parameter.Key" name="@parameter.Key" value="@parameter.Value" />
+                </div>
+            }
+            <button type="submit">Submit and Reload Report</button>
+        </form>
+    }
+
+    <p><a class="linkButton" href="~/reports/download/@Model.NameAndQuery">Download CSV</a></p>
+    <div class="dynamicTable">
+        @if (Model.Rows == null || Model.Rows.Count == 0)
+        {
+            <p>No data to display.</p>
+        }
+        else
+        {
+            var obj = Model.Rows[0];
+
+            <table class="tablesorter-metro-dark">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        @foreach (var p in obj.Properties())
+                        {
+                            
+                            
+                            var colName = p.Path.Trim('[', ']', '\'');
+
+                            bool hidden = (Model.HiddenColumns != null
+                                        && Model.HiddenColumns.Count > 0
+                                        && Model.HiddenColumns.Contains(colName));
+
+                            <th class="left@(hidden ? " hidden" : "")">@colName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var counter = 1;
+                    }
+                    @foreach (var item in Model.Rows)
+                    {
+                    <tr>
+                        <td>@(counter++)</td>
+                        @{
+                            var properties = item.Properties();
+                            foreach (var p in item.Properties())
+                            {
+                                var outputRaw = false;
+                                var colName = p.Path.Trim('[', ']', '\'');
+                                var value = p.Value.ToString();
+
+                                bool hidden = (Model.HiddenColumns != null
+                                    && Model.HiddenColumns.Count > 0
+                                    && Model.HiddenColumns.Contains(colName));
+                        
+
+                                if (p.Value.Type == Newtonsoft.Json.Linq.JTokenType.Date)
+                                {
+                                    value = DateTime.Parse(p.Value.ToString()).ToString("yyyy-MM-dd");
+                                }
+                                else if (p.Value.Type == Newtonsoft.Json.Linq.JTokenType.Boolean)
+                                {
+                                    value = bool.Parse(p.Value.ToString()) ? "&#10003;" : "";
+                                    outputRaw = true;
+                                }
+
+                                Fed.Web.Portal.Models.Reports.ReportModel.FieldLink link = null;
+
+                                if (Model.Links != null && Model.Links.Count > 0)
+                                {
+                                    link = Model.Links.SingleOrDefault(l => l.ColumnName.Equals(colName, StringComparison.OrdinalIgnoreCase));
+                                }
+
+                                if (link != null)
+                                {
+                                    var source = properties.First(x => x.Path.Trim('[', ']', '\'').Equals(link.SourceName, StringComparison.OrdinalIgnoreCase));
+                                    var linkValue = source.Value.ToString();
+                                    var urlEncodedValue = System.Net.WebUtility.UrlEncode(linkValue);
+                                    <td class="@(hidden ? " hidden" : "")">
+                                        <a href="~/@link.RelativeUrl.Replace(link.Placeholder, urlEncodedValue)">@value</a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    if (outputRaw)
+                                    {
+                                        <td class="@(hidden ? " hidden" : "")">@Html.Raw(value)</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="@(hidden ? " hidden" : "")">@value</td>
+                                    }
+                                }
+                            }
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<script src="~/js/jquery.tablesorter.min.js"></script>
+<script>
+    $(function () {
+        $(".tablesorter-metro-dark").tablesorter();
+        if ($("input").length)
+            $("#submit").show();
+    });
+</script>

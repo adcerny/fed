@@ -1,0 +1,249 @@
+﻿@model Fed.Web.Portal.ViewModels.DeliveriesViewModel
+@using Fed.Core.Extensions
+@{
+    Layout = "_Master";
+}
+
+<h1>Confirmed Deliveries</h1>
+<div class="singleRowForm">
+    <form action="/deliveries" method="get">
+        <label for="deliveryDate">Delivery Date</label>
+        <input type="date" id="deliveryDate" name="deliveryDate" value="@Model.SelectedDate" />
+        <button type="submit">Show Deliveries</button>
+        @if (Model.Deliveries != null && Model.Deliveries.Count > 0)
+        {
+            var printPickSheetPath = $"/deliveries/pickSheets?deliveryDate={Model.SelectedDate}";
+
+            <a class="linkButton" href="@printPickSheetPath" target="_blank">Print Pick Sheets</a>
+            <a class="linkButton" href="/deliveries/labels?deliveryDate=@Model.SelectedDate" target="_blank">Print Labels</a>
+        }
+    </form>
+</div>
+<div id="Deliveries">
+    @if (Model.Deliveries != null && Model.Deliveries.Count > 0)
+    {
+        <h2>Total Deliveries: @Model.Deliveries.Count</h2>
+
+        var path = $"/deliveries?deliveryDate={Model.SelectedDate}";
+        var sortByDay = $"{path}&sortBy=Day&asc={!Model.Asc}";
+        var sortByDate = $"{path}&sortBy=Date&asc={!Model.Asc}";
+        var sortByDeadline = $"{path}&sortBy=Slot&asc={!Model.Asc}";
+        var sortByDeliveryId = $"{path}&sortBy=DeliveryId&asc={!Model.Asc}";
+        var sortByCompanyName = $"{path}&sortBy=CompanyName&asc={!Model.Asc}";
+        var sortByContactName = $"{path}&sortBy=ContactName&asc={!Model.Asc}";
+        var sortByPostcode = $"{path}&sortBy=Postcode&asc={!Model.Asc}";
+        var sortByItemsCount = $"{path}&sortBy=ItemCount&asc={!Model.Asc}";
+        var sortByFirstDelivery = $"{path}&sortBy=FirstDelivery&asc={!Model.Asc}";
+        var sortByPackingStatus = $"{path}&sortBy=PackingStatus&asc={!Model.Asc}";
+
+        var arrowDirection = Model.Asc ? "up" : "down";
+        var arrowHtml = $"<i class=\"arrow {arrowDirection}\"></i>";
+
+        <div id="sortableHeaders">
+
+            <span class="dayCol"><a href="@sortByDay">Day @Html.Raw(Model.SortBy == "Day" ? arrowHtml : "")</a></span>
+            <span class="dateCol"><a href="@sortByDate">Date @Html.Raw(Model.SortBy == "Date" ? arrowHtml : "")</a></span>
+            <span class="deadlineCol"><a href="@sortByDeadline">Deadline @Html.Raw(Model.SortBy == "Slot" ? arrowHtml : "")</a></span>
+            <span class="orderIdCol"><a href="@sortByDeliveryId">Delivery ID @Html.Raw(Model.SortBy == "DeliveryId" ? arrowHtml : "")</a></span>
+            <span class="companyNameCol"><a href="@sortByCompanyName">Company Name @Html.Raw(Model.SortBy == "CompanyName" ? arrowHtml : "")</a></span>
+            <span class="contactNameCol"><a href="@sortByContactName">Contact Name @Html.Raw(Model.SortBy == "ContactName" ? arrowHtml : "")</a></span>
+            <span class="postcodeCol"><a href="@sortByPostcode">Postcode @Html.Raw(Model.SortBy == "Postcode" ? arrowHtml : "")</a></span>
+            <span class="itemsCountCol"><a href="@sortByItemsCount">Total Items @Html.Raw(Model.SortBy == "ItemCount" ? arrowHtml : "")</a></span>
+            <span class="firstDeliveryCol"><a href="@sortByFirstDelivery">First Delivery @Html.Raw(Model.SortBy == "FirstDelivery" ? arrowHtml : "")</a></span>
+            <span class="packingStatusCol"><a href="@sortByPackingStatus">Status @Html.Raw(Model.SortBy == "PackingStatus" ? arrowHtml : "")</a></span>
+        </div>
+        @foreach (var delivery in Model.Deliveries)
+        {
+            var sampleOrder = delivery.Orders.First();
+            var isNewDelivery = delivery.IsFirstDelivery();
+
+            var status = string.Empty;
+            var statusClass = "notPacked";
+
+            switch (delivery.PackingStatus)
+            {
+                case Fed.Core.Enums.PackingStatus.NotPacked:
+                    status = "Not Packed";
+                    statusClass = "notPacked";
+                    break;
+                case Fed.Core.Enums.PackingStatus.PartiallyPacked:
+                    status = "Partially Packed";
+                    statusClass = "partiallyPacked";
+                    break;
+                case Fed.Core.Enums.PackingStatus.Packed:
+                    status = "Packed";
+                    statusClass = "packed";
+                    break;
+                default: break;
+            }
+
+            <article @(delivery.Orders.Any(o => o.IsFirstOrder) ? " class=first-order" : "")>
+                <hgroup>
+                    <h1>
+                        <span class="dayCol">@delivery.DeliveryDate.Value.DayOfWeek.ToString().Substring(0, 3).ToUpper()</span>
+                        <span class="dateCol">@delivery.DeliveryDate.Value.ToString("dd/MM/yy")</span>
+                        <span class="deadlineCol">@delivery.LatestTime.ToString(@"hh\:mm")</span>
+                        <span class="orderIdCol">@delivery.ShortId</span>
+                        <span class="companyNameCol">@delivery.DeliveryCompanyName</span>
+                        <span class="contactNameCol">@delivery.DeliveryFullName</span>
+                        <span class="postcodeCol">@delivery.DeliveryPostcode</span>
+                        <span class="itemsCountCol">@delivery.GetAggregatedOrderItems().Count</span>
+                        <span class="firstDeliveryCol">@Html.Raw(isNewDelivery ? "<strong>NEW</strong>" : "--")</span>
+                        <span class="packingStatusCol @statusClass">@status</span>
+                    </h1>
+                </hgroup>
+                <div style="display: none;">
+                    <div class="orderInfo">
+                        <table>
+                            <caption>Delivery Details</caption>
+                            <tr>
+                                <th>Delivery ID:</th>
+                                <td><a href="~/deliveries/@delivery.ShortId">@delivery.ShortId</a></td>
+                            </tr>
+                            <tr>
+                                <th>Total Orders:</th>
+                                <td>
+                                    @{
+                                        var orderIds = new System.Text.StringBuilder();
+
+                                        foreach (var order in delivery.Orders)
+                                        {
+                                            if (orderIds.Length > 0)
+                                            {
+                                                orderIds.Append(", ");
+                                            }
+
+                                            orderIds.Append($"{order.ShortId} ({order.OrderName})");
+                                        }
+                                    }
+                                    @delivery.Orders?.Count: @orderIds.ToString()
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="left">Delivery Time:</th>
+                                <td>@delivery.DeliveryDate, @delivery.EarliestTime.ToString(@"hh\:mm") - @delivery.LatestTime.ToString(@"hh\:mm")</td>
+                            </tr>
+                        </table>
+                        <table>
+                            <caption>Contact Details</caption>
+                            <tr>
+                                <th class="left">Customer ID:</th>
+                                <td>@sampleOrder.CustomerShortId</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Contact ID:</th>
+                                <td>@sampleOrder.ContactShortId</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Company Name:</th>
+                                <td>@sampleOrder.CompanyName</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Full Name:</th>
+                                <td>@(sampleOrder.ContactFirstName + ' ' + sampleOrder.ContactLastName)</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Email:</th>
+                                <td>@sampleOrder.ContactEmail</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Phone:</th>
+                                <td>@sampleOrder.ContactPhone</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="orderInfo">
+                        <table>
+                            <caption>Delivery Address</caption>
+                            <tr>
+                                <th class="left">Full Name:</th>
+                                <td>@delivery.DeliveryFullName</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Company Name:</th>
+                                <td>@delivery.DeliveryCompanyName</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Address Line 1:</th>
+                                <td>@delivery.DeliveryAddressLine1</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Address Line 2:</th>
+                                <td>@delivery.DeliveryAddressLine2</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Town:</th>
+                                <td>@delivery.DeliveryTown</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Postcode:</th>
+                                <td>@delivery.DeliveryPostcode</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Instructions:</th>
+                                <td>@delivery.DeliveryInstructions</td>
+                            </tr>
+                            <tr>
+                                <th class="left">Leave Outside:</th>
+                                <td>@delivery.LeaveDeliveryOutside</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <partial name="_DeliveryItemsPartial" for="@delivery"/>
+                    <table class="productsTable">
+                        <caption>Products</caption>
+                        <tr>
+                            <th class="left">Product Code</th>
+                            <th class="left">Product Group</th>
+                            <th class="left">Product Name</th>
+                            <th class="left">Supplier ID</th>
+                            <th class="left">Supplier SKU</th>
+                            <th class="right">Quantity</th>
+                            <th class="right">Price</th>
+                            <th class="right">Sale Price</th>
+                            <th class="right">Total Price</th>
+                        </tr>
+                        @foreach (var item in delivery.GetAggregatedOrderItems())
+                        {
+                            <tr>
+                                <td class="left">@item.ProductCode</td>
+                                <td class="left">@item.ProductGroup</td>
+                                <td class="left">@item.ProductName</td>
+                                <td class="left">@item.SupplierId</td>
+                                <td class="left">@item.SupplierSKU</td>
+                                <td class="right">@item.Quantity</td>
+                                <td class="right">&pound; @(item.Price.ToString("#,##0.00"))</td>
+                                <td class="right">@(item.SalePrice?.ToString("£ #,##0.00"))</td>
+                                <td class="right">&pound; @((item.ActualPrice * item.Quantity).ToString("#,##0.00"))</td>
+                            </tr>
+                        }
+                        <tr class="totalRetailPrice">
+                            <td class="right bgDark" colspan="8">Total Retail Price</td>
+                            <td class="right">&pound; @delivery.GetOrderItemsTotal().ToString("#,##0.00")</td>
+                        </tr>
+                        <tr class="deliveryCharge">
+                            <td class="right bgDark" colspan="8">Delivery Charge</td>
+                            <td class="right">&pound;@delivery.DeliveryCharge</td>
+                        </tr>
+                        @foreach (var discount in delivery.Orders.SelectMany(o => o.OrderDiscounts.OrEmptyIfNull()))
+                        {
+                            <tr class="deliveryCharge">
+                                <td class="right bgDark" colspan="8">@discount.Name</td>
+                                <td class="right">- &pound;@discount.OrderTotalDeduction</td>
+                            </tr>
+                        }
+                        <tr class="totalPrice">
+                            <td class="right bgDark" colspan="8">Total Price</td>
+                            <td class="right">&pound; @(delivery.GetDeliveryTotal().ToString("#,##0.00"))</td>
+                        </tr>
+                    </table>
+                    <a class="linkButton printLabelButton" href="/deliveries/labels/@delivery.Id">Print Labels for this order</a>
+                </div>
+            </article>
+        }
+    }
+    else
+    {
+        <p>Deliveries for the selected date haven't been generated yet or do not exist.</p>
+    }
+</div>

@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Fed by Abel &amp; Cole</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <base href="~/" />
+    @* css custom files *@
+    <link rel="stylesheet" type="text/css" href="~/css/site.css?v=@Fed.Web.Portal.Models.Home.PortalInfo.GetInfo().Version">
+    <link rel="stylesheet" type="text/css" href="~/css/modules/sorting-list-mod.css">
+    @RenderSection("Styles", false)
+    @* js libs - stage 1 scripts *@
+    <script src="~/js/libs/jquery.min.js"></script>
+    <script src="~/js/libs/sortable.js"></script>
+    <script src="~/js/libs/handlebars.min-v4.5.1.js"></script>
+
+    <script src="~/js/libs/toolkit.min.js"></script>
+    @RenderSection("HeaderScripts", false)
+</head>
+<body>
+    <div id="bodyContainer">
+        @if (ViewBag.HideHeader == null)
+        {
+            <header>
+                <a href="~/"><img id="fedLogo" src="~/img/fed-logo.png" alt="Fed by Abel & Cole" /></a>
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="~/dashboard/customers">Customers</a></li>
+                        <li><a href="~/dashboard/ops">Operations</a></li>
+                        <li><a href="~/dashboard/sales">Sales</a></li>
+                        <li><a href="~/dashboard/suppliers">Suppliers</a></li>
+                        <li><a href="~/dashboard/system">System</a></li>
+                    </ul>
+                </nav>
+            </header>
+        }
+        <main>
+            @RenderBody()
+        </main>
+        <footer>
+            Copyright @DateTime.Now.ToString("yyyy") - Fed by Abel &amp; Cole
+        </footer>
+    </div>
+
+    @* custom js files - stage 2 scripts *@
+    <script src="~/js/site.js"></script>
+    <script src="~/js/libs/helpers.js"></script>
+    <script src="~/js/modules/sorting-list-mod.js"></script>
+    @RenderSection("FooterScripts", false)
+</body>
+</html>

@@ -1,0 +1,150 @@
+﻿@model Fed.Web.Portal.ViewModels.HomeDashboardViewModel
+@{
+    Layout = "_Master";
+}
+
+<h2>Accounts Created</h2>
+<p>
+    <a class="linkButton" href="/dashboard/download/accountsCreated">Download CSV</a>
+</p>
+<div id="AccountsCreatedReport">
+    <div id="Customers-Table">
+        <table class="tablesorter-metro-dark">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="hidden">CustomerId</th>
+                    <th class="left">Company Name</th>
+                    <th class="left">Account Type</th>
+                    <th class="left">Office Size</th>
+                    <th class="left">Source</th>
+                    <th class="left">Email</th>
+                    <th class="left">Opt In</th>
+                    <th class="left">Register Date</th>
+                    <th class="left">Account Status</th>
+                    <th class="left">Account Setup</th>
+                    <th class="left">Next Delivery Date</th>
+                    <th class="left">First Delivery Date</th>
+                    <th class="left">Agent</th>
+                    <th class="left">Marketing Attribute</th>
+                    <th class="left">Add to Freshsales</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(int i = 1; i < Model.AccountsCreated.Count; i++)
+                {
+                var customer = Model.AccountsCreated[i-1];
+                <tr>
+                    <td>@i</td>
+                    <td class="hidden">@customer.CustomerId</td>
+                    <td><a href="/customers/@customer.CustomerId">@customer.CompanyName</a></td>
+                    <td>@customer.AccountType</td>
+                    <td>@customer.OfficeSize</td>
+                    <td>@customer.Source</td>
+                    <td>@customer.Email</td>
+                    <td>@(customer.OptIn ? "✓" : "")</td>
+                    <td>@customer.RegisterDate</td>
+                    <td>@customer.AccountStatus</td>
+                    <td>@customer.AccountSetup</td>
+                    <td>@customer.NextDeliveryDate</td>
+                    <td>@customer.FirstDeliveryDate</td>
+                    <td>@customer.Agent</td>
+                    <td data-count="@i"><a class="set-attribute">@customer.MarketingAttribute</a></td>
+                    <td class="add-to-fresh-sales" data-customer-id="@customer.CustomerId">
+                        <img src="~/img/freshsales.svg" class="add" />
+                        <img src="~/img/freshsales-added.svg" class="added" />
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2>New Customers Summary</h2>
+<div id="NewCustomersReport">
+    @await Html.PartialAsync("_Report", Model.NewCustomerSummary)
+</div>
+
+<style>
+    #NewCustomersReport table th:nth-child(4),
+    #NewCustomersReport table td:nth-child(4),
+    #NewCustomersReport table tr:last-child td:nth-child(1) {
+        text-align: right;
+    }
+
+    #NewCustomersReport table th:nth-child(5),
+    #NewCustomersReport table th:nth-child(6),
+    #NewCustomersReport table th:nth-child(7),
+    #NewCustomersReport table th:nth-child(8),
+    #NewCustomersReport table td:nth-child(5),
+    #NewCustomersReport table td:nth-child(6),
+    #NewCustomersReport table td:nth-child(7),
+    #NewCustomersReport table td:nth-child(8),
+    #NewCustomersReport table tr:last-child td:nth-child(2),
+    #NewCustomersReport table tr:last-child td:nth-child(3),
+    #NewCustomersReport table tr:last-child td:nth-child(4),
+    #NewCustomersReport table tr:last-child td:nth-child(5) {
+        text-align: center;
+    }
+
+    #NewCustomersReport table tr:last-child td {
+        background: #222;
+    }
+</style>
+
+<script>
+    $(document).ready(
+        function () {
+            var tableRef = $("#NewCustomersReport .dynamicTable > table tbody")[0];
+
+            var week1Sum = 0;
+            var week2Sum = 0;
+            var week3Sum = 0;
+            var week4Sum = 0;
+
+            for (var i = 0, row; row = tableRef.rows[i]; i++) {
+                var week1Cell = row.cells[5];
+                var week2Cell = row.cells[6];
+                var week3Cell = row.cells[7];
+                var week4Cell = row.cells[8];
+
+                if (week1Cell.innerText.length !== 0) {
+                    week1Sum++;
+                }
+
+                if (week2Cell.innerText.length !== 0) {
+                    week2Sum++;
+                }
+
+                if (week3Cell.innerText.length !== 0) {
+                    week3Sum++;
+                }
+
+                if (week4Cell.innerText.length !== 0) {
+                    week4Sum++;
+                }
+            }
+
+            var sumRow = tableRef.insertRow(tableRef.rows.length);
+            var firstCell = sumRow.insertCell(0);
+            firstCell.colSpan = 4;
+
+            var week1Cell = sumRow.insertCell(1);
+            var week2Cell = sumRow.insertCell(2);
+            var week3Cell = sumRow.insertCell(3);
+            var week4Cell = sumRow.insertCell(4);
+
+            firstCell.appendChild(document.createTextNode("Total new customers per week"));
+
+            week1Cell.appendChild(document.createTextNode(week1Sum));
+            week2Cell.appendChild(document.createTextNode(week2Sum));
+            week3Cell.appendChild(document.createTextNode(week3Sum));
+            week4Cell.appendChild(document.createTextNode(week4Sum));
+
+        });
+    
+</script>
+<script src="~/js/customer-setagent.js"></script>
+<script src="~/js/customer-setattribute.js"></script>
+<script src="~/js/customer-add-to-crm.js"></script>
