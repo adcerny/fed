@@ -17,7 +17,7 @@ namespace Fed.Tests.Integration
 
             var products = await fedClient.GetProductsAsync(Guid.NewGuid());
 
-            Assert.Equal(0, products.Count);
+            Assert.Empty(products);
         }
 
         [Fact]

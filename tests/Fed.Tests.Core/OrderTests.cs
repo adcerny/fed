@@ -28,14 +28,14 @@ namespace Fed.Core.Tests
 
             order.OrderItems = orderItems;
 
-            Assert.Equal(1, order.OrderItems.Count);
+            Assert.Single(order.OrderItems);
 
             order.OrderItems.Add(new OrderItem
             {
                 Quantity = 0
             });
 
-            Assert.Equal(1, order.OrderItems.Count);
+            Assert.Single(order.OrderItems);
         }
     }
 }

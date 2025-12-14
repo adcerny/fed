@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using Fed.Web.Portal.Models.Reports;
 using Fed.Web.Portal.ViewModels;
 using Fed.Web.Service.Client;
@@ -78,9 +79,9 @@ namespace Fed.Web.Portal.Controllers
                 records.Add(JsonConvert.DeserializeObject<ExpandoObject>(row.ToString(), exp));
 
             using (var writer = new StringWriter())
-            using (var csv = new CsvWriter(writer))
+            using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.GetCultureInfo("en-GB"))))
             {
-                csv.Configuration.CultureInfo = CultureInfo.GetCultureInfo("en-GB");
+                // csv configuration set via CsvConfiguration
 
                 csv.WriteRecords(records);
                 var contents = Encoding.UTF8.GetBytes(writer.ToString());

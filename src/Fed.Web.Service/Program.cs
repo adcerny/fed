@@ -1,6 +1,6 @@
 ﻿using Fed.Web.Service.Extensions;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.IO;
@@ -13,26 +13,27 @@ namespace Fed.Web.Service
 
         public static int StartWebServer(string[] args)
         {
-            var loggerConfig =
+            Log.Logger =
                 new LoggerConfiguration()
                     .MinimumLevel.Warning()
                     .Enrich.WithProperty("Application", "Fed.Web.Service")
-                    .WriteTo.ApplicationInsightsTraces(TelemetryConfiguration.Active)
-                    .WriteTo.Console();
-
-            Log.Logger = loggerConfig.CreateLogger();
+                    .WriteTo.Console()
+                    .CreateLogger();
 
             try
             {
                 Log.Information("Starting Fed.Web.Service...");
+
                 WebBuilderExtensions.UseAzureKeyVault(args)
-                .UseSerilog()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build()
-                .Run();
+                    .UseSerilog()
+                    .ConfigureWebHostDefaults(webBuilder =>
+                    {
+                        webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
+                        webBuilder.UseIISIntegration();
+                        webBuilder.UseStartup<Startup>();
+                    })
+                    .Build()
+                    .Run();
 
                 return 0;
             }

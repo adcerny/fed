@@ -3,7 +3,6 @@ using Fed.Web.SupplierPortal.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,8 +23,6 @@ namespace Fed.Web.SupplierPortal
             services.AddFed(Configuration);
             services.AddRazorPages()
                     .AddRazorRuntimeCompilation();
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

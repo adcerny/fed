@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace Fed.AzureFunctions.Functions
         [FunctionName("GetCustomerActivityFunction")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            [Table("CustomerActivity")] CloudTable cloudTable,
             ILogger logger)
         {
+            var cloudTable = GetTable("CustomerActivity");
             string userId = req.Query["userId"];
             if (string.IsNullOrEmpty(userId))
             {
@@ -54,6 +55,16 @@ namespace Fed.AzureFunctions.Functions
             } while (token != null);
 
             return new JsonResult(results);
+        }
+
+        private static CloudTable GetTable(string tableName)
+        {
+            var conn = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
+            var account = CloudStorageAccount.Parse(conn);
+            var client = account.CreateCloudTableClient();
+            var table = client.GetTableReference(tableName);
+            table.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            return table;
         }
     }
 }

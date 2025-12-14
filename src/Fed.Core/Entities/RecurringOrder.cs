@@ -42,13 +42,13 @@ namespace Fed.Core.Entities
             OrderItems = orderItems ?? new List<RecurringOrderItem>();
             CreatedDate = createdDate ?? DateTime.UtcNow;
             LastUpdatedDate = lastUpdatedDate ?? CreatedDate;
-            IsDeleted = IsDeleted;
+            IsDeleted = isDeleted;
             DeletedDate = deletedDate;
             Timeslot = timeslot;
             DeliveryAddress = deliveryAddress;
-            SkipDates = skipDates;
+            SkipDates = skipDates ?? new List<SkipDate>();
             IsFree = isFree;
-            NextDeliveryDate = GetNextDeliveryDate(futureHolidays);
+            NextDeliveryDate = GetNextDeliveryDate(futureHolidays ?? new List<Holiday>());
         }
 
         public Guid Id { get; }
@@ -109,7 +109,7 @@ namespace Fed.Core.Entities
                 return Date.MinDate;
 
             var nextDelDate = Date.Create(StartDate.Value.NextWeekday(Timeslot?.DayOfWeek ?? StartDate.Value.DayOfWeek, false));
-            if (EndDate < nextDelDate)
+            if (EndDate.HasValue && EndDate.Value < nextDelDate)
                 return Date.MinDate;
 
             if (WeeklyRecurrence == 0 && (SkipDates is object && SkipDates.Any(sd => sd.Date == nextDelDate) || futureHolidays is object && futureHolidays.Any(h => h.Date == nextDelDate)))

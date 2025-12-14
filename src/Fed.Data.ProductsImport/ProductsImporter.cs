@@ -4,9 +4,9 @@ using Fed.Core.Data.Commands;
 using Fed.Core.Entities;
 using Fed.Infrastructure.Data.SqlServer;
 using Fed.Infrastructure.Data.SqlServer.Handlers;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Fed.Data.Migration

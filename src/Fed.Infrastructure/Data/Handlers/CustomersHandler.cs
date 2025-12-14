@@ -98,7 +98,7 @@ namespace Fed.Infrastructure.Data.SqlServer.Handlers
                     return await ExecuteAsync(command);
                 }
 
-                throw sqlEx;
+                throw;
             }
         }
 

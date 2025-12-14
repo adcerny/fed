@@ -113,7 +113,7 @@ namespace Fed.Infrastructure.Data.SqlServer
                     if (sqlEx.Number == 2601 || sqlEx.Number == 2627)
                         throw new DuplicateCompanyNameException(createBillingAddressCommand.BillingAddress.CompanyName);
                     else
-                        throw sqlEx;
+                        throw; // preserve original stack trace
                 }
             }
 
