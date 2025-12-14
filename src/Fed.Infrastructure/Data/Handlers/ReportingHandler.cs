@@ -3,7 +3,7 @@ using Fed.Core.Data.Handlers;
 using Fed.Core.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
