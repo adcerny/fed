@@ -127,17 +127,28 @@ namespace Fed.Api.External.MicrosoftTeams
             }
         }
 
+        private string GetImageBaseUrl()
+        {
+            // Allow overriding the image base URL via environment variable to avoid exposing storage account names.
+            var overrideUrl = Environment.GetEnvironmentVariable("TEAMS_CARD_IMAGE_BASE_URL");
+            if (!string.IsNullOrWhiteSpace(overrideUrl))
+                return overrideUrl.TrimEnd('/');
+
+            return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot";
+        }
+
         private string GetCardImage()
         {
+            var baseUrl = GetImageBaseUrl();
             switch (CardType)
             {
-                case CardType.Order: return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot/order.png";
-                case CardType.Payment: return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot/payment2.png";
-                case CardType.Delivery: return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot/delivery.png";
-                case CardType.Error: return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot/error.png";
-                case CardType.Warning: return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot/warning.png";
-                case CardType.SupplierOrder: return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot/supplierOrder.png";
-                case CardType.Invoice: return "https://fedstorageaccountprd.blob.core.windows.net/fed-bot/invoice.png";
+                case CardType.Order: return $"{baseUrl}/order.png";
+                case CardType.Payment: return $"{baseUrl}/payment2.png";
+                case CardType.Delivery: return $"{baseUrl}/delivery.png";
+                case CardType.Error: return $"{baseUrl}/error.png";
+                case CardType.Warning: return $"{baseUrl}/warning.png";
+                case CardType.SupplierOrder: return $"{baseUrl}/supplierOrder.png";
+                case CardType.Invoice: return $"{baseUrl}/invoice.png";
                 default: return "";
             }
         }
