@@ -1,6 +1,7 @@
 ﻿using Fed.Web.Portal.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.IO;
@@ -24,11 +25,14 @@ namespace Fed.Web.Portal
             {
                 Log.Information("Starting Fed.Web.Portal...");
 
-                WebBuilderExtensions.UseAzureKeyVault(args)
+                Host.CreateDefaultBuilder(args)
                     .UseSerilog()
-                    .UseContentRoot(Directory.GetCurrentDirectory())
-                    .UseIISIntegration()
-                    .UseStartup<Startup>()
+                    .ConfigureWebHostDefaults(webBuilder =>
+                    {
+                        webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
+                        webBuilder.UseIISIntegration();
+                        webBuilder.UseStartup<Startup>();
+                    })
                     .Build()
                     .Run();
 

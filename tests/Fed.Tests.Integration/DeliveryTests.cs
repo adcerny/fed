@@ -396,7 +396,7 @@ namespace Fed.Tests.Integration
             Assert.Equal(4, splitDeliveries.Count());
 
             //we should only have one delivery charge
-            Assert.Single(splitDeliveries.Where(d => d.DeliveryCharge > 0));
+            Assert.Single(splitDeliveries, d => d.DeliveryCharge > 0);
 
             //each split delivery should have a single order
             foreach (var delivery in splitDeliveries)

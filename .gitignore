@@ -416,3 +416,15 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+## Ignore environment-specific appsettings containing secrets
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Local.json
+
+# Additional local secret files
+secrets.json
+.env
+
+# Azure Functions local settings
+local.settings.json

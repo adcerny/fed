@@ -1,13 +1,13 @@
 ﻿using Dapper;
 using Newtonsoft.Json;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Fed.Infrastructure.Extensions
 {
     public static class SqlConnectionExtensions
     {
-        public static async Task<T> ReadJsonAsync<T>(this SqlConnection connection, string sql, object obj = null)
+        public static async Task<T> ReadJsonAsync<T>(this Microsoft.Data.SqlClient.SqlConnection connection, string sql, object obj = null)
         {
             await connection.OpenAsync();
 

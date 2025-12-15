@@ -274,9 +274,9 @@ namespace Fed.Tests.Integration
             Assert.NotNull(customers[1].Contacts);
             Assert.NotNull(customers[2].Contacts);
 
-            Assert.Equal(0, customers[0].Contacts.Count);
-            Assert.Equal(0, customers[1].Contacts.Count);
-            Assert.Equal(0, customers[2].Contacts.Count);
+            Assert.Empty(customers[0].Contacts);
+            Assert.Empty(customers[1].Contacts);
+            Assert.Empty(customers[2].Contacts);
         }
 
         [Fact]
@@ -542,9 +542,9 @@ namespace Fed.Tests.Integration
             Assert.NotNull(customers[1].Contacts);
             Assert.NotNull(customers[2].Contacts);
 
-            Assert.NotEqual(0, customers[0].Contacts.Count);
-            Assert.NotEqual(0, customers[1].Contacts.Count);
-            Assert.NotEqual(0, customers[2].Contacts.Count);
+            Assert.NotEmpty(customers[0].Contacts);
+            Assert.NotEmpty(customers[1].Contacts);
+            Assert.NotEmpty(customers[2].Contacts);
         }
 
         [Fact]

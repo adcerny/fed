@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using Fed.Api.External.AzureStorage;
 using Fed.Core.Common;
 using Fed.Core.Enums;
@@ -263,10 +264,8 @@ namespace Fed.Web.Portal.Controllers
         public async Task<IActionResult> DownloadAccountsCreated(string reportName)
         {
             using (var writer = new StringWriter())
-            using (var csv = new CsvWriter(writer))
+            using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.GetCultureInfo("en-GB"))))
             {
-                csv.Configuration.CultureInfo = CultureInfo.GetCultureInfo("en-GB");
-
                 var data = await GetAccountsCreatedForDownload();
 
                 csv.WriteRecords(data);

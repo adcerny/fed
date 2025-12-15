@@ -39,14 +39,14 @@ namespace Fed.Core.Tests
 
             recurringOrder.OrderItems = orderItems;
 
-            Assert.Equal(1, recurringOrder.OrderItems.Count);
+            Assert.Single(recurringOrder.OrderItems);
 
             recurringOrder.OrderItems.Add(new RecurringOrderItem
             {
                 Quantity = 0
             });
 
-            Assert.Equal(1, recurringOrder.OrderItems.Count);
+            Assert.Single(recurringOrder.OrderItems);
 
             var orderItems2 = new List<RecurringOrderItem>();
 
@@ -79,14 +79,14 @@ namespace Fed.Core.Tests
             null,
             orderItems2);
 
-            Assert.Equal(1, recurringOrder2.OrderItems.Count);
+            Assert.Single(recurringOrder2.OrderItems);
 
             recurringOrder2.OrderItems.Add(new RecurringOrderItem
             {
                 Quantity = 0
             });
 
-            Assert.Equal(1, recurringOrder2.OrderItems.Count);
+            Assert.Single(recurringOrder2.OrderItems);
         }
     }
 }

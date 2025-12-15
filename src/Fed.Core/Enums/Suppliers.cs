@@ -6,8 +6,8 @@ namespace Fed.Core.Enums
     {
         AbelAndCole = 8,
         SevenSeeded = 7,
-        PlanetOrganic = 209,
-        YummyTummy = 291
+        PlanetOrganic = 291,
+        YummyTummy = 209
     }
 
     public static class SupplierExtensions

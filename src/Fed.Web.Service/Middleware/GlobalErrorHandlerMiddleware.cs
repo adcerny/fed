@@ -49,7 +49,7 @@ namespace Fed.Web.Service.Middleware
             {
                 if (_logger != null)
                 {
-                    _logger.LogError("Exception thrown. Message: {msg}, Source: {src}, TargetSite: {site}, StackTrace: {stack}", ex.Message, ex.Source, ex.TargetSite, ex.StackTrace, ex);
+                    _logger.LogError("Exception thrown. Message: {msg}, Source: {src}, TargetSite: {site}, StackTrace: {stack}, Exception: {exception}", ex.Message, ex.Source, ex.TargetSite, ex.StackTrace, ex);
                 }
 
                 ctx.Response.StatusCode = 500;
