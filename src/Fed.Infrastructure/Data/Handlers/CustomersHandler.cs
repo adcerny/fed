@@ -9,7 +9,7 @@ using Fed.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Fed.Infrastructure.Data.SqlServer.Handlers
@@ -98,7 +98,7 @@ namespace Fed.Infrastructure.Data.SqlServer.Handlers
                     return await ExecuteAsync(command);
                 }
 
-                throw sqlEx;
+                throw;
             }
         }
 

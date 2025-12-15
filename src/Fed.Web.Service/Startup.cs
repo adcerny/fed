@@ -1,6 +1,7 @@
 ﻿using Fed.Core.Services.Validators;
 using Fed.Web.Service.Config;
 using Fed.Web.Service.Extensions;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,9 +27,12 @@ namespace Fed.Web.Service
         {
             services.AddFed(Configuration, HostingEnvironment);
 
-            services.AddMvc()
-            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerValidator>())
-            .AddNewtonsoftJson(JsonConfig.MvcConfig);
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(JsonConfig.MvcConfig);
+
+            services.AddFluentValidationAutoValidation()
+                    .AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 
             services.AddSwaggerGen(OpenApiConfig.SwaggerGenConfig);
             services.AddSwaggerGenNewtonsoftSupport();

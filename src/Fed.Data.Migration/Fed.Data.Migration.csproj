@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>1.2.0</Version>
     <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -46,9 +46,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="dbup" Version="4.3.0" />
-    <PackageReference Include="Dapper" Version="2.0.30" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
+    <PackageReference Include="dbup" Version="5.0.41" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="dbup-sqlserver" Version="6.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>

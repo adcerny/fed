@@ -28,9 +28,7 @@ namespace Fed.AzureFunctions.Functions
 
         public static async Task ReportInsanityAsync(ServicesBag bag)
         {
-            const string webhookUrl = "https://outlook.office.com/webhook/4cc77159-f19d-4930-8b9c-7e93d3736bb2@a64e24f4-52b9-4b42-80ae-bd5c1085942c/IncomingWebhook/ca6a9fc2d0dd4498a1250ff7749519b0/b3ee8686-9c9e-4c20-a093-120e5234b637";
             const int messageLimit = 30;
-
 
             var logger = bag.Logger;
             logger.LogInformation("Running the sanity report to detect any irregularities...");
@@ -67,6 +65,13 @@ namespace Fed.AzureFunctions.Functions
                     urlActions: new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("View Chaos", "https://portal.fedteam.co.uk/reports/SanityReport") });
 
             logger.LogInformation(teamsCard.AsJson());
+
+            var webhookUrl = bag.Config?.TeamsWebhookUrl;
+            if (string.IsNullOrWhiteSpace(webhookUrl))
+            {
+                logger.LogWarning("Microsoft Teams webhook URL is not configured. Skipping Teams notification.");
+                return;
+            }
 
             var chaosMonkey = FedBot.Create(bag.Logger, webhookUrl);
 

@@ -5,7 +5,7 @@ using Fed.Core.Entities;
 using Fed.Core.Exceptions;
 using Fed.Core.Extensions;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,8 +17,8 @@ namespace Fed.Infrastructure.Data.SqlServer
             Guid customerId,
             string customerShortId,
             CreateCommand<Customer> command,
-            SqlConnection connection,
-            SqlTransaction transaction)
+            Microsoft.Data.SqlClient.SqlConnection connection,
+            Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = await SqlQueryReader.GetSqlQueryAsync("InsertCustomer.sql");
 
@@ -108,12 +108,12 @@ namespace Fed.Infrastructure.Data.SqlServer
                 {
                     await InsertBillingAddress(billingAddressId, createBillingAddressCommand, connection, transaction);
                 }
-                catch (SqlException sqlEx)
+                catch (Microsoft.Data.SqlClient.SqlException sqlEx)
                 {
                     if (sqlEx.Number == 2601 || sqlEx.Number == 2627)
                         throw new DuplicateCompanyNameException(createBillingAddressCommand.BillingAddress.CompanyName);
                     else
-                        throw sqlEx;
+                        throw; // preserve original stack trace
                 }
             }
 
@@ -128,14 +128,14 @@ namespace Fed.Infrastructure.Data.SqlServer
             }
         }
 
-        public async static Task DeleteContact(string contactId, SqlConnection connection, SqlTransaction transaction)
+        public async static Task DeleteContact(string contactId, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             const string sql = "UPDATE [dbo].[Contacts] SET [IsDeleted] = 1 WHERE Id = @Id";
             var obj = new { Id = contactId };
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task InsertDeliveryAddress(Guid id, CreateDeliveryAddressCommand command, SqlConnection connection, SqlTransaction transaction)
+        public static async Task InsertDeliveryAddress(Guid id, CreateDeliveryAddressCommand command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             if (command.DeliveryAddress.IsPrimary)
                 await ResetPrimaryDeliveryAddress(command.ContactId, connection, transaction);
@@ -165,7 +165,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task InsertCardToken(Guid id, CreateCardTokenCommand command, SqlConnection connection, SqlTransaction transaction)
+        public static async Task InsertCardToken(Guid id, CreateCardTokenCommand command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             if (command.CardToken.IsPrimary)
                 await ResetPrimaryCardToken(command.ContactId, connection, transaction);
@@ -191,7 +191,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task InsertBillingAddress(Guid id, CreateBillingAddressCommand command, SqlConnection connection, SqlTransaction transaction)
+        public static async Task InsertBillingAddress(Guid id, CreateBillingAddressCommand command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             if (command.BillingAddress.IsPrimary)
                 await ResetPrimaryBillingAddress(command.ContactId, connection, transaction);
@@ -220,7 +220,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public async static Task UpdateCustomer(UpdateCommand<Customer> command, SqlConnection connection, SqlTransaction transaction)
+        public async static Task UpdateCustomer(UpdateCommand<Customer> command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = await SqlQueryReader.GetSqlQueryAsync("UpdateCustomer.sql");
 
@@ -249,7 +249,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public async static Task UpdateContact(UpdateCommand<Contact> command, SqlConnection connection, SqlTransaction transaction)
+        public async static Task UpdateContact(UpdateCommand<Contact> command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = string.Concat(
                 " UPDATE [dbo].[Contacts]" +
@@ -278,7 +278,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task UpdateDeliveryAddress(UpdateCommand<DeliveryAddress> command, SqlConnection connection, SqlTransaction transaction)
+        public static async Task UpdateDeliveryAddress(UpdateCommand<DeliveryAddress> command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             if (command.Object.IsPrimary)
                 await ResetPrimaryDeliveryAddress(command.Object.ContactId, connection, transaction);
@@ -316,7 +316,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task ResetPrimaryDeliveryAddress(Guid contactId, SqlConnection connection, SqlTransaction transaction)
+        public static async Task ResetPrimaryDeliveryAddress(Guid contactId, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = string.Concat(
                 "UPDATE [dbo].[DeliveryAddresses]" +
@@ -331,7 +331,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task UpdateCardToken(UpdateCommand<CardToken> command, SqlConnection connection, SqlTransaction transaction)
+        public static async Task UpdateCardToken(UpdateCommand<CardToken> command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             if (command.Object.IsPrimary)
                 await ResetPrimaryCardToken(command.Object.ContactId, connection, transaction);
@@ -363,14 +363,14 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task ResetPrimaryCardToken(Guid contactId, SqlConnection connection, SqlTransaction transaction)
+        public static async Task ResetPrimaryCardToken(Guid contactId, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = "UPDATE [dbo].[CardTokens] SET [IsPrimary] = 0 WHERE ContactId = @ContactId";
 
             await connection.ExecuteAsync(sql, new { Contactid = contactId }, transaction);
         }
 
-        public static async Task UpdateBillingAddress(UpdateCommand<BillingAddress> command, SqlConnection connection, SqlTransaction transaction)
+        public static async Task UpdateBillingAddress(UpdateCommand<BillingAddress> command, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             if (command.Object.IsPrimary)
                 await ResetPrimaryBillingAddress(command.Object.ContactId, connection, transaction);
@@ -408,7 +408,7 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public static async Task ResetPrimaryBillingAddress(Guid contactId, SqlConnection connection, SqlTransaction transaction)
+        public static async Task ResetPrimaryBillingAddress(Guid contactId, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = string.Concat(
                 "UPDATE [dbo].[BillingAddresses]" +
@@ -423,21 +423,21 @@ namespace Fed.Infrastructure.Data.SqlServer
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public async static Task DeleteDeliveryAddress(string deliveryAddressId, SqlConnection connection, SqlTransaction transaction)
+        public async static Task DeleteDeliveryAddress(string deliveryAddressId, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = "UPDATE DeliveryAddresses SET IsDeleted = 1, DeletedDate = GETDATE() WHERE Id = @Id";
             var obj = new { Id = deliveryAddressId };
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public async static Task DeleteCardToken(string cardTokenId, SqlConnection connection, SqlTransaction transaction)
+        public async static Task DeleteCardToken(string cardTokenId, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = "DELETE FROM [dbo].[CardTokens] WHERE [Id] = @Id";
             var obj = new { Id = cardTokenId };
             await connection.ExecuteAsync(sql, obj, transaction);
         }
 
-        public async static Task DeleteBillingAddress(string deliveryAddressId, SqlConnection connection, SqlTransaction transaction)
+        public async static Task DeleteBillingAddress(string deliveryAddressId, Microsoft.Data.SqlClient.SqlConnection connection, Microsoft.Data.SqlClient.SqlTransaction transaction)
         {
             var sql = "DELETE FROM [dbo].[BillingAddresses] WHERE [Id] = @Id";
             var obj = new { Id = deliveryAddressId };

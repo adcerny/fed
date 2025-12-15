@@ -34,7 +34,12 @@ namespace Fed.Core.ValueTypes
 
         public static Date Create(DateTime date) => new Date(date);
         public static Date Create(int year, int month, int day) => new DateTime(year, month, day).ToDate();
-        public static Date Parse(string date) => Create(DateTime.Parse(date));
+        public static Date Parse(string date)
+        {
+            if (string.IsNullOrWhiteSpace(date))
+                return MinDate;
+            return Create(DateTime.Parse(date));
+        }
 
         public static Date Today => DateTime.Today.ToDate();
         public static Date MinDate => new Date(MinOrMaxDate.MinDate);

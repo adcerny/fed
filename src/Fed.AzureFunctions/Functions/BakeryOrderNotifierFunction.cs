@@ -5,7 +5,9 @@ using Fed.Core.Enums;
 using Fed.Core.Extensions;
 using Fed.Core.Models;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Storage;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
@@ -37,9 +39,18 @@ namespace Fed.AzureFunctions.Functions
         [FunctionName(FuncName)]
         public static Task Run(
             [TimerTrigger(Schedule)]TimerInfo timerInfo,
-            [Table("SimpleKeyValueStore")] CloudTable keyValueStore,
             ILogger logger)
-            => FunctionRunner.RunWithArgAsync(logger, FuncName, keyValueStore, NotifyBakery);
+            => FunctionRunner.RunWithArgAsync(logger, FuncName, GetTable("SimpleKeyValueStore"), NotifyBakery);
+
+        private static CloudTable GetTable(string tableName)
+        {
+            var conn = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
+            var account = CloudStorageAccount.Parse(conn);
+            var client = account.CreateCloudTableClient();
+            var table = client.GetTableReference(tableName);
+            table.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            return table;
+        }
 
         private static string GenerateForecastKey(IDictionary<DateTime, IList<SupplierProductQuantity>> forecast)
         {
